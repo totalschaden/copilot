@@ -291,7 +291,7 @@ namespace CoPilot
         [Menu("Dont use on Left Mouse Pressed", 112, 110)]
         public ToggleNode autoAttackLeftMouseCheck { get; set; }
 
-        [Menu("Key:", 113, 110)]
+        [Menu("Key: (Dont use Mousebuttons)", 113, 110)]
         public HotkeyNode autoAttackKey { get; set; }
 
         [Menu("Trigger Range", 114, 110)]

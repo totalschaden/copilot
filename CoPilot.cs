@@ -43,16 +43,21 @@ namespace CoPilot
         Vector3 playerPosition;
         private Entity flask4;
         private Entity flask5;
-        private bool autoAttackRunning;
+        private DateTime autoAttackRunning = new DateTime();
+        private DateTime autoAttackUpdate = new DateTime();
 
         private Coroutine CoroutineWorker;
         private const string coroutineKeyPress = "KeyPress";
 
+
         private void KeyPress(Keys key)
         {
+            if (CoroutineWorker != null && !CoroutineWorker.IsDone)
+                return;
             CoroutineWorker = new Coroutine(KeyPressRoutine(key), this, coroutineKeyPress);
             Core.ParallelRunner.Run(CoroutineWorker);
         }
+
         private static IEnumerator KeyPressRoutine(Keys key)
         {
             Keyboard.KeyDown(key);
@@ -253,7 +258,7 @@ namespace CoPilot
                     var isMoving = localPlayer.GetComponent<Actor>().isMoving;
 
                     playerPosition = GameController.Player.Pos;
-                    enemys = GameController.Entities.Where(x => !x.IsHidden && x.IsValid && x.IsHostile && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0);
+                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
                     corpses = GameController.Entities.Where(x => x.IsHostile && x.GetComponent<Monster>() != null && x.IsDead && x.IsTargetable);
 
                     // Maybe someone will add proper Skill API in the future ?
@@ -599,23 +604,30 @@ namespace CoPilot
                     #endregion
 
                     #region AutoAttack Cyclone / Nova / etc.
-                    if (Settings.autoAttackEnabled)
+                    if (Settings.autoAttackEnabled && (DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50)
                     {
                         try
                         {
-                            if ((Settings.autoAttackLeftMouseCheck && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck) && 
+                            autoAttackUpdate = DateTime.Now;
+                            if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck.Value) &&
                                 GetMonsterWithin(Settings.autoAttackRange) >= 1)
                             {
-                                if (!autoAttackRunning)
+                                if (!isCasting && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 100 && Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value))
+                                {
+                                    Keyboard.KeyUp(Settings.autoAttackKey.Value);
+                                    if (Settings.debugMode.Value)
+                                        LogMessage("Detected Key Priority Problem due to User Input, fixing.");
+                                }
+                                if (!Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value))
                                 {
                                     Keyboard.KeyDown(Settings.autoAttackKey.Value);
-                                    autoAttackRunning = true;
-                                }
+                                    autoAttackRunning = DateTime.Now;
+                                }                                
                             } 
-                            else if (autoAttackRunning)
+                            else if (Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value))
                             {
                                 Keyboard.KeyUp(Settings.autoAttackKey.Value);
-                                autoAttackRunning = false;
+                                autoAttackRunning = DateTime.MinValue;
                             }
                         }
                         catch (Exception e)
