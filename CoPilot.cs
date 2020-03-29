@@ -18,6 +18,7 @@ using ExileCore.Shared.Static;
 using SharpDX;
 using static CoPilot.WinApiMouse;
 using Point = CoPilot.WinApiMouse.Point;
+using System.Windows.Input;
 
 namespace CoPilot
 {
@@ -42,6 +43,7 @@ namespace CoPilot
         Vector3 playerPosition;
         private Entity flask4;
         private Entity flask5;
+        private bool autoAttackRunning;
 
         private Coroutine CoroutineWorker;
         private const string coroutineKeyPress = "KeyPress";
@@ -247,7 +249,9 @@ namespace CoPilot
                     var player = localPlayer.GetComponent<Life>();
                     var buffs = player.Buffs;
                     var isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
+                    var isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
                     var isMoving = localPlayer.GetComponent<Actor>().isMoving;
+
                     playerPosition = GameController.Player.Pos;
                     enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0);
                     corpses = GameController.Entities.Where(x => x.IsHostile && x.GetComponent<Monster>() != null && x.IsDead && x.IsTargetable);
@@ -264,7 +268,7 @@ namespace CoPilot
                     */
 
                     #region Auto Quit
-                    if (Settings.useAutoQuit)
+                    if (Settings.autoQuitEnabled)
                     {
                         try
                         {
@@ -281,9 +285,10 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Offerings
 
-                    if (Settings.useOfferings)
+                    if (Settings.offeringsEnabled)
                     {
                         try
                         {
@@ -299,20 +304,21 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Rallying Cry
-                    if (Settings.useRallyingCry)
+                    if (Settings.rallyingCryEnabled)
                     {
                         try
                         {
                             if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryDelay.Value && (GetMonsterWithin(Settings.rallyingCryRange) >= 1))
                             {
-                                if (Settings.useEnduringCry && (!buffs.Exists(x => x.Name == "inspiring_cry") || buffs.Exists(x => x.Name == "inspiring_cry" && x.Timer < 3.13)))
+                                if (Settings.enduringCryEnabled && (!buffs.Exists(x => x.Name == "inspiring_cry") || buffs.Exists(x => x.Name == "inspiring_cry" && x.Timer < 3.13)))
                                 {
                                     KeyPress(Settings.rallyingCryKey.Value);
                                     lastWarCry = DateTime.Now;
                                     lastTimeAny = DateTime.Now;
                                 }
-                                else if (!Settings.useEnduringCry)
+                                else if (!Settings.enduringCryEnabled)
                                 {
                                     KeyPress(Settings.rallyingCryKey.Value);
                                     lastWarCry = DateTime.Now;
@@ -325,8 +331,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Enduring Cry
-                    if (Settings.useEnduringCry)
+                    if (Settings.enduringCryEnabled)
                     {
                         try
                         {
@@ -343,8 +350,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Phase Run
-                    if (Settings.usePhaserun)
+                    if (Settings.phaserunEnabled)
                     {
                         try
                         {
@@ -363,8 +371,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Molten Shell / Steelskin / Bone Armour
-                    if (Settings.useMoltenShell)
+                    if (Settings.moltenShellEnabled)
                     {
                         try
                         {
@@ -395,8 +404,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Divine Ire
-                    if (Settings.useDivineIre)
+                    if (Settings.divineIreEnabled)
                     {
                         try
                         {
@@ -406,7 +416,7 @@ namespace CoPilot
                             (b.Name == "virulent_arrow_counter" && b.Charges >= Settings.divineIreStacks)))
                             {
 
-                                if (Settings.waitForInfused) {
+                                if (Settings.divineIreWaitForInfused) {
                                     // Get delay here at some point ?
                                     if (!buffs.Exists(x => x.Name == "storm_barrier_support_damage" && x.Timer > 1.0)) {
                                         return;
@@ -432,12 +442,13 @@ namespace CoPilot
 
                     }
                     #endregion
+
                     #region Delve Flare
-                    if (Settings.useDelveFlare)
+                    if (Settings.delveFlareEnabled)
                     {
                         try
                         {
-                            if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 && (player.ESPercentage < (Settings.delveEsBelow / 100) || player.HPPercentage < (Settings.delveHpBelow / 100)) && buffs.Exists(x => x.Name == "delve_degen_buff" && x.Charges >= Settings.delveDebuffStacks))
+                            if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 && (player.ESPercentage < (Settings.delveFlareEsBelow / 100) || player.HPPercentage < (Settings.delveFlareHpBelow / 100)) && buffs.Exists(x => x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
                             {
                                 KeyPress(Settings.delveFlareKey.Value);
                                 lastDelveFlare = DateTime.Now;
@@ -448,8 +459,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Vortex
-                    if (Settings.useVortex)
+                    if (Settings.vortexEnabled)
                     {
                         try
                         {
@@ -465,8 +477,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Blood Rage
-                    if (Settings.useBloodRage)
+                    if (Settings.bloodRageEnabled)
                     {
                         try
                         {
@@ -482,8 +495,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Doedre Effigy
-                    if (Settings.useDoedreEffigy)
+                    if (Settings.doedreEffigyEnabled)
                     {
                         try
                         {
@@ -499,6 +513,7 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Speed Flask
                     if ((Settings.useSpeed4 || Settings.useSpeed5))
                     {
@@ -559,8 +574,9 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
                     #region Detonate Mines ( to be done )
-                    if (Settings.useMines)
+                    if (Settings.minesEnabled)
                     {
                         try
                         {
@@ -574,12 +590,35 @@ namespace CoPilot
                                 // Internal delay 500-1000ms ?
                                 // Removing/Filter enemys that are not "deployed" yet / invunerale from enemys list ? 
 
-
-
-                                //Feature request: Cyclone near enemys
-
                             }
                         } catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+                    }
+                    #endregion
+
+                    #region AutoAttack Cyclone / Nova / etc.
+                    if (Settings.autoAttackEnabled)
+                    {
+                        try
+                        {
+                            if ((Settings.autoAttackLeftMouseCheck && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck) && 
+                                GetMonsterWithin(Settings.autoAttackRange) >= 1)
+                            {
+                                if (!autoAttackRunning)
+                                {
+                                    Keyboard.KeyDown(Settings.autoAttackKey.Value);
+                                    autoAttackRunning = true;
+                                }
+                            } 
+                            else if (autoAttackRunning)
+                            {
+                                Keyboard.KeyUp(Settings.autoAttackKey.Value);
+                                autoAttackRunning = false;
+                            }
+                        }
+                        catch (Exception e)
                         {
                             LogError(e.ToString());
                         }
@@ -591,6 +630,13 @@ namespace CoPilot
     }
     internal static class MouseTools
     {
+        public static bool IsMouseLeftPressed()
+        {
+            if (Control.MouseButtons == MouseButtons.Left)
+                return true;
+            else
+                return false;
+        }
         public static void MouseLeftClickEvent()
         {
             MouseEvent(MouseEventFlags.LeftUp);
