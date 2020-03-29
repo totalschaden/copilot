@@ -253,7 +253,7 @@ namespace CoPilot
                     var isMoving = localPlayer.GetComponent<Actor>().isMoving;
 
                     playerPosition = GameController.Player.Pos;
-                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0);
+                    enemys = GameController.Entities.Where(x => !x.IsHidden && x.IsValid && x.IsHostile && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0);
                     corpses = GameController.Entities.Where(x => x.IsHostile && x.GetComponent<Monster>() != null && x.IsDead && x.IsTargetable);
 
                     // Maybe someone will add proper Skill API in the future ?
