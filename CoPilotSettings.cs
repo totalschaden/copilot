@@ -79,6 +79,7 @@ namespace CoPilot
             autoAttackEnabled = new ToggleNode(false);
             autoAttackLeftMouseCheck = new ToggleNode(true);
             autoAttackKey = new HotkeyNode(Keys.T);
+            autoAttackPickItKey = new HotkeyNode(Keys.Space);
             autoAttackRange = new RangeNode<int>(500, 100, 2000);
 
 
@@ -291,10 +292,13 @@ namespace CoPilot
         [Menu("Dont use on Left Mouse Pressed", 112, 110)]
         public ToggleNode autoAttackLeftMouseCheck { get; set; }
 
-        [Menu("Key: (Dont use Mousebuttons)", 113, 110)]
+        [Menu("(Dont use Mousebuttons) Key:", 113, 110)]
         public HotkeyNode autoAttackKey { get; set; }
 
-        [Menu("Trigger Range", 114, 110)]
+        [Menu("PickIt Key:", 114, 110)]
+        public HotkeyNode autoAttackPickItKey { get; set; }
+
+        [Menu("Trigger Range", 115, 110)]
         public RangeNode<int> autoAttackRange { get; set; }
 
 

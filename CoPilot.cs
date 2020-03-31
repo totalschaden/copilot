@@ -612,13 +612,13 @@ namespace CoPilot
                             if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck.Value) &&
                                 GetMonsterWithin(Settings.autoAttackRange) >= 1)
                             {
-                                if (!isCasting && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 100 && Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value))
+                                if (Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value) ||!isCasting && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 100 && Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value))
                                 {
                                     Keyboard.KeyUp(Settings.autoAttackKey.Value);
                                     if (Settings.debugMode.Value)
                                         LogMessage("Detected Key Priority Problem due to User Input, fixing.");
                                 }
-                                if (!Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value))
+                                if (!Keyboard.IsKeyDown((int)Settings.autoAttackKey.Value) && !Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value) )
                                 {
                                     Keyboard.KeyDown(Settings.autoAttackKey.Value);
                                     autoAttackRunning = DateTime.Now;
