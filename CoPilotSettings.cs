@@ -82,6 +82,9 @@ namespace CoPilot
             autoAttackPickItKey = new HotkeyNode(Keys.Space);
             autoAttackRange = new RangeNode<int>(500, 100, 2000);
 
+            autoGolemEnabled = new ToggleNode(false);
+            autoGolemKey = new HotkeyNode(Keys.T);
+            autoGolemMax = new RangeNode<int>(1, 1, 15);
 
 
         }
@@ -301,6 +304,22 @@ namespace CoPilot
         [Menu("Trigger Range", 115, 110)]
         public RangeNode<int> autoAttackRange { get; set; }
 
+
+        #endregion
+
+        #region Auto Golem
+
+        [Menu("Auto Golem", 120)]
+        public EmptyNode autoGolem { get; set; }
+
+        [Menu("Enable", 121, 120)]
+        public ToggleNode autoGolemEnabled { get; set; }
+
+        [Menu("Key:", 122, 120)]
+        public HotkeyNode autoGolemKey { get; set; }
+
+        [Menu("Max. Golems", 123, 120)]
+        public RangeNode<int> autoGolemMax { get; set; }
 
         #endregion
 

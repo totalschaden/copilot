@@ -45,13 +45,16 @@ namespace CoPilot
         private Entity flask5;
         private DateTime autoAttackRunning = new DateTime();
         private DateTime autoAttackUpdate = new DateTime();
+        private int golemsAlive;
 
         private Coroutine CoroutineWorker;
         private const string coroutineKeyPress = "KeyPress";
 
 
-        private void KeyPress(Keys key)
+        private void KeyPress(Keys key, bool anyDelay = true)
         {
+            if (anyDelay)
+                lastTimeAny = DateTime.Now;
             if (CoroutineWorker != null && !CoroutineWorker.IsDone)
                 return;
             CoroutineWorker = new Coroutine(KeyPressRoutine(key), this, coroutineKeyPress);
@@ -217,6 +220,14 @@ namespace CoPilot
             }
         }
 
+        public bool Ready()
+        {
+            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay)
+                return true;
+            else
+                return false;
+        }
+
         public void Quit()
         {
             try
@@ -261,6 +272,10 @@ namespace CoPilot
                     enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
                     corpses = GameController.Entities.Where(x => x.IsHostile && x.GetComponent<Monster>() != null && x.IsDead && x.IsTargetable);
 
+                    if (Settings.autoGolemEnabled)
+                        golemsAlive = GameController.Entities.Where(x => !x.IsHostile && (x.Path.Contains("ChaosElemental") || x.Path.Contains("FireElemental") || x.Path.Contains("IceElemental") || x.Path.Contains("LightningGolem") || x.Path.Contains("RockGolem") || x.Path.Contains("DropBearUniqueSummoned"))).Count();
+
+
                     // Maybe someone will add proper Skill API in the future ?
                     // Simple Loop through Skills available, could move regions into this
                     //var skills = RemoteMemoryObject.pTheGame.IngameState.Data.LocalPlayer.GetComponent<Actor>().ActorSkills;
@@ -297,10 +312,9 @@ namespace CoPilot
                     {
                         try
                         {
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && !buffs.Exists(x => x.Name == "active_offering" && x.Timer > 0.3) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
+                            if (Ready() && !buffs.Exists(x => x.Name == "active_offering" && x.Timer > 0.3) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
                             {
                                 KeyPress(Settings.offeringsKey);
-                                lastTimeAny = DateTime.Now;
                             }
                         }
                         catch (Exception e)
@@ -315,19 +329,17 @@ namespace CoPilot
                     {
                         try
                         {
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryDelay.Value && (GetMonsterWithin(Settings.rallyingCryRange) >= 1))
+                            if (Ready() && (DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryDelay.Value && (GetMonsterWithin(Settings.rallyingCryRange) >= 1))
                             {
                                 if (Settings.enduringCryEnabled && (!buffs.Exists(x => x.Name == "inspiring_cry") || buffs.Exists(x => x.Name == "inspiring_cry" && x.Timer < 3.13)))
                                 {
                                     KeyPress(Settings.rallyingCryKey.Value);
                                     lastWarCry = DateTime.Now;
-                                    lastTimeAny = DateTime.Now;
                                 }
                                 else if (!Settings.enduringCryEnabled)
                                 {
                                     KeyPress(Settings.rallyingCryKey.Value);
                                     lastWarCry = DateTime.Now;
-                                    lastTimeAny = DateTime.Now;
                                 }
                             }                            
                         } catch (Exception e)
@@ -342,11 +354,10 @@ namespace CoPilot
                     {
                         try
                         {
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryDelay.Value && (GetMonsterWithin(Settings.enduringCryRange) >= 1 || player.HPPercentage < 0.90))
+                            if (Ready() && (DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryDelay.Value && (GetMonsterWithin(Settings.enduringCryRange) >= 1 || player.HPPercentage < 0.90))
                             {
                                 KeyPress(Settings.enduringCryKey.Value);
                                 lastWarCry = DateTime.Now;
-                                lastTimeAny = DateTime.Now;
                             }
                             
                         } catch (Exception e)
@@ -361,13 +372,12 @@ namespace CoPilot
                     {
                         try
                         {
-                            if (!isAttacking && isMoving && (DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastPhaserun).TotalMilliseconds > Settings.phaserunDelay.Value)
+                            if (!isAttacking && isMoving && Ready() && (DateTime.Now - lastPhaserun).TotalMilliseconds > Settings.phaserunDelay.Value)
                             {
                                 if (!buffs.Exists(b => b.Name == "new_phase_run" || buffs.Exists(x => x.Name == "new_phase_run" && x.Timer < 0.013)))
                                 {
                                     KeyPress(Settings.phaserunKey.Value);
                                     lastPhaserun = DateTime.Now;
-                                    lastTimeAny = DateTime.Now;
                                 }
                             }
                         } catch (Exception e)
@@ -394,13 +404,12 @@ namespace CoPilot
                                     lastMoltenShell = DateTime.Now;
                                 }
                             }
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastMoltenShell).TotalMilliseconds > Settings.moltenShellDelay.Value)
+                            if (Ready() && (DateTime.Now - lastMoltenShell).TotalMilliseconds > Settings.moltenShellDelay.Value)
                             {
                                 if ((GetMonsterWithin(Settings.moltenShellRange) >= 1))
                                 {
                                     KeyPress(Settings.moltenShellKey.Value);
                                     lastMoltenShell = DateTime.MaxValue;
-                                    lastTimeAny = DateTime.Now;
                                 }
                             }
                         } catch (Exception e)
@@ -470,11 +479,10 @@ namespace CoPilot
                     {
                         try
                         {
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastVortex).TotalMilliseconds > Settings.vortexDelay.Value && (GetMonsterWithin(Settings.vortexRange) >= 1))
+                            if (Ready() && (DateTime.Now - lastVortex).TotalMilliseconds > Settings.vortexDelay.Value && (GetMonsterWithin(Settings.vortexRange) >= 1))
                             {
                                 KeyPress(Settings.vortexKey.Value);
                                 lastVortex = DateTime.Now;
-                                lastTimeAny = DateTime.Now;
                             }
                         } catch (Exception e)
                         {
@@ -488,11 +496,10 @@ namespace CoPilot
                     {
                         try
                         {
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay && (DateTime.Now - lastBloodRage).TotalMilliseconds > Settings.bloodRageDelay.Value && (GetMonsterWithin(Settings.bloodRageRange) >= 1))
+                            if (Ready() && (DateTime.Now - lastBloodRage).TotalMilliseconds > Settings.bloodRageDelay.Value && (GetMonsterWithin(Settings.bloodRageRange) >= 1))
                             {
                                 KeyPress(Settings.bloodRageKey.Value);
                                 lastBloodRage = DateTime.Now;
-                                lastTimeAny = DateTime.Now;
                             }
                         } catch (Exception e)
                         {
@@ -537,17 +544,17 @@ namespace CoPilot
                                     {
                                         if (charges4.NumCharges > charges5.NumCharges)
                                         {
-                                            KeyPress(Keys.D4);
+                                            KeyPress(Keys.D4, false);
                                             lastFlask = DateTime.Now;
                                         }
                                         else if (charges5.NumCharges > charges4.NumCharges)
                                         {
-                                            KeyPress(Keys.D5);
+                                            KeyPress(Keys.D5, false);
                                             lastFlask = DateTime.Now;
                                         }
                                         else
                                         {
-                                            KeyPress(Keys.D4);
+                                            KeyPress(Keys.D4, false);
                                             lastFlask = DateTime.Now;
                                         }
                                     }
@@ -558,7 +565,7 @@ namespace CoPilot
                                     var charges4 = flask4.GetComponent<Charges>();
                                     if (charges4.NumCharges >= charges4.ChargesPerUse && !buffs.Exists(x => x.Name == "Speed"))
                                     {
-                                        KeyPress(Keys.D4);
+                                        KeyPress(Keys.D4, false);
                                         lastFlask = DateTime.Now;
                                     }
                                 }
@@ -567,7 +574,7 @@ namespace CoPilot
                                     var charges5 = flask5.GetComponent<Charges>();
                                     if (charges5.NumCharges >= charges5.ChargesPerUse && !buffs.Exists(x => x.Name == "Speed"))
                                     {
-                                        KeyPress(Keys.D5);
+                                        KeyPress(Keys.D5, false);
                                         lastFlask = DateTime.Now;
                                     }
                                 }
@@ -585,7 +592,7 @@ namespace CoPilot
                     {
                         try
                         {
-                            if ((DateTime.Now - lastTimeAny).TotalMilliseconds > delay)
+                            if (Ready())
                             {
                                 var remoteMines = localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x.Entity != null && x.Entity.Path == "Metadata/MiscellaneousObjects/RemoteMine").ToList();
 
@@ -636,6 +643,25 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
+                    #region Auto Golem
+                    if (Settings.autoGolemEnabled)
+                    {
+                        try
+                        {
+                            if (Ready() && !isCasting && !isAttacking && golemsAlive < Settings.autoGolemMax.Value && GetMonsterWithin(600) == 0)
+                            {
+                                KeyPress(Settings.autoGolemKey.Value);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+                    }
+                    #endregion
+
+
                 }
             }
         }
