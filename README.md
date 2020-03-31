@@ -5,8 +5,8 @@ Automated use of Skills, with as few interferance for User Input as possible.
 Some Skills have added Logic or Logic to work better when used together (Warcrys).  
 
 Currently Supports:  
-Auto Attack (Cyclone/Nova/etc.)
-Auto Golem
+Auto Attack (Cyclone/Nova/etc.)  
+Auto Golem  
 Auto Quit  
 Blood Rage  
 Deodre Effigy (Item)
