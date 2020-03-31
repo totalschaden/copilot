@@ -276,6 +276,10 @@ namespace CoPilot
                         golemsAlive = GameController.Entities.Where(x => !x.IsHostile && (x.Path.Contains("ChaosElemental") || x.Path.Contains("FireElemental") || x.Path.Contains("IceElemental") || x.Path.Contains("LightningGolem") || x.Path.Contains("RockGolem") || x.Path.Contains("BoneGolem") || x.Path.Contains("DropBearUniqueSummoned"))).Count();
 
 
+                    // Feature request
+                    //  LeHeupOfSoupheute um 19:49 Uhr
+                    //  Would it be possible to add convocate on nearby enemies? Pretty please
+
                     // Maybe someone will add proper Skill API in the future ?
                     // Simple Loop through Skills available, could move regions into this
                     //var skills = RemoteMemoryObject.pTheGame.IngameState.Data.LocalPlayer.GetComponent<Actor>().ActorSkills;
@@ -496,7 +500,7 @@ namespace CoPilot
                     {
                         try
                         {
-                            if (Ready() && (DateTime.Now - lastBloodRage).TotalMilliseconds > Settings.bloodRageDelay.Value && (GetMonsterWithin(Settings.bloodRageRange) >= 1))
+                            if (Ready() && (DateTime.Now - lastBloodRage).TotalMilliseconds > Settings.bloodRageDelay.Value && !buffs.Exists(b => b.Name == "blood_rage" && b.Timer > 1.0) &&(GetMonsterWithin(Settings.bloodRageRange) >= 1))
                             {
                                 KeyPress(Settings.bloodRageKey.Value);
                                 lastBloodRage = DateTime.Now;
@@ -563,7 +567,7 @@ namespace CoPilot
                                 else if (Settings.useSpeed4 && flask4 != null && flask4.Address != 0x00)
                                 {
                                     var charges4 = flask4.GetComponent<Charges>();
-                                    if (charges4.NumCharges >= charges4.ChargesPerUse && !buffs.Exists(x => x.Name == "Speed"))
+                                    if (charges4.NumCharges >= charges4.ChargesPerUse )
                                     {
                                         KeyPress(Keys.D4, false);
                                         lastFlask = DateTime.Now;
@@ -572,7 +576,7 @@ namespace CoPilot
                                 else if (Settings.useSpeed5 && flask5 != null && flask5.Address != 0x00)
                                 {
                                     var charges5 = flask5.GetComponent<Charges>();
-                                    if (charges5.NumCharges >= charges5.ChargesPerUse && !buffs.Exists(x => x.Name == "Speed"))
+                                    if (charges5.NumCharges >= charges5.ChargesPerUse )
                                     {
                                         KeyPress(Keys.D5, false);
                                         lastFlask = DateTime.Now;
