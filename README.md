@@ -9,7 +9,7 @@ Auto Attack (Cyclone/Nova/etc.)
 Auto Golem  
 Auto Quit  
 Blood Rage  
-Deodre Effigy (Item)
+Deodre Effigy (Item)  
 Divine Ire / Blade Flurry / Scourge Arrow  
 Enduring Cry  
 Molten Shell / Bone Armour / Steelskin   
