@@ -12,7 +12,7 @@ Blood Rage
 Deodre Effigy (Item)  
 Divine Ire / Blade Flurry / Scourge Arrow  
 Enduring Cry  
-Molten Shell / Bone Armour / Steelskin   
+Molten Shell / Bone Armour / Steelskin / Arcane Cloak  
 Offerings  
 Phase Run  
 Rallying Cry  
