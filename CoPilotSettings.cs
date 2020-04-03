@@ -93,6 +93,7 @@ namespace CoPilot
         [Menu("Debug Mode", 2, 1)]
         public ToggleNode debugMode { get; set; }
 
+
         #region Auto Quit
         [Menu("Auto Quit (RUN LOADER.EXE AS ADMIN !!!", 1000)]
         public EmptyNode emptyAuto { get; set; }
