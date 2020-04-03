@@ -8,8 +8,7 @@ Currently Supports:
 Auto Attack (Cyclone/Nova/etc.)  
 Auto Golem  
 Auto Quit  
-Blood Rage  
-Delve Flare  
+Blood Rage   
 Deodre Effigy (Item)  
 Divine Ire / Blade Flurry / Scourge Arrow  
 Enduring Cry  
