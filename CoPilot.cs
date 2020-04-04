@@ -251,196 +251,317 @@ namespace CoPilot
             ImGuiTreeNodeFlags collapsingHeaderFlags = ImGuiTreeNodeFlags.CollapsingHeader;
             ImGui.Text("Plugin by Totalschaden. https://github.com/totalschaden/copilot");
 
-            // Auto Attack
-            if (Settings.autoAttackEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / ...", collapsingHeaderFlags))
-            {
-                Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoAttackEnabled);
-                Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", Settings.autoAttackLeftMouseCheck);
-                Settings.autoAttackKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.autoAttackKey.Value, Settings.autoAttackKey);
-                Settings.autoAttackPickItKey.Value = ImGuiExtension.HotkeySelector("PickIt Key: " + Settings.autoAttackPickItKey.Value, Settings.autoAttackPickItKey);
-                Settings.autoAttackRange.Value = ImGuiExtension.IntSlider("Range", Settings.autoAttackRange);
-            }
 
-            // Auto Golem
-            if (Settings.autoGolemEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Auto Golem", collapsingHeaderFlags))
+            try
             {
-                Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoGolemEnabled);
-                Settings.autoGolemKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.autoGolemKey.Value, Settings.autoGolemKey);
-                Settings.autoGolemMax.Value = ImGuiExtension.IntSlider("Max. Golems", Settings.autoGolemMax);
+                // Auto Attack
+                if (Settings.autoAttackEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(1);
+                if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / ...", collapsingHeaderFlags))
+                {
+                    Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoAttackEnabled.Value);
+                    Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", Settings.autoAttackLeftMouseCheck.Value);
+                    Settings.autoAttackKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.autoAttackKey.Value, Settings.autoAttackKey.Value);
+                    Settings.autoAttackPickItKey.Value = ImGuiExtension.HotkeySelector("PickIt Key: " + Settings.autoAttackPickItKey.Value, Settings.autoAttackPickItKey.Value);
+                    Settings.autoAttackRange.Value = ImGuiExtension.IntSlider("Range", Settings.autoAttackRange);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
             }
 
 
-            // Auto Quit
-            if (Settings.autoQuitEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Auto Quit", collapsingHeaderFlags))
+            try
             {
-                Settings.autoQuitEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoQuitEnabled);
-                Settings.hpPctQuit.Value = ImGuiExtension.FloatSlider("HP%", Settings.hpPctQuit);
-                Settings.esPctQuit.Value = ImGuiExtension.FloatSlider("ES%", Settings.esPctQuit);
-                Settings.forcedAutoQuit.Value = ImGuiExtension.HotkeySelector("Force Quit Key: " + Settings.forcedAutoQuit.Value, Settings.forcedAutoQuit);
+                // Auto Golem
+                if (Settings.autoGolemEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(2);
+                if (ImGui.TreeNodeEx("Auto Golem", collapsingHeaderFlags))
+                {
+                    Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoGolemEnabled.Value);
+                    Settings.autoGolemKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.autoGolemKey.Value, Settings.autoGolemKey.Value);
+                    Settings.autoGolemMax.Value = ImGuiExtension.IntSlider("Max. Golems", Settings.autoGolemMax);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Auto Quit
+                if (Settings.autoQuitEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(3);
+                if (ImGui.TreeNodeEx("Auto Quit", collapsingHeaderFlags))
+                {
+                    Settings.autoQuitEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoQuitEnabled.Value);
+                    Settings.hpPctQuit.Value = ImGuiExtension.FloatSlider("HP%", Settings.hpPctQuit);
+                    Settings.esPctQuit.Value = ImGuiExtension.FloatSlider("ES%", Settings.esPctQuit);
+                    Settings.forcedAutoQuit.Value = ImGuiExtension.HotkeySelector("Force Quit Key: " + Settings.forcedAutoQuit.Value, Settings.forcedAutoQuit.Value);
+                }        
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Blood Rage
+                if (Settings.bloodRageEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(4);
+                if (ImGui.TreeNodeEx("Blood Rage", collapsingHeaderFlags))
+                {
+                    Settings.bloodRageEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.bloodRageEnabled.Value);
+                    Settings.bloodRageKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.bloodRageKey.Value, Settings.bloodRageKey.Value);
+                    Settings.bloodRageDelay.Value = ImGuiExtension.IntSlider("Delay", Settings.bloodRageDelay);
+                    Settings.bloodRageRange.Value = ImGuiExtension.IntSlider("Range", Settings.bloodRageRange);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                if (Settings.delveFlareEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(5);
+                if (ImGui.TreeNodeEx("Delve Flare", collapsingHeaderFlags))
+                {
+                    Settings.delveFlareEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.delveFlareEnabled);
+                    Settings.delveFlareKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.delveFlareKey.Value, Settings.delveFlareKey.Value);
+                    Settings.delveFlareDebuffStacks.Value = ImGuiExtension.IntSlider("min. Debuff Stacks", Settings.delveFlareDebuffStacks);
+                    Settings.delveFlareHpBelow.Value = ImGuiExtension.FloatSlider("HP%", Settings.delveFlareHpBelow);
+                    Settings.delveFlareEsBelow.Value = ImGuiExtension.FloatSlider("ES%", Settings.delveFlareEsBelow);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Doedre Effigy
+                if (Settings.doedreEffigyEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(6);
+                if (ImGui.TreeNodeEx("Doedre Effigy", collapsingHeaderFlags))
+                {
+                    Settings.doedreEffigyEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.doedreEffigyEnabled.Value);
+                    Settings.doedreEffigyKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.doedreEffigyKey.Value, Settings.doedreEffigyKey.Value);
+                    Settings.doedreEffigyDelay.Value = ImGuiExtension.IntSlider("min. Debuff Stacks", Settings.doedreEffigyDelay);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                if (Settings.divineIreEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(7);
+                if (ImGui.TreeNodeEx("Divine Ire / Blade Flurry / Scourge Arrow", collapsingHeaderFlags))
+                {
+                    Settings.divineIreEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.divineIreEnabled.Value);
+                    Settings.divineIreKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.divineIreKey.Value, Settings.divineIreKey.Value);
+                    Settings.divineIreStacks.Value = ImGuiExtension.IntSlider("Stacks", Settings.divineIreStacks);
+                    Settings.divineIreWaitForInfused.Value = ImGuiExtension.Checkbox("Wait for Infused Channeling Support", Settings.divineIreWaitForInfused.Value);
+
+
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Warcrys
+                if (Settings.enduringCryEnabled || Settings.rallyingCryEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(8);
+                if (ImGui.TreeNodeEx("Enduring Cry / Rallying Cry", collapsingHeaderFlags))
+                {
+                    Settings.warCryDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.warCryDelay);
+                    Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enduring Cry Enabled", Settings.enduringCryEnabled.Value);
+                    Settings.enduringCryKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.enduringCryKey.Value, Settings.enduringCryKey.Value);
+                    Settings.enduringCryRange.Value = ImGuiExtension.IntSlider("Range", Settings.enduringCryRange);
+                    Settings.rallyingCryEnabled.Value = ImGuiExtension.Checkbox("Rallying Cry Enabled", Settings.rallyingCryEnabled.Value);
+                    Settings.rallyingCryKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.rallyingCryKey.Value, Settings.rallyingCryKey.Value);
+                    Settings.rallyingCryRange.Value = ImGuiExtension.IntSlider("Range", Settings.rallyingCryRange);
+
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Molten Shell / Steelskin / Bone Armour / Arcane Cloak
+                if (Settings.moltenShellEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(9);
+                if (ImGui.TreeNodeEx("Molten Shell / Steelskin / Bone Armour / Arcane Cloak", collapsingHeaderFlags))
+                {
+                    Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.moltenShellEnabled.Value);
+                    Settings.moltenShellKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.moltenShellKey.Value, Settings.moltenShellKey.Value);
+                    Settings.moltenShellDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.moltenShellDelay);
+                    Settings.moltenShellRange.Value = ImGuiExtension.IntSlider("Range", Settings.moltenShellRange);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Offerings
+                if (Settings.offeringsEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(10);
+                if (ImGui.TreeNodeEx("Offerings (This will get you stuck in Animation for your Casttime !)", collapsingHeaderFlags))
+                {
+                    Settings.offeringsEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.offeringsEnabled.Value);
+                    Settings.offeringsKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.offeringsKey.Value, Settings.offeringsKey.Value);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Phaserun
+                if (Settings.phaserunEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(11);
+                if (ImGui.TreeNodeEx("Phaserun", collapsingHeaderFlags))
+                {
+                    Settings.phaserunEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.phaserunEnabled.Value);
+                    Settings.phaserunKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.phaserunKey.Value, Settings.phaserunKey.Value);
+                    Settings.phaserunDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.phaserunDelay);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+
+
+            try
+            {
+                // Speed Flasks
+                if (Settings.useSpeed4 || Settings.useSpeed5)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(12);
+                if (ImGui.TreeNodeEx("Speed Flask", collapsingHeaderFlags))
+                {
+                    Settings.useSpeed4.Value = ImGuiExtension.Checkbox("Flask 4 Enabled", Settings.useSpeed4.Value);
+                    Settings.useSpeed5.Value = ImGuiExtension.Checkbox("Flask 5 Enabled", Settings.useSpeed5.Value);
+                    Settings.useSpeedMoving.Value = ImGuiExtension.Checkbox("Use when Moving", Settings.useSpeedMoving.Value);
+                    Settings.useSpeedAttack.Value = ImGuiExtension.Checkbox("Use when Attacking", Settings.useSpeedAttack.Value);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+            try
+            {
+                // Vortex
+                if (Settings.vortexEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(13);
+                if (ImGui.TreeNodeEx("Vortex", collapsingHeaderFlags))
+                {
+                    Settings.vortexEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.vortexEnabled.Value);
+                    Settings.vortexKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.vortexKey.Value, Settings.vortexKey.Value);
+                    Settings.vortexDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.vortexDelay);
+                    Settings.vortexRange.Value = ImGuiExtension.IntSlider("Range", Settings.vortexRange);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+
+
+            try
+            {
+                if (Settings.minesEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(14);
+                if (ImGui.TreeNodeEx("Mines (Not Implemented)", collapsingHeaderFlags))
+                {
+
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
             }
 
 
-            // Blood Rage
-            if (Settings.bloodRageEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Blood Rage", collapsingHeaderFlags))
-            {
-                Settings.bloodRageEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.bloodRageEnabled);
-                Settings.bloodRageKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.bloodRageKey.Value, Settings.bloodRageKey);
-                Settings.bloodRageDelay.Value = ImGuiExtension.IntSlider("Delay", Settings.bloodRageDelay);
-                Settings.bloodRageRange.Value = ImGuiExtension.IntSlider("Range", Settings.bloodRageRange);
-            }
 
-
-            if (Settings.delveFlareEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Delve Flare", collapsingHeaderFlags))
-            {
-                Settings.delveFlareEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.delveFlareEnabled);
-                Settings.delveFlareKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.delveFlareKey.Value, Settings.delveFlareKey);
-                Settings.delveFlareDebuffStacks.Value = ImGuiExtension.IntSlider("min. Debuff Stacks", Settings.delveFlareDebuffStacks);
-                Settings.delveFlareHpBelow.Value = ImGuiExtension.FloatSlider("HP%", Settings.delveFlareHpBelow);
-                Settings.delveFlareEsBelow.Value = ImGuiExtension.FloatSlider("ES%", Settings.delveFlareEsBelow);
-            }
-
-
-            // Doedre Effigy
-            if (Settings.doedreEffigyEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Doedre Effigy", collapsingHeaderFlags))
-            {
-                Settings.doedreEffigyEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.doedreEffigyEnabled);
-                Settings.doedreEffigyKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.doedreEffigyKey.Value, Settings.doedreEffigyKey);
-                Settings.doedreEffigyDelay.Value = ImGuiExtension.IntSlider("min. Debuff Stacks", Settings.doedreEffigyDelay);
-            }
-
-
-            if (Settings.divineIreEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Divine Ire / Blade Flurry / Scourge Arrow", collapsingHeaderFlags))
-            {
-                Settings.divineIreEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.divineIreEnabled);
-                Settings.divineIreKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.divineIreKey.Value, Settings.divineIreKey);
-                Settings.divineIreStacks.Value = ImGuiExtension.IntSlider("Stacks", Settings.divineIreStacks);
-                Settings.divineIreWaitForInfused.Value = ImGuiExtension.Checkbox("Wait for Infused Channeling Support", Settings.divineIreWaitForInfused);
-
-
-            }
-
-
-            // Warcrys
-            if (Settings.enduringCryEnabled || Settings.rallyingCryEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Enduring Cry / Rallying Cry", collapsingHeaderFlags))
-            {
-                Settings.warCryDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.warCryDelay);
-                Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enduring Cry Enabled", Settings.enduringCryEnabled);
-                Settings.enduringCryKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.enduringCryKey.Value, Settings.enduringCryKey);
-                Settings.enduringCryRange.Value = ImGuiExtension.IntSlider("Range", Settings.enduringCryRange);
-                Settings.rallyingCryEnabled.Value = ImGuiExtension.Checkbox("Rallying Cry Enabled", Settings.rallyingCryEnabled);
-                Settings.rallyingCryKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.rallyingCryKey.Value, Settings.rallyingCryKey);
-                Settings.rallyingCryRange.Value = ImGuiExtension.IntSlider("Range", Settings.rallyingCryRange);
-
-            }
-
-
-            // Molten Shell / Steelskin / Bone Armour / Arcane Cloak
-            if (Settings.moltenShellEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Molten Shell / Steelskin / Bone Armour / Arcane Cloak", collapsingHeaderFlags))
-            {
-                Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.moltenShellEnabled);
-                Settings.moltenShellKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.moltenShellKey.Value, Settings.moltenShellKey);
-                Settings.moltenShellDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.moltenShellDelay);
-                Settings.moltenShellRange.Value = ImGuiExtension.IntSlider("Range", Settings.moltenShellRange);
-            }
-
-
-            // Offerings
-            if (Settings.offeringsEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Offerings (This will get you stuck in Animation for your Casttime !)", collapsingHeaderFlags))
-            {
-                Settings.offeringsEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.offeringsEnabled);
-                Settings.offeringsKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.offeringsKey.Value, Settings.offeringsKey);
-            }
-
-
-            // Phaserun
-            if (Settings.phaserunEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Phaserun", collapsingHeaderFlags))
-            {
-                Settings.phaserunEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.phaserunEnabled);
-                Settings.phaserunKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.phaserunKey.Value, Settings.phaserunKey);
-                Settings.phaserunDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.phaserunDelay);
-            }
-
-            // Speed Flasks
-            if (Settings.useSpeed4 || Settings.useSpeed5)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Speed Flask", collapsingHeaderFlags))
-            {
-                Settings.useSpeed4.Value = ImGuiExtension.Checkbox("Flask 4 Enabled", Settings.useSpeed4);
-                Settings.useSpeed5.Value = ImGuiExtension.Checkbox("Flask 5 Enabled", Settings.useSpeed5);
-                Settings.useSpeedMoving.Value = ImGuiExtension.Checkbox("Use when Moving", Settings.useSpeedMoving);
-                Settings.useSpeedAttack.Value = ImGuiExtension.Checkbox("Use when Attacking", Settings.useSpeedAttack);
-            }
-
-
-            // Vortex
-            if (Settings.vortexEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Vortex", collapsingHeaderFlags))
-            {
-                Settings.vortexEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.vortexEnabled);
-                Settings.vortexKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.vortexKey.Value, Settings.vortexKey);
-                Settings.vortexDelay.Value = ImGuiExtension.IntSlider("Cooldown", Settings.vortexDelay);
-                Settings.vortexRange.Value = ImGuiExtension.IntSlider("Range", Settings.vortexRange);
-            }
-     
-
-
-            if (Settings.minesEnabled)
-                ImGui.PushStyleColor(ImGuiCol.Header, green);
-            else
-                ImGui.PushStyleColor(ImGuiCol.Header, red);
-            if (ImGui.TreeNodeEx("Mines (Not Implemented)", collapsingHeaderFlags))
-            {
-                //Settings.enduringCryEnabled = 
-            }
+            ImGui.End();
         }
         public override void Render()
         {
