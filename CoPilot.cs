@@ -258,7 +258,7 @@ namespace CoPilot
                 ImGui.PushStyleColor(ImGuiCol.Header, red);
             if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / ...", collapsingHeaderFlags))
             {
-                Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.enduringCryEnabled);
+                Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.autoAttackEnabled);
                 Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", Settings.autoAttackLeftMouseCheck);
                 Settings.autoAttackKey.Value = ImGuiExtension.HotkeySelector("Key: " + Settings.autoAttackKey.Value, Settings.autoAttackKey);
                 Settings.autoAttackPickItKey.Value = ImGuiExtension.HotkeySelector("PickIt Key: " + Settings.autoAttackPickItKey.Value, Settings.autoAttackPickItKey);
