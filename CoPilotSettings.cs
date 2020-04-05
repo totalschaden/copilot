@@ -8,86 +8,6 @@ namespace CoPilot
 {
     public class CoPilotSettings : ISettings
     {
-        public CoPilotSettings()
-        {
-            Enable = new ToggleNode(false);
-            empty = new EmptyNode();
-            debugMode = new ToggleNode(false);
-
-            autoQuitEnabled = new ToggleNode(false);
-            hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
-            esPctQuit = new RangeNode<float>(35f, 0f, 100f);
-            forcedAutoQuit = Keys.F4;
-
-            phaserunEnabled = new ToggleNode(false);
-            phaserunDelay = new RangeNode<int>(4000, 100, 4100);
-            phaserunKey = Keys.W;
-
-            moltenShellEnabled = new ToggleNode(false);
-            moltenShellDelay = new RangeNode<int>(4000, 100, 4100);
-            moltenShellKey = Keys.T;            
-            moltenShellRange = new RangeNode<int>(550, 100, 1000);
-
-            enduringCryEnabled = new ToggleNode(false);
-            enduringCryRange = new RangeNode<int>(550, 100, 1000);
-            warCryDelay = new RangeNode<int>(4000, 3330, 4100);
-            enduringCryKey = Keys.E;
-
-            rallyingCryEnabled = new ToggleNode(false);
-            rallyingCryKey = Keys.Q;
-            rallyingCryRange = new RangeNode<int>(300, 100, 1000);
-
-            divineIreEnabled = new ToggleNode(false);
-            divineIreStacks = new RangeNode<int>(20, 1, 20);
-            divineIreKey = Keys.NumPad9;
-            divineIreWaitForInfused = new ToggleNode(false);
-
-            delveFlareEnabled = new ToggleNode(false);
-            delveFlareKey = Keys.D6;
-            delveFlareDebuffStacks = new RangeNode<int>(12, 1, 1000);
-            delveFlareHpBelow = new RangeNode<float>(75, 0, 100);
-            delveFlareEsBelow = new RangeNode<float>(0, 0, 100);
-
-            vortexEnabled = new ToggleNode(false);
-            vortexDelay = new RangeNode<int>(1800, 500, 1900);
-            vortexRange = new RangeNode<int>(300, 100, 1000);
-            vortexKey = Keys.D8;
-
-            bloodRageEnabled = new ToggleNode(false);
-            bloodRageKey = Keys.R;
-            bloodRageDelay = new RangeNode<int>(1000, 1000, 10100);
-            bloodRageRange = new RangeNode<int>(300, 800, 3000);
-
-            offeringsEnabled = new ToggleNode(false);
-            offeringsKey = Keys.Q;
-
-            doedreEffigyEnabled = new ToggleNode(false);
-            doedreEffigyKey = Keys.R;
-            doedreEffigyDelay = new RangeNode<int>(600, 500, 2000);
-
-            
-            useSpeed4 = new ToggleNode(false);
-            useSpeed5 = new ToggleNode(false);
-            useSpeedAttack = new ToggleNode(false);
-            useSpeedMoving = new ToggleNode(false);
-
-            minesEnabled = new ToggleNode(false);
-            minesDelay = new RangeNode<int>(1000, 250, 3000);
-            minesMin = new RangeNode<int>(1, 1, 20);
-            minesDetonateRange = new RangeNode<int>(50, 10, 200);
-
-            autoAttackEnabled = new ToggleNode(false);
-            autoAttackLeftMouseCheck = new ToggleNode(true);
-            autoAttackKey = new HotkeyNode(Keys.T);
-            autoAttackPickItKey = new HotkeyNode(Keys.Space);
-            autoAttackRange = new RangeNode<int>(500, 100, 2000);
-
-            autoGolemEnabled = new ToggleNode(false);
-            autoGolemKey = new HotkeyNode(Keys.T);
-            autoGolemMax = new RangeNode<int>(1, 1, 15);
-
-
-        }
         [Menu("Plugin by Totalschaden", 1)]
         public EmptyNode empty { get; set; }
         [Menu("Debug Mode", 2, 1)]
@@ -115,9 +35,6 @@ namespace CoPilot
         [Menu("Enable", 4, 3)]
         public ToggleNode phaserunEnabled { get; set; }
 
-        [Menu("Key:", 5, 3)]
-        public HotkeyNode phaserunKey { get; set; }
-
         [Menu("Cooldown", 6, 3)]
         public RangeNode<int> phaserunDelay { get; set; }
         #endregion
@@ -127,9 +44,6 @@ namespace CoPilot
         public EmptyNode emptyMolten { get; set; }
         [Menu("Enable", 11, 10)]
         public ToggleNode moltenShellEnabled { get; set; }
-
-        [Menu("Key:", 12, 10)]
-        public HotkeyNode moltenShellKey { get; set; }
 
         [Menu("Cooldown", 13, 10)]
         public RangeNode<int> moltenShellDelay { get; set; }
@@ -147,9 +61,6 @@ namespace CoPilot
         [Menu("Cooldown", 22, 20)]
         public RangeNode<int> warCryDelay { get; set; }
 
-        [Menu("Key:", 23, 20)]
-        public HotkeyNode enduringCryKey { get; set; }
-
         [Menu("Trigger Range", 24, 20)]
         public RangeNode<int> enduringCryRange { get; set; }
 
@@ -158,11 +69,11 @@ namespace CoPilot
         [Menu("Enable", 26, 25)]
         public ToggleNode rallyingCryEnabled { get; set; }
 
-        [Menu("Key:", 27, 25)]
-        public HotkeyNode rallyingCryKey { get; set; }
-
         [Menu("Trigger Range", 28, 25)]
         public RangeNode<int> rallyingCryRange { get; set; }
+
+        [Menu("Keep Rage")]
+        public ToggleNode warCryKeepRage { get; set; }
         #endregion
 
         #region Divine Ire / Blade Flurry / Scourge Arrow
@@ -170,9 +81,6 @@ namespace CoPilot
         public EmptyNode emptyIre { get; set; }
         [Menu("Enable", 31, 30)]
         public ToggleNode divineIreEnabled { get; set; }
-
-        [Menu("Key:", 33, 30)]
-        public HotkeyNode divineIreKey { get; set; }
 
         [Menu("Stacks", 34, 30)]
         public RangeNode<int> divineIreStacks { get; set; }
@@ -208,9 +116,6 @@ namespace CoPilot
         [Menu("Cooldown", 52, 50)]
         public RangeNode<int> vortexDelay { get; set; }
 
-        [Menu("Key:", 53, 50)]
-        public HotkeyNode vortexKey { get; set; }
-
         [Menu("Trigger Range", 54, 50)]
         public RangeNode<int> vortexRange { get; set; }
         #endregion
@@ -224,9 +129,6 @@ namespace CoPilot
         [Menu("Cooldown", 62, 60)]
         public RangeNode<int> bloodRageDelay { get; set; }
 
-        [Menu("Key:", 63, 60)]
-        public HotkeyNode bloodRageKey { get; set; }
-
         [Menu("Trigger Range", 64, 60)]
         public RangeNode<int> bloodRageRange { get; set; }
         #endregion
@@ -236,9 +138,6 @@ namespace CoPilot
         public EmptyNode emptyOffering { get; set; }
         [Menu("Enable", 71, 70)]
         public ToggleNode offeringsEnabled { get; set; }
-
-        [Menu("Key:", 73, 70)]
-        public HotkeyNode offeringsKey { get; set; }
         #endregion
 
         #region Doedre Effigy
@@ -247,15 +146,12 @@ namespace CoPilot
         [Menu("Enable", 81, 80)]
         public ToggleNode doedreEffigyEnabled { get; set; }
 
-        [Menu("Key:", 83, 80)]
-        public HotkeyNode doedreEffigyKey { get; set; }
-
         [Menu("Cooldown", 84, 80)]
         public RangeNode<int> doedreEffigyDelay { get; set; }
         #endregion
 
         #region Flask
-        
+
         [Menu("Speed Flask", 90)]
         public EmptyNode emptySpeed { get; set; }
         [Menu("Enable Slot 4", 91, 90)]
@@ -296,9 +192,6 @@ namespace CoPilot
         [Menu("Dont use on Left Mouse Pressed", 112, 110)]
         public ToggleNode autoAttackLeftMouseCheck { get; set; }
 
-        [Menu("(Dont use Mousebuttons) Key:", 113, 110)]
-        public HotkeyNode autoAttackKey { get; set; }
-
         [Menu("PickIt Key:", 114, 110)]
         public HotkeyNode autoAttackPickItKey { get; set; }
 
@@ -316,15 +209,147 @@ namespace CoPilot
         [Menu("Enable", 121, 120)]
         public ToggleNode autoGolemEnabled { get; set; }
 
-        [Menu("Key:", 122, 120)]
-        public HotkeyNode autoGolemKey { get; set; }
-
         [Menu("Max. Golems", 123, 120)]
         public RangeNode<int> autoGolemMax { get; set; }
 
         #endregion
 
+        #region Input Keys
+        [Menu("boundSkill2:")]
+        public HotkeyNode InputKey1 { get; set; }
+
+        [Menu("boundSkill4:")]
+        public HotkeyNode InputKey3 { get; set; }
+
+        [Menu("boundSkill5:")]
+        public HotkeyNode InputKey4 { get; set; }
+
+        [Menu("boundSkill6:")]
+        public HotkeyNode InputKey5 { get; set; }
+
+        [Menu("boundSkill7:")]
+        public HotkeyNode InputKey6 { get; set; }
+
+        [Menu("boundSkill8:")]
+        public HotkeyNode InputKey7 { get; set; }
+
+        [Menu("boundSkill9:")]
+        public HotkeyNode InputKey8 { get; set; }
+
+        [Menu("boundSkill10:")]
+        public HotkeyNode InputKey9 { get; set; }
+
+        [Menu("boundSkill11:")]
+        public HotkeyNode InputKey10 { get; set; }
+
+        [Menu("boundSkill12:")]
+        public HotkeyNode InputKey11 { get; set; }
+
+        [Menu("boundSkill13:")]
+        public HotkeyNode InputKey12 { get; set; }
+        #endregion
+
+        #region
+        [Menu("Confirm")]
+        public ToggleNode confirm1 { get; set; }
+        [Menu("Confirm")]
+        public ToggleNode confirm2 { get; set; }
+        [Menu("Confirm")]
+        public ToggleNode confirm3 { get; set; }
+        [Menu("Confirm")]
+        public ToggleNode confirm4 { get; set; }
+        [Menu("Confirm")]
+        public ToggleNode confirm5 { get; set; }
+        #endregion
 
         public ToggleNode Enable { get; set; }
+        public CoPilotSettings()
+        {
+            Enable = new ToggleNode(false);
+            empty = new EmptyNode();
+            debugMode = new ToggleNode(false);
+
+            autoQuitEnabled = new ToggleNode(false);
+            hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
+            esPctQuit = new RangeNode<float>(35f, 0f, 100f);
+            forcedAutoQuit = Keys.F4;
+
+            phaserunEnabled = new ToggleNode(false);
+            phaserunDelay = new RangeNode<int>(4000, 100, 4100);
+
+            moltenShellEnabled = new ToggleNode(false);
+            moltenShellDelay = new RangeNode<int>(4000, 100, 4100);           
+            moltenShellRange = new RangeNode<int>(550, 100, 1000);
+
+            enduringCryEnabled = new ToggleNode(false);
+            enduringCryRange = new RangeNode<int>(550, 100, 1000);
+            warCryDelay = new RangeNode<int>(4000, 3330, 4100);
+            warCryKeepRage = new ToggleNode(false);
+
+            rallyingCryEnabled = new ToggleNode(false);
+            rallyingCryRange = new RangeNode<int>(300, 100, 1000);
+
+            divineIreEnabled = new ToggleNode(false);
+            divineIreStacks = new RangeNode<int>(20, 1, 20);
+            divineIreWaitForInfused = new ToggleNode(false);
+
+            delveFlareEnabled = new ToggleNode(false);
+            delveFlareKey = Keys.D6;
+            delveFlareDebuffStacks = new RangeNode<int>(12, 1, 1000);
+            delveFlareHpBelow = new RangeNode<float>(75, 0, 100);
+            delveFlareEsBelow = new RangeNode<float>(0, 0, 100);
+
+            vortexEnabled = new ToggleNode(false);
+            vortexDelay = new RangeNode<int>(1800, 500, 1900);
+            vortexRange = new RangeNode<int>(300, 100, 1000);
+
+            bloodRageEnabled = new ToggleNode(false);
+            bloodRageDelay = new RangeNode<int>(1000, 1000, 10100);
+            bloodRageRange = new RangeNode<int>(300, 800, 3000);
+
+            offeringsEnabled = new ToggleNode(false);
+
+            doedreEffigyEnabled = new ToggleNode(false);
+            doedreEffigyDelay = new RangeNode<int>(600, 500, 2000);
+
+            
+            useSpeed4 = new ToggleNode(false);
+            useSpeed5 = new ToggleNode(false);
+            useSpeedAttack = new ToggleNode(false);
+            useSpeedMoving = new ToggleNode(false);
+
+            minesEnabled = new ToggleNode(false);
+            minesDelay = new RangeNode<int>(1000, 250, 3000);
+            minesMin = new RangeNode<int>(1, 1, 20);
+            minesDetonateRange = new RangeNode<int>(50, 10, 200);
+
+            autoAttackEnabled = new ToggleNode(false);
+            autoAttackLeftMouseCheck = new ToggleNode(true);
+            autoAttackPickItKey = new HotkeyNode(Keys.Space);
+            autoAttackRange = new RangeNode<int>(500, 100, 2000);
+
+            autoGolemEnabled = new ToggleNode(false);
+            autoGolemMax = new RangeNode<int>(1, 1, 15);
+
+            InputKey1 = new HotkeyNode(Keys.Z);
+            InputKey3 = new HotkeyNode(Keys.Q);
+            InputKey4 = new HotkeyNode(Keys.W);
+            InputKey5 = new HotkeyNode(Keys.E);
+            InputKey6 = new HotkeyNode(Keys.R);
+            InputKey7 = new HotkeyNode(Keys.T);
+            InputKey8 = new HotkeyNode(Keys.NumPad1);
+            InputKey9 = new HotkeyNode(Keys.NumPad2);
+            InputKey10 = new HotkeyNode(Keys.NumPad3);
+            InputKey11 = new HotkeyNode(Keys.NumPad4);
+            InputKey12= new HotkeyNode(Keys.NumPad5);
+
+            confirm1 = new ToggleNode(false);
+            confirm2 = new ToggleNode(false);
+            confirm3 = new ToggleNode(false);
+            confirm4 = new ToggleNode(false);
+            confirm5 = new ToggleNode(false);
+
+
+        }
     }
 }
