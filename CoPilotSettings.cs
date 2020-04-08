@@ -8,15 +8,11 @@ namespace CoPilot
 {
     public class CoPilotSettings : ISettings
     {
-        [Menu("Plugin by Totalschaden", 1)]
-        public EmptyNode empty { get; set; }
         [Menu("Debug Mode", 2, 1)]
         public ToggleNode debugMode { get; set; }
 
 
         #region Auto Quit
-        [Menu("Auto Quit (RUN LOADER.EXE AS ADMIN !!!", 1000)]
-        public EmptyNode emptyAuto { get; set; }
         [Menu("Enable", 1001, 1000)]
         public ToggleNode autoQuitEnabled { get; set; }
 
@@ -30,8 +26,6 @@ namespace CoPilot
         #endregion
 
         #region Phaserun
-        [Menu("Phase Run", 3)]
-        public EmptyNode emptyPhase { get; set; }
         [Menu("Enable", 4, 3)]
         public ToggleNode phaserunEnabled { get; set; }
 
@@ -40,8 +34,6 @@ namespace CoPilot
         #endregion
 
         #region Molten Shell
-        [Menu("Molten Shell / Bone Armour / Steelskin", 10)]
-        public EmptyNode emptyMolten { get; set; }
         [Menu("Enable", 11, 10)]
         public ToggleNode moltenShellEnabled { get; set; }
 
@@ -53,8 +45,6 @@ namespace CoPilot
         #endregion
 
         #region War Cry
-        [Menu("Enduring Cry", 20)]
-        public EmptyNode emptyEnduring { get; set; }
         [Menu("Enable", 21, 20)]
         public ToggleNode enduringCryEnabled { get; set; }
 
@@ -64,8 +54,6 @@ namespace CoPilot
         [Menu("Trigger Range", 24, 20)]
         public RangeNode<int> enduringCryRange { get; set; }
 
-        [Menu("Rallying Cry", 25)]
-        public EmptyNode emptyRally { get; set; }
         [Menu("Enable", 26, 25)]
         public ToggleNode rallyingCryEnabled { get; set; }
 
@@ -77,8 +65,6 @@ namespace CoPilot
         #endregion
 
         #region Divine Ire / Blade Flurry / Scourge Arrow
-        [Menu("Divine Ire / Blade Flurry / Scourge Arrow (Mouse might have stuck Issue, use Keyboard)", 30)]
-        public EmptyNode emptyIre { get; set; }
         [Menu("Enable", 31, 30)]
         public ToggleNode divineIreEnabled { get; set; }
 
@@ -89,8 +75,6 @@ namespace CoPilot
         #endregion
 
         #region Delve Flare
-        [Menu("Delve Flare", 40)]
-        public EmptyNode emptyFlare { get; set; }
         [Menu("Enable", 41, 40)]
         public ToggleNode delveFlareEnabled { get; set; }
 
@@ -108,8 +92,6 @@ namespace CoPilot
         #endregion
 
         #region Vortex
-        [Menu("Vortex", 50)]
-        public EmptyNode emptyVortex { get; set; }
         [Menu("Enable", 51, 50)]
         public ToggleNode vortexEnabled { get; set; }
 
@@ -121,8 +103,6 @@ namespace CoPilot
         #endregion
 
         #region BloodRage
-        [Menu("Blood Rage", 60)]
-        public EmptyNode emptyBlood { get; set; }
         [Menu("Enable", 61, 60)]
         public ToggleNode bloodRageEnabled { get; set; }
 
@@ -134,15 +114,11 @@ namespace CoPilot
         #endregion
 
         #region Offerings
-        [Menu("Offerings (This will get you stuck in Animation for your Casttime !", 70)]
-        public EmptyNode emptyOffering { get; set; }
         [Menu("Enable", 71, 70)]
         public ToggleNode offeringsEnabled { get; set; }
         #endregion
 
         #region Doedre Effigy
-        [Menu("Use Doedre's Effigy", 80)]
-        public EmptyNode emptyeffigy { get; set; }
         [Menu("Enable", 81, 80)]
         public ToggleNode doedreEffigyEnabled { get; set; }
 
@@ -151,9 +127,6 @@ namespace CoPilot
         #endregion
 
         #region Flask
-
-        [Menu("Speed Flask", 90)]
-        public EmptyNode emptySpeed { get; set; }
         [Menu("Enable Slot 4", 91, 90)]
         public ToggleNode useSpeed4 { get; set; }
         [Menu("Enable Slot 5", 92, 90)]
@@ -166,9 +139,6 @@ namespace CoPilot
         #endregion
 
         #region Mines
-
-        [Menu("Detonate Mines || This is not Done yet and will not work", 100)]
-        public EmptyNode emptyMines { get; set; }
         [Menu("Enable", 101, 100)]
         public ToggleNode minesEnabled { get; set; }
         [Menu("Cooldown", 102, 100)]
@@ -182,10 +152,6 @@ namespace CoPilot
         #endregion
 
         #region AutoAttack Cyclone / Nova etc.
-
-        [Menu("Auto Attack (Cyclone/Nova/etc.)", 110)]
-        public EmptyNode autoAttack { get; set; }
-
         [Menu("Enable", 111, 110)]
         public ToggleNode autoAttackEnabled { get; set; }
 
@@ -202,16 +168,39 @@ namespace CoPilot
         #endregion
 
         #region Auto Golem
-
-        [Menu("Auto Golem", 120)]
-        public EmptyNode autoGolem { get; set; }
-
         [Menu("Enable", 121, 120)]
         public ToggleNode autoGolemEnabled { get; set; }
 
         [Menu("Max. Golems", 123, 120)]
         public RangeNode<int> autoGolemMax { get; set; }
 
+        #endregion
+
+        #region Any Vaal Skill
+        [Menu("Enable")]
+        public ToggleNode anyVaalEnabled { get; set; }
+
+        [Menu("Range")]
+        public RangeNode<int> anyVaalTriggerRange { get; set; }
+
+        [Menu("Enemys")]
+        public RangeNode<int> anyVaalMinEnemys { get; set; }
+
+        [Menu("%Life Quit")]
+        public RangeNode<float> anyVaalHpPct { get; set; }
+
+        [Menu("%ES Quit")]
+        public RangeNode<float> anyVaalEsPct { get; set; }
+        #endregion
+
+        #region Custom Skill
+        public ToggleNode customEnabled { get; set; }
+        public RangeNode<int> customTriggerRange { get; set; }
+        public RangeNode<int> customMinEnemys { get; set; }
+        public RangeNode<float> customHpPct { get; set; }
+        public RangeNode<float> customEsPct { get; set; }
+        public RangeNode<int> customCooldown { get; set; }
+        public HotkeyNode customKey { get; set; }
         #endregion
 
         #region Input Keys
@@ -249,7 +238,7 @@ namespace CoPilot
         public HotkeyNode InputKey12 { get; set; }
         #endregion
 
-        #region
+        #region Confirm
         [Menu("Confirm")]
         public ToggleNode confirm1 { get; set; }
         [Menu("Confirm")]
@@ -266,12 +255,11 @@ namespace CoPilot
         public CoPilotSettings()
         {
             Enable = new ToggleNode(false);
-            empty = new EmptyNode();
             debugMode = new ToggleNode(false);
 
             autoQuitEnabled = new ToggleNode(false);
             hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
-            esPctQuit = new RangeNode<float>(35f, 0f, 100f);
+            esPctQuit = new RangeNode<float>(0f, 0f, 100f);
             forcedAutoQuit = Keys.F4;
 
             phaserunEnabled = new ToggleNode(false);
@@ -330,6 +318,20 @@ namespace CoPilot
 
             autoGolemEnabled = new ToggleNode(false);
             autoGolemMax = new RangeNode<int>(1, 1, 15);
+
+            anyVaalEnabled = new ToggleNode(false);
+            anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
+            anyVaalMinEnemys = new RangeNode<int>(0, 0, 50);
+            anyVaalHpPct = new RangeNode<float>(35f, 0f, 100f);
+            anyVaalEsPct = new RangeNode<float>(0f, 0f, 100f);
+
+            customEnabled = new ToggleNode(false);
+            customTriggerRange = new RangeNode<int>(500, 100, 2000);
+            customMinEnemys = new RangeNode<int>(1, 0, 50);
+            customHpPct = new RangeNode<float>(100, 0f, 100f);
+            customEsPct = new RangeNode<float>(0f, 0f, 100f);
+            customCooldown = new RangeNode<int>(4000, 1000, 10000);
+            customKey = new HotkeyNode(Keys.T);
 
             InputKey1 = new HotkeyNode(Keys.Z);
             InputKey3 = new HotkeyNode(Keys.Q);
