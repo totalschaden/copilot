@@ -8,7 +8,7 @@ Currently Supports:
 Auto Attack (Cyclone/Nova/etc.)  
 Auto Golem  
 Auto Quit  
-Blood Rage 
+Blood Rage  
 Custom Skill (Use any Skill not Supported here)  
 Deodre Effigy (Item)  
 Divine Ire / Blade Flurry / Scourge Arrow  
