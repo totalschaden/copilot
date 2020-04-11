@@ -717,7 +717,7 @@ namespace CoPilot
                     var vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
 
                     playerPosition = GameController.Player.Pos;
-                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
+                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
                     corpses = GameController.Entities.Where(x => x.IsHostile && x.GetComponent<Monster>() != null && x.IsDead && x.IsTargetable);
 
                     if (Settings.autoGolemEnabled)
@@ -727,6 +727,9 @@ namespace CoPilot
                     // Feature request
                     //  LeHeupOfSoupheute um 19:49 Uhr
                     //  Would it be possible to add convocate on nearby enemies? Pretty please
+
+                    // Thanosheute um 16:15 Uhr
+                    // Totalschaden Can you make a "Tempest Shield" option in your CoPilot please ?
 
                     // Option for Cyclone on destroyable stuff ?
                     // Chest isTargetable && !isOpen && isHostile
