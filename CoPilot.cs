@@ -550,6 +550,8 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Offerings (This will get you stuck in Animation for your Casttime !)", collapsingHeaderFlags))
                 {
                     Settings.offeringsEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.offeringsEnabled.Value);
+                    Settings.offeringsMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys", Settings.offeringsMinEnemys);
+                    Settings.offeringsTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", Settings.offeringsTriggerRange);
                 }
             }
             catch (Exception e)
@@ -1000,7 +1002,7 @@ namespace CoPilot
                                 if ((DateTime.Now - lastOfferings).TotalMilliseconds > 500 && 
                                     (skill.InternalName == "spirit_offering" || skill.InternalName == "bone_offering" || skill.InternalName == "flesh_offering"))
                                 {
-                                    if (!buffs.Exists(x => x.Name == "active_offering" && x.Timer > 0.3) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
+                                    if (GetMonsterWithin(Settings.offeringsTriggerRange) >= Settings.offeringsMinEnemys &&!buffs.Exists(x => x.Name == "active_offering" && x.Timer > 0.3) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastOfferings = DateTime.Now;
