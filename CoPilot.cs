@@ -1050,7 +1050,7 @@ namespace CoPilot
                                     if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck.Value) &&
                                         GetMonsterWithin(Settings.autoAttackRange) >= 1)
                                     {
-                                        if (Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value) || !isCasting && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 100 && Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)))
+                                        if ((Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value) && Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex) ) || !isCasting && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 100 && Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex))))
                                         {
                                             Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
                                             if (Settings.debugMode.Value)
