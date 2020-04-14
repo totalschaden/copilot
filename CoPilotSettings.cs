@@ -66,9 +66,9 @@ namespace CoPilot
 
         #region Offerings
         public ToggleNode offeringsEnabled { get; set; }
-        #endregion
         public RangeNode<int> offeringsMinEnemys { get; set; }
         public RangeNode<int> offeringsTriggerRange { get; set; }
+        #endregion
 
         #region Doedre Effigy
         public ToggleNode doedreEffigyEnabled { get; set; }
@@ -123,6 +123,13 @@ namespace CoPilot
         public RangeNode<float> customEsPct { get; set; }
         public RangeNode<int> customCooldown { get; set; }
         public HotkeyNode customKey { get; set; }
+        #endregion
+
+        #region Brand Recall
+        public ToggleNode brandRecallEnabled { get; set; }
+        public RangeNode<int> brandRecallTriggerRange { get; set; }
+        public RangeNode<int> brandRecallMinEnemys { get; set; }
+        public RangeNode<int> brandRecallCooldown { get; set; }
         #endregion
 
         #region Input Keys
@@ -251,6 +258,11 @@ namespace CoPilot
             customEsPct = new RangeNode<float>(0f, 0f, 100f);
             customCooldown = new RangeNode<int>(4000, 1000, 10000);
             customKey = new HotkeyNode(Keys.T);
+
+            brandRecallEnabled = new ToggleNode(false);
+            brandRecallTriggerRange = new RangeNode<int>(500, 100, 2000);
+            brandRecallMinEnemys = new RangeNode<int>(1, 0, 50);
+            brandRecallCooldown = new RangeNode<int>(3100, 1000, 10000);
 
             InputKey1 = new HotkeyNode(Keys.Z);
             InputKey3 = new HotkeyNode(Keys.Q);

@@ -41,6 +41,7 @@ namespace CoPilot
         private DateTime lastCustom = new DateTime();
         private DateTime lastOfferings = new DateTime();
         private DateTime lastAutoGolem = new DateTime();
+        private DateTime lastBrandRecall = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -668,6 +669,26 @@ namespace CoPilot
                 LogError(e.ToString());
             }
 
+            try
+            {
+                if (Settings.brandRecallEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(16);
+                if (ImGui.TreeNodeEx("Brand Recall", collapsingHeaderFlags))
+                {
+                    Settings.brandRecallEnabled.Value = ImGuiExtension.Checkbox("Enabled", Settings.brandRecallEnabled.Value);
+                    Settings.brandRecallCooldown.Value = ImGuiExtension.IntSlider("Cooldown", Settings.brandRecallCooldown);
+                    Settings.brandRecallMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", Settings.brandRecallMinEnemys);
+                    Settings.brandRecallTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", Settings.brandRecallTriggerRange);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+
 
 
             try
@@ -728,6 +749,8 @@ namespace CoPilot
                     if (Settings.autoGolemEnabled)
                         golemsAlive = GameController.Entities.Where(x => !x.IsHostile && (x.Path.Contains("ChaosElemental") || x.Path.Contains("FireElemental") || x.Path.Contains("IceElemental") || x.Path.Contains("LightningGolem") || x.Path.Contains("RockGolem") || x.Path.Contains("BoneGolem") || x.Path.Contains("DropBearUniqueSummoned"))).Count();
 
+                    //int volaCount = GameController.Entities.Where(x => x.Path.Contains("VolatileDeadCore")).Count();
+                    //LogError("Vola: " + volaCount.ToString());
 
                     // Feature request
                     //  LeHeupOfSoupheute um 19:49 Uhr
@@ -765,7 +788,9 @@ namespace CoPilot
                     {
                         if (!Ready())
                             break;
-                        if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2)
+                        skill.Stats.TryGetValue(GameStat.ManaCost, out int _manaCost);
+                        int manaCost = _manaCost;
+                        if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 || player.CurMana < manaCost)
                             continue;
 
 
@@ -1031,6 +1056,27 @@ namespace CoPilot
                                         }
                                     }
                                 }                                
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+
+                        #region Brand Recall
+                        if (Settings.brandRecallEnabled)
+                        {
+                            try
+                            {
+                                if ((DateTime.Now - lastBrandRecall).TotalMilliseconds > Settings.brandRecallCooldown && skill.InternalName == "sigil_recall")
+                                {
+                                    if (GetMonsterWithin(Settings.brandRecallTriggerRange) >= Settings.brandRecallMinEnemys)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastBrandRecall = DateTime.Now;
+                                    }
+                                }
                             }
                             catch (Exception e)
                             {
