@@ -31,10 +31,9 @@ namespace CoPilot
 
         #region War Cry
         public ToggleNode enduringCryEnabled { get; set; }
-        public RangeNode<int> warCryDelay { get; set; }
-        public RangeNode<int> enduringCryRange { get; set; }
+        public RangeNode<int> warCryCooldown { get; set; }
+        public RangeNode<int> warCryTriggerRange { get; set; }
         public ToggleNode rallyingCryEnabled { get; set; }
-        public RangeNode<int> rallyingCryRange { get; set; }
         public ToggleNode warCryKeepRage { get; set; }
         #endregion
 
@@ -194,12 +193,10 @@ namespace CoPilot
             moltenShellRange = new RangeNode<int>(550, 100, 1000);
 
             enduringCryEnabled = new ToggleNode(false);
-            enduringCryRange = new RangeNode<int>(550, 100, 1000);
-            warCryDelay = new RangeNode<int>(4000, 3330, 4100);
+            warCryTriggerRange = new RangeNode<int>(550, 100, 1000);
+            warCryCooldown = new RangeNode<int>(4000, 3330, 4100);
             warCryKeepRage = new ToggleNode(false);
-
             rallyingCryEnabled = new ToggleNode(false);
-            rallyingCryRange = new RangeNode<int>(300, 100, 1000);
 
             divineIreEnabled = new ToggleNode(false);
             divineIreStacks = new RangeNode<int>(20, 1, 20);
