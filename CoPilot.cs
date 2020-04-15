@@ -729,7 +729,7 @@ namespace CoPilot
                     Quit();
                 }
 
-                if (!GameController.Area.CurrentArea.IsHideout && !GameController.Area.CurrentArea.IsTown && !GameController.IngameState.IngameUi.ChatBox.IsVisible /*&& !IngameUi.StashElement.IsVisible && !IngameUi.OpenRightPanel.IsVisible*/ )
+                if (!GameController.Area.CurrentArea.IsHideout && !GameController.Area.CurrentArea.IsTown /*&& !IngameUi.StashElement.IsVisible && !IngameUi.OpenRightPanel.IsVisible*/ )
                 {
 
                     var localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
@@ -759,6 +759,7 @@ namespace CoPilot
                     // Thanosheute um 16:15 Uhr
                     // Totalschaden Can you make a "Tempest Shield" option in your CoPilot please ?
 
+
                     // Option for Cyclone on destroyable stuff ?
                     // Chest isTargetable && !isOpen && isHostile
 
@@ -781,6 +782,11 @@ namespace CoPilot
                         }
                     }
                     #endregion
+
+
+                    // Do not Cast anything while we are untouchable or Chat is Open
+                    if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.IsVisible)
+                        return;
 
                     // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
                     // Currently thats unanavailable in API.
