@@ -129,6 +129,7 @@ namespace CoPilot
         public RangeNode<int> brandRecallTriggerRange { get; set; }
         public RangeNode<int> brandRecallMinEnemys { get; set; }
         public RangeNode<int> brandRecallCooldown { get; set; }
+        public RangeNode<int> brandRecallMinBrands { get; set; }
         #endregion
 
         #region Input Keys
@@ -260,6 +261,7 @@ namespace CoPilot
             brandRecallTriggerRange = new RangeNode<int>(500, 100, 2000);
             brandRecallMinEnemys = new RangeNode<int>(1, 0, 50);
             brandRecallCooldown = new RangeNode<int>(3100, 1000, 10000);
+            brandRecallMinBrands = new RangeNode<int>(0, 0, 10);
 
             InputKey1 = new HotkeyNode(Keys.Z);
             InputKey3 = new HotkeyNode(Keys.Q);
