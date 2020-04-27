@@ -102,7 +102,14 @@ namespace CoPilot
 
         #region Auto Golem
         public ToggleNode autoGolemEnabled { get; set; }
-        public RangeNode<int> autoGolemMax { get; set; }
+        public RangeNode<int> autoGolemChaosMax { get; set; }
+        public RangeNode<int> autoGolemFireMax { get; set; }
+        public RangeNode<int> autoGolemIceMax { get; set; }
+        public RangeNode<int> autoGolemLightningMax { get; set; }
+        public RangeNode<int> autoGolemRockMax { get; set; }
+        public RangeNode<int> autoBoneMax { get; set; }
+        public RangeNode<int> autoGolemDropBearMax { get; set; }
+
 
         #endregion
 
@@ -241,7 +248,13 @@ namespace CoPilot
             autoAttackRange = new RangeNode<int>(500, 100, 2000);
 
             autoGolemEnabled = new ToggleNode(false);
-            autoGolemMax = new RangeNode<int>(1, 1, 15);
+            autoGolemChaosMax = new RangeNode<int>(0, 0, 15);
+            autoGolemFireMax = new RangeNode<int>(0, 0, 15);
+            autoGolemIceMax = new RangeNode<int>(0, 0, 15);
+            autoGolemLightningMax = new RangeNode<int>(0, 0, 15);
+            autoGolemRockMax = new RangeNode<int>(0, 0, 15);
+            autoBoneMax = new RangeNode<int>(0, 0, 15);
+            autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
 
             anyVaalEnabled = new ToggleNode(false);
             anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);

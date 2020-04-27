@@ -117,7 +117,13 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Auto Golem", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoGolemEnabled.Value);
-                    CoPilot.instance.Settings.autoGolemMax.Value = ImGuiExtension.IntSlider("Max. Golems", CoPilot.instance.Settings.autoGolemMax);
+                    CoPilot.instance.Settings.autoGolemChaosMax.Value = ImGuiExtension.IntSlider("Chaos Golems max.", CoPilot.instance.Settings.autoGolemChaosMax);
+                    CoPilot.instance.Settings.autoGolemFireMax.Value = ImGuiExtension.IntSlider("Flame Golems max.", CoPilot.instance.Settings.autoGolemFireMax);
+                    CoPilot.instance.Settings.autoGolemIceMax.Value = ImGuiExtension.IntSlider("Ice Golems max.", CoPilot.instance.Settings.autoGolemIceMax);
+                    CoPilot.instance.Settings.autoGolemLightningMax.Value = ImGuiExtension.IntSlider("Lightning Golems max.", CoPilot.instance.Settings.autoGolemLightningMax);
+                    CoPilot.instance.Settings.autoGolemRockMax.Value = ImGuiExtension.IntSlider("Stone Golems max.", CoPilot.instance.Settings.autoGolemRockMax);
+                    CoPilot.instance.Settings.autoBoneMax.Value = ImGuiExtension.IntSlider("Carrion Golems max.", CoPilot.instance.Settings.autoBoneMax);
+                    CoPilot.instance.Settings.autoGolemDropBearMax.Value = ImGuiExtension.IntSlider("Drop Bear Max.", CoPilot.instance.Settings.autoGolemDropBearMax);
                 }
             }
             catch (Exception e)

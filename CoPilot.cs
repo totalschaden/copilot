@@ -25,6 +25,15 @@ namespace CoPilot
 {
     public class CoPilot : BaseSettingsPlugin<CoPilotSettings>
     {
+        internal Entity localPlayer;
+        internal Life player;
+        internal List<Buff> buffs;
+        internal bool isAttacking;
+        internal bool isCasting;
+        internal bool isMoving;
+        internal List<ActorSkill> skills = new List<ActorSkill>();
+        internal List<ActorVaalSkill> vaalSkills = new List<ActorVaalSkill>();
+
         Stats stats = new Stats();
         private readonly int mouseAutoSnapRange = 250;
         private DateTime lastPhaserun = new DateTime();
@@ -50,7 +59,7 @@ namespace CoPilot
         private Entity flask5;
         private DateTime autoAttackRunning = new DateTime();
         private DateTime autoAttackUpdate = new DateTime();
-        private int golemsAlive;
+        private Golems golems = new Golems();
 
         private Coroutine CoroutineWorker;
         private const string coroutineKeyPress = "KeyPress";
@@ -298,23 +307,22 @@ namespace CoPilot
                 if (!GameController.Area.CurrentArea.IsHideout && !GameController.Area.CurrentArea.IsTown /*&& !IngameUi.StashElement.IsVisible && !IngameUi.OpenRightPanel.IsVisible*/ )
                 {
 
-                    var localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
-                    var player = localPlayer.GetComponent<Life>();
-                    var buffs = player.Buffs;
-                    var isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
-                    var isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
-                    var isMoving = localPlayer.GetComponent<Actor>().isMoving;
-                    var skills = localPlayer.GetComponent<Actor>().ActorSkills;
-                    var vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
+                    localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
+                    player = localPlayer.GetComponent<Life>();
+                    buffs = player.Buffs;
+                    isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
+                    isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
+                    isMoving = localPlayer.GetComponent<Actor>().isMoving;
+                    skills = localPlayer.GetComponent<Actor>().ActorSkills;
+                    vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
 
                     playerPosition = GameController.Player.Pos;
                     enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
 
                     if (Settings.offeringsEnabled)
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
-                    if (Settings.autoGolemEnabled)
-                        golemsAlive = GameController.Entities.Where(x => !x.IsHostile && (x.Path.Contains("ChaosElemental") || x.Path.Contains("FireElemental") || x.Path.Contains("IceElemental") || x.Path.Contains("LightningGolem") || x.Path.Contains("RockGolem") || x.Path.Contains("BoneGolem") || x.Path.Contains("DropBearUniqueSummoned"))).Count();
-
+                    if (Settings.autoGolemEnabled) { }
+                        golems.UpdateGolems();
                     //int volaCount = GameController.Entities.Where(x => x.Path.Contains("VolatileDeadCore")).Count();
                     //LogError("Vola: " + volaCount.ToString());
 
@@ -504,9 +512,39 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && skill.InternalName.Contains("summon") && (skill.InternalName.Contains("golem") || skill.InternalName.Contains("elemental")))
+                                if ((DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0)
                                 {
-                                    if (!isCasting && !isAttacking && golemsAlive < Settings.autoGolemMax.Value && GetMonsterWithin(600) == 0)
+                                    if (skill.InternalName == "summon_chaos_elemental" && golems.chaosElemental < Settings.autoGolemChaosMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                    else if (skill.InternalName == "summon_fire_elemental" && golems.fireElemental < Settings.autoGolemFireMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                    else if (skill.InternalName == "summon_ice_elemental" && golems.iceElemental < Settings.autoGolemIceMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                    else if (skill.InternalName == "summon_lightning_golem" && golems.lightningGolem < Settings.autoGolemLightningMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                    else if (skill.InternalName == "summon_rock_golem" && golems.rockGolem < Settings.autoGolemRockMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                    else if (skill.InternalName == "summon_bone_golem" && golems.boneGolem < Settings.autoBoneMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                    else if (skill.InternalName == "summon_beastial_ursa" && golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
