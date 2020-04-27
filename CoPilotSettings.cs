@@ -113,6 +113,12 @@ namespace CoPilot
 
         #endregion
 
+        #region Tempest Shield
+        public ToggleNode tempestShieldEnabled { get; set; }
+        public RangeNode<int> tempestShieldTriggerRange { get; set; }
+        public RangeNode<int> tempestShieldMinEnemys { get; set; }
+        #endregion
+
         #region Any Vaal Skill
         public ToggleNode anyVaalEnabled { get; set; }
         public RangeNode<int> anyVaalTriggerRange { get; set; }
@@ -255,6 +261,10 @@ namespace CoPilot
             autoGolemRockMax = new RangeNode<int>(0, 0, 15);
             autoBoneMax = new RangeNode<int>(0, 0, 15);
             autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
+
+            tempestShieldEnabled = new ToggleNode(false);
+            tempestShieldTriggerRange = new RangeNode<int>(1200, 100, 1200);
+            tempestShieldMinEnemys = new RangeNode<int>(1, 0, 50);
 
             anyVaalEnabled = new ToggleNode(false);
             anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);

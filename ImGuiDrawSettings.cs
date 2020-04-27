@@ -434,6 +434,25 @@ namespace CoPilot
                 CoPilot.instance.LogError(e.ToString());
             }
 
+            try
+            {
+                if (CoPilot.instance.Settings.tempestShieldEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(17);
+                if (ImGui.TreeNodeEx("Tempest Shield", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.tempestShieldEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.tempestShieldEnabled.Value);
+                    CoPilot.instance.Settings.tempestShieldMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", CoPilot.instance.Settings.tempestShieldMinEnemys);
+                    CoPilot.instance.Settings.tempestShieldTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.tempestShieldTriggerRange);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+
 
 
             try

@@ -51,6 +51,7 @@ namespace CoPilot
         private DateTime lastOfferings = new DateTime();
         private DateTime lastAutoGolem = new DateTime();
         private DateTime lastBrandRecall = new DateTime();
+        private DateTime lastTempestShield = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -713,6 +714,27 @@ namespace CoPilot
                                 }   
                             }
                         catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+
+                        #region Tempest Shield
+                        if (Settings.tempestShieldEnabled)
+                        {
+                            try
+                            {
+                                if ((DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.InternalName == "tempest_shield")
+                                {
+                                    if (!buffs.Exists(x => x.Name == "lightning_shield" && x.Timer > 1.0) && GetMonsterWithin(Settings.tempestShieldTriggerRange) >= Settings.tempestShieldMinEnemys)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastTempestShield = DateTime.Now;
+                                    }                                   
+                                }
+                            }
+                            catch (Exception e)
                             {
                                 LogError(e.ToString());
                             }
