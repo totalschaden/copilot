@@ -34,7 +34,6 @@ namespace CoPilot
         internal List<ActorSkill> skills = new List<ActorSkill>();
         internal List<ActorVaalSkill> vaalSkills = new List<ActorVaalSkill>();
 
-        Stats stats = new Stats();
         private readonly int mouseAutoSnapRange = 250;
         private DateTime lastPhaserun = new DateTime();
         private DateTime lastMoltenShell = new DateTime();
@@ -43,7 +42,6 @@ namespace CoPilot
         private DateTime lastDelveFlare = new DateTime();
         private DateTime lastVortex = new DateTime();
         private DateTime lastBloodRage = new DateTime();
-        private DateTime lastStats = new DateTime();
         private DateTime lastdoedreEffigy = new DateTime();
         private DateTime lastFlask = new DateTime();
         private DateTime lastStackSkill = new DateTime();
@@ -324,16 +322,13 @@ namespace CoPilot
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
                     if (Settings.autoGolemEnabled) { }
                         golems.UpdateGolems();
+
                     //int volaCount = GameController.Entities.Where(x => x.Path.Contains("VolatileDeadCore")).Count();
                     //LogError("Vola: " + volaCount.ToString());
 
                     // Feature request
                     //  LeHeupOfSoupheute um 19:49 Uhr
                     //  Would it be possible to add convocate on nearby enemies? Pretty please
-
-                    // Thanosheute um 16:15 Uhr
-                    // Totalschaden Can you make a "Tempest Shield" option in your CoPilot please ?
-
 
                     // Option for Cyclone on destroyable stuff ?
                     // Chest isTargetable && !isOpen && isHostile
