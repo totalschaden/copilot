@@ -123,7 +123,7 @@ namespace CoPilot
                     CoPilot.instance.Settings.autoGolemLightningMax.Value = ImGuiExtension.IntSlider("Lightning Golems max.", CoPilot.instance.Settings.autoGolemLightningMax);
                     CoPilot.instance.Settings.autoGolemRockMax.Value = ImGuiExtension.IntSlider("Stone Golems max.", CoPilot.instance.Settings.autoGolemRockMax);
                     CoPilot.instance.Settings.autoBoneMax.Value = ImGuiExtension.IntSlider("Carrion Golems max.", CoPilot.instance.Settings.autoBoneMax);
-                    CoPilot.instance.Settings.autoGolemDropBearMax.Value = ImGuiExtension.IntSlider("Drop Bear Max.", CoPilot.instance.Settings.autoGolemDropBearMax);
+                    CoPilot.instance.Settings.autoGolemDropBearMax.Value = ImGuiExtension.IntSlider("Beastial Ursa Max.", CoPilot.instance.Settings.autoGolemDropBearMax);
                 }
             }
             catch (Exception e)
