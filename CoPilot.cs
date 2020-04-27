@@ -725,7 +725,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.InternalName == "tempest_shield")
+                                if (!isCasting && !isAttacking && (DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.InternalName == "tempest_shield")
                                 {
                                     if (!buffs.Exists(x => x.Name == "lightning_shield" && x.Timer > 1.0) && GetMonsterWithin(Settings.tempestShieldTriggerRange) >= Settings.tempestShieldMinEnemys)
                                     {
