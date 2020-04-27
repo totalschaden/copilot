@@ -30,10 +30,6 @@ namespace CoPilot
 
             foreach(var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
             {
-                int i = 0;
-                CoPilot.instance.LogError(i.ToString());
-                i++;
-
                 if (obj.Entity.Path.Contains("ChaosElemental"))
                     chaosElemental++;
                 else if (obj.Entity.Path.Contains("FireElemental"))
