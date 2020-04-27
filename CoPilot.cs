@@ -290,13 +290,6 @@ namespace CoPilot
         {
             if (Settings.Enable)
             {
-                // Update Stats
-                /*
-                if ((DateTime.Now - lastStats).TotalMilliseconds >= 1000)
-                {
-                    stats.Update();
-                    lastStats = DateTime.Now;
-                }*/
                 if ((WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
                 {
                     LogMessage("Panic Quit...");
@@ -508,7 +501,10 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0)
+                                if ((golems.chaosElemental < Settings.autoGolemChaosMax || golems.fireElemental < Settings.autoGolemFireMax || golems.iceElemental < Settings.autoGolemIceMax
+                                    || golems.lightningGolem < Settings.autoGolemLightningMax || golems.rockGolem < Settings.autoGolemRockMax || golems.boneGolem < Settings.autoBoneMax
+                                    || golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
+                                    && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0)
                                 {
                                     if (skill.InternalName == "summon_chaos_elemental" && golems.chaosElemental < Settings.autoGolemChaosMax)
                                     {
@@ -632,7 +628,6 @@ namespace CoPilot
                         #endregion
 
                         #region Offerings
-
                         if (Settings.offeringsEnabled)
                         {
                             try

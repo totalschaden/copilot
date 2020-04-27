@@ -18,8 +18,14 @@ namespace CoPilot
         internal int boneGolem;
         internal int dropBearUniqueSummoned;
 
+        internal DateTime lastUpdate = DateTime.Now;
+        
         internal void UpdateGolems()
         {
+            if ((DateTime.Now - lastUpdate).TotalMilliseconds < 100)
+                return;
+            lastUpdate = DateTime.Now;
+
             chaosElemental = 0;
             fireElemental = 0;
             iceElemental = 0;
