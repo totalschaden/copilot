@@ -351,6 +351,10 @@ namespace CoPilot
                     if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.IsVisible)
                         return;
 
+                    // Cache Skill Ids
+                    SkillInfo.UpdateSkillInfo();
+                    
+
                     // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
                     // Currently thats unanavailable in API.
                     foreach (var skill in skills)
@@ -367,25 +371,25 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryCooldown.Value && skill.InternalName == "enduring_cry" || skill.InternalName == "inspiring_cry")
+                                if ((DateTime.Now - lastWarCry).TotalMilliseconds > Settings.warCryCooldown.Value && skill.Id == SkillInfo.enduringCry.Id || skill.Id == SkillInfo.rallyingCry.Id)
                                 {
-                                    if (Settings.enduringCryEnabled && Settings.rallyingCryEnabled && skills.Exists(x => x.InternalName == "enduring_cry") && skills.Exists(x => x.InternalName == "inspiring_cry"))
+                                    if (Settings.enduringCryEnabled && Settings.rallyingCryEnabled && skills.Exists(x => x.Id == SkillInfo.enduringCry.Id) && skills.Exists(x => x.Id == SkillInfo.rallyingCry.Id))
                                     {
                                         if (GetMonsterWithin(Settings.warCryTriggerRange) >= 1 || player.HPPercentage < 0.90f || (Settings.warCryKeepRage &&
-                                            ((DateTime.Now - lastWarCry).TotalMilliseconds > 3.8 || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))))
+                                            ((DateTime.Now - lastWarCry).TotalMilliseconds > 3800 || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))))
                                         {
                                             if (!buffs.Exists(x => x.Name == "endurance_charge" && x.Timer * 1000 > Settings.warCryCooldown.Value + 100) ||
                                                 buffs.Exists(x => x.Name == "inspiring_cry" && x.Timer * 1000 > Settings.warCryCooldown.Value + 100))
                                             {
-                                                if (skill.InternalName == "inspiring_cry")
+                                                if (skill.Id == SkillInfo.rallyingCry.Id)
                                                     continue;
-                                                if (skill.InternalName == "enduring_cry")
+                                                if (skill.Id == SkillInfo.enduringCry.Id)
                                                 {
                                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                                     lastWarCry = DateTime.Now;
                                                 }
                                             }
-                                            else if (skill.InternalName == "inspiring_cry")
+                                            else if (skill.Id == SkillInfo.rallyingCry.Id)
                                             {
                                                 KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                                 lastWarCry = DateTime.Now;
@@ -398,12 +402,12 @@ namespace CoPilot
                                         if (GetMonsterWithin(Settings.warCryTriggerRange) >= 1 || player.HPPercentage < 0.90f || (Settings.warCryKeepRage &&
                                             ((DateTime.Now - lastWarCry).TotalMilliseconds > 3.8 || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))))
                                         {
-                                            if (Settings.enduringCryEnabled && skill.InternalName == "enduring_cry")
+                                            if (Settings.enduringCryEnabled && skill.Id == SkillInfo.enduringCry.Id)
                                             {
                                                 KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                                 lastWarCry = DateTime.Now;
                                             }
-                                            else if (Settings.rallyingCryEnabled && skill.InternalName == "inspiring_cry")
+                                            else if (Settings.rallyingCryEnabled && skill.Id == SkillInfo.rallyingCry.Id)
                                             {
                                                 KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                                 lastWarCry = DateTime.Now;
@@ -425,9 +429,9 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastPhaserun).TotalMilliseconds > Settings.phaserunDelay.Value && skill.InternalName == "new_phase_run")
+                                if ((DateTime.Now - lastPhaserun).TotalMilliseconds > Settings.phaserunDelay.Value && skill.Id == SkillInfo.phaserun.Id)
                                 {
-                                    if (!isAttacking && isMoving && (!buffs.Exists(b => b.Name == "new_phase_run" || buffs.Exists(x => x.Name == "new_phase_run" && x.Timer < 0.013))))
+                                    if (!isAttacking && isMoving && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1)))
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastPhaserun = DateTime.Now;
@@ -447,7 +451,8 @@ namespace CoPilot
                             try
                             {
                                 // Cooldown reset starts on Buff expire
-                                if (buffs.Exists(x => x.Name == "fire_shield") || buffs.Exists(x => x.Name == "quick_guard") || buffs.Exists(x => x.Name == "bone_armour") || buffs.Exists(x => x.Name == "arcane_cloak"))
+                                if (buffs.Exists(x => x.Name == SkillInfo.moltenShell.BuffName) || buffs.Exists(x => x.Name == SkillInfo.steelSkin.BuffName) || buffs.Exists(x => x.Name == SkillInfo.boneArmour.BuffName) 
+                                    || buffs.Exists(x => x.Name == SkillInfo.arcaneCloak.BuffName))
                                 {
                                     lastMoltenShell = DateTime.MaxValue;
                                 }
@@ -459,7 +464,7 @@ namespace CoPilot
                                     }
                                 }
                                 if ((DateTime.Now - lastMoltenShell).TotalMilliseconds > Settings.moltenShellDelay.Value &&
-                                    (skill.InternalName == "molten_shell_barrier" || skill.InternalName == "steelskin" || skill.InternalName == "bone_armour" || skill.InternalName == "arcane_cloak"))
+                                    (skill.Id == SkillInfo.moltenShell.Id || skill.Id == SkillInfo.steelSkin.Id || skill.Id == SkillInfo.boneArmour.Id || skill.Id == SkillInfo.arcaneCloak.Id))
                                 {
                                     if ((GetMonsterWithin(Settings.moltenShellRange) >= 1))
                                     {
@@ -480,9 +485,9 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastBloodRage).TotalMilliseconds > Settings.bloodRageDelay.Value && skill.InternalName == "blood_rage")
+                                if ((DateTime.Now - lastBloodRage).TotalMilliseconds > Settings.bloodRageDelay.Value && skill.Id == SkillInfo.bloodRage.Id)
                                 {
-                                    if (!buffs.Exists(b => b.Name == "blood_rage" && b.Timer > 1.0) && (GetMonsterWithin(Settings.bloodRageRange) >= 1))
+                                    if (!buffs.Exists(b => b.Name == SkillInfo.bloodRage.BuffName && b.Timer > 1.0) && (GetMonsterWithin(Settings.bloodRageRange) >= 1))
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastBloodRage = DateTime.Now;
@@ -506,37 +511,37 @@ namespace CoPilot
                                     || golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
                                     && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0)
                                 {
-                                    if (skill.InternalName == "summon_chaos_elemental" && golems.chaosElemental < Settings.autoGolemChaosMax)
+                                    if (skill.Id == SkillInfo.chaosGolem.Id && golems.chaosElemental < Settings.autoGolemChaosMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.InternalName == "summon_fire_elemental" && golems.fireElemental < Settings.autoGolemFireMax)
+                                    else if (skill.Id == SkillInfo.flameGolem.Id && golems.fireElemental < Settings.autoGolemFireMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.InternalName == "summon_ice_elemental" && golems.iceElemental < Settings.autoGolemIceMax)
+                                    else if (skill.Id == SkillInfo.iceGolem.Id && golems.iceElemental < Settings.autoGolemIceMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.InternalName == "summon_lightning_golem" && golems.lightningGolem < Settings.autoGolemLightningMax)
+                                    else if (skill.Id == SkillInfo.lightningGolem.Id && golems.lightningGolem < Settings.autoGolemLightningMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.InternalName == "summon_rock_golem" && golems.rockGolem < Settings.autoGolemRockMax)
+                                    else if (skill.Id == SkillInfo.stoneGolem.Id && golems.rockGolem < Settings.autoGolemRockMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.InternalName == "summon_bone_golem" && golems.boneGolem < Settings.autoBoneMax)
+                                    else if (skill.Id == SkillInfo.carrionGolem.Id && golems.boneGolem < Settings.autoBoneMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.InternalName == "summon_beastial_ursa" && golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
+                                    else if (skill.Id == SkillInfo.ursaGolem.Id && golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
@@ -555,7 +560,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastVortex).TotalMilliseconds > Settings.vortexDelay.Value && skill.InternalName == "frost_bolt_nova")
+                                if ((DateTime.Now - lastVortex).TotalMilliseconds > Settings.vortexDelay.Value && skill.Id == SkillInfo.vortex.Id)
                                 {
                                     if (GetMonsterWithin(Settings.vortexRange) >= 1)
                                     {
@@ -577,11 +582,11 @@ namespace CoPilot
                             try
                             {
                                 if ((DateTime.Now - lastStackSkill).TotalMilliseconds > 250 &&
-                                    (skill.InternalName == "divine_tempest" || skill.InternalName == "virulent_arrow" || skill.InternalName == "charged_attack_channel"))
+                                    (skill.Id == SkillInfo.divineIre.Id || skill.Id == SkillInfo.scourgeArror.Id || skill.Id == SkillInfo.bladeFlurry.Id))
                                 {
-                                    if (buffs.Exists(b => (b.Name == "divine_tempest_stage" && b.Charges >= Settings.divineIreStacks.Value) ||
-                                    (b.Name == "charged_attack" && b.Charges >= Settings.divineIreStacks) ||
-                                    (b.Name == "virulent_arrow_counter" && b.Charges >= Settings.divineIreStacks)))
+                                    if (buffs.Exists(b => (b.Name == SkillInfo.divineIre.BuffName && b.Charges >= Settings.divineIreStacks.Value) ||
+                                    (b.Name == SkillInfo.bladeFlurry.BuffName && b.Charges >= Settings.divineIreStacks) ||
+                                    (b.Name == SkillInfo.scourgeArror.BuffName && b.Charges >= Settings.divineIreStacks)))
                                     {
 
                                         if (Settings.divineIreWaitForInfused)
@@ -611,7 +616,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastdoedreEffigy).TotalMilliseconds > Settings.doedreEffigyDelay.Value && skill.InternalName == "curse_pillar")
+                                if ((DateTime.Now - lastdoedreEffigy).TotalMilliseconds > Settings.doedreEffigyDelay.Value && skill.Id == SkillInfo.doedreEffigy.Id)
                                 {
                                     if (CountEnemysAroundMouse(350) > 0)
                                     {
@@ -633,9 +638,9 @@ namespace CoPilot
                             try
                             {
                                 if ((DateTime.Now - lastOfferings).TotalMilliseconds > 500 &&
-                                    (skill.InternalName == "spirit_offering" || skill.InternalName == "bone_offering" || skill.InternalName == "flesh_offering"))
+                                    (skill.Id == SkillInfo.spiritOffering.Id || skill.Id == SkillInfo.boneOffering.Id || skill.Id == SkillInfo.fleshOffering.Id))
                                 {
-                                    if (GetMonsterWithin(Settings.offeringsTriggerRange) >= Settings.offeringsMinEnemys && !buffs.Exists(x => x.Name == "active_offering" && x.Timer > 0.3) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
+                                    if (GetMonsterWithin(Settings.offeringsTriggerRange) >= Settings.offeringsMinEnemys && !buffs.Exists(x => x.Name == SkillInfo.boneOffering.BuffName && x.Timer > 0.5) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastOfferings = DateTime.Now;
@@ -677,7 +682,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastBrandRecall).TotalMilliseconds > Settings.brandRecallCooldown && skill.InternalName == "sigil_recall")
+                                if ((DateTime.Now - lastBrandRecall).TotalMilliseconds > Settings.brandRecallCooldown && skill.Id == SkillInfo.brandRecall.Id)
                                 {
                                     // Once a Brand Skill is linked with Archemage for example, it will show incorrect stats for 1 frame IsUsing turns true, even when in down, SkillUseStage 3 etc.
 
@@ -715,9 +720,9 @@ namespace CoPilot
                         {
                             try
                             {
-                                if (!isCasting && !isAttacking && (DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.InternalName == "tempest_shield")
+                                if (!isCasting && !isAttacking && (DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.Id == SkillInfo.tempestShield.Id)
                                 {
-                                    if (!buffs.Exists(x => x.Name == "lightning_shield" && x.Timer > 1.0) && GetMonsterWithin(Settings.tempestShieldTriggerRange) >= Settings.tempestShieldMinEnemys)
+                                    if (!buffs.Exists(x => x.Name == SkillInfo.tempestShield.BuffName && x.Timer > 1.0) && GetMonsterWithin(Settings.tempestShieldTriggerRange) >= Settings.tempestShieldMinEnemys)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastTempestShield = DateTime.Now;
@@ -736,7 +741,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 && (skill.InternalName == "cyclone_channelled" || skill.InternalName == "dark_pact" || skill.InternalName == "new_shock_nova" || skill.InternalName == "ice_nova"))
+                                if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 && (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id))
                                 {
                                     autoAttackUpdate = DateTime.Now;
                                     if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck.Value) &&
