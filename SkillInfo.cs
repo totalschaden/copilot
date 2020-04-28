@@ -46,6 +46,8 @@ namespace CoPilot
             lastUpdate = DateTime.Now;
             foreach (var skill in CoPilot.instance.skills)
             {
+                if (!skill.IsOnSkillBar)
+                    continue;
                 if(skill.InternalName == "enduring_cry")
                 {
                     enduringCry.Id = skill.Id;
