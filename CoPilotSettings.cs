@@ -8,303 +8,172 @@ namespace CoPilot
 {
     public class CoPilotSettings : ISettings
     {
-        public ToggleNode debugMode { get; set; }
+        public ToggleNode debugMode = new ToggleNode(false);
 
 
         #region Auto Quit
-        public ToggleNode autoQuitEnabled { get; set; }
-        public HotkeyNode forcedAutoQuit { get; set; }
-        public RangeNode<float> hpPctQuit { get; set; }
-        public RangeNode<float> esPctQuit { get; set; }
+        public ToggleNode autoQuitEnabled = new ToggleNode(false);
+        public HotkeyNode forcedAutoQuit = new HotkeyNode(Keys.F4);
+        public RangeNode<float> hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
+        public RangeNode<float> esPctQuit = new RangeNode<float>(0f, 0f, 100f);
         #endregion
 
         #region Phaserun
-        public ToggleNode phaserunEnabled { get; set; }
-        public RangeNode<int> phaserunDelay { get; set; }
+        public ToggleNode phaserunEnabled = new ToggleNode(false);
+        public RangeNode<int> phaserunDelay = new RangeNode<int>(4000, 100, 4100);
         #endregion
 
         #region Molten Shell
-        public ToggleNode moltenShellEnabled { get; set; }
-        public RangeNode<int> moltenShellDelay { get; set; }
-        public RangeNode<int> moltenShellRange { get; set; }
+        public ToggleNode moltenShellEnabled = new ToggleNode(false);
+        public RangeNode<int> moltenShellDelay = new RangeNode<int>(4000, 100, 4100);
+        public RangeNode<int> moltenShellRange = new RangeNode<int>(550, 100, 1000);
         #endregion
 
         #region War Cry
-        public ToggleNode enduringCryEnabled { get; set; }
-        public RangeNode<int> warCryCooldown { get; set; }
-        public RangeNode<int> warCryTriggerRange { get; set; }
-        public ToggleNode rallyingCryEnabled { get; set; }
-        public ToggleNode warCryKeepRage { get; set; }
+        public ToggleNode enduringCryEnabled = new ToggleNode(false);
+        public RangeNode<int> warCryCooldown = new RangeNode<int>(4000, 3330, 4100);
+        public RangeNode<int> warCryTriggerRange = new RangeNode<int>(550, 100, 1000);
+        public ToggleNode rallyingCryEnabled = new ToggleNode(false);
+        public ToggleNode warCryKeepRage = new ToggleNode(false);
         #endregion
 
         #region Divine Ire / Blade Flurry / Scourge Arrow
-        public ToggleNode divineIreEnabled { get; set; }
-        public RangeNode<int> divineIreStacks { get; set; }
-        public ToggleNode divineIreWaitForInfused { get; set; }
+        public ToggleNode divineIreEnabled = new ToggleNode(false);
+        public RangeNode<int> divineIreStacks = new RangeNode<int>(20, 1, 20);
+        public ToggleNode divineIreWaitForInfused = new ToggleNode(false);
         #endregion
 
         #region Delve Flare
-        public ToggleNode delveFlareEnabled { get; set; }
-        public HotkeyNode delveFlareKey { get; set; }
-        public RangeNode<int> delveFlareDebuffStacks { get; set; }
-        public RangeNode<float> delveFlareHpBelow { get; set; }
-        public RangeNode<float> delveFlareEsBelow { get; set; }
+        public ToggleNode delveFlareEnabled = new ToggleNode(false);
+        public HotkeyNode delveFlareKey = new HotkeyNode(Keys.D6);
+        public RangeNode<int> delveFlareDebuffStacks = new RangeNode<int>(12, 1, 1000);
+        public RangeNode<float> delveFlareHpBelow = new RangeNode<float>(75, 0, 100);
+        public RangeNode<float> delveFlareEsBelow = new RangeNode<float>(0, 0, 100);
         #endregion
 
         #region Vortex
-        public ToggleNode vortexEnabled { get; set; }
-        public RangeNode<int> vortexDelay { get; set; }
-        public RangeNode<int> vortexRange { get; set; }
+        public ToggleNode vortexEnabled = new ToggleNode(false);
+        public RangeNode<int> vortexDelay = new RangeNode<int>(1800, 500, 1900);
+        public RangeNode<int> vortexRange = new RangeNode<int>(300, 100, 1000);
         #endregion
 
         #region BloodRage
-        public ToggleNode bloodRageEnabled { get; set; }
-        public RangeNode<int> bloodRageDelay { get; set; }
-        public RangeNode<int> bloodRageRange { get; set; }
+        public ToggleNode bloodRageEnabled = new ToggleNode(false);
+        public RangeNode<int> bloodRageDelay = new RangeNode<int>(1000, 1000, 10100);
+        public RangeNode<int> bloodRageRange = new RangeNode<int>(300, 800, 3000);
         #endregion
 
         #region Offerings
-        public ToggleNode offeringsEnabled { get; set; }
-        public RangeNode<int> offeringsMinEnemys { get; set; }
-        public RangeNode<int> offeringsTriggerRange { get; set; }
+        public ToggleNode offeringsEnabled = new ToggleNode(false);
+        public ToggleNode offeringsUseWhileCasting = new ToggleNode(true);
+        public RangeNode<int> offeringsMinEnemys = new RangeNode<int>(0, 0, 20);
+        public RangeNode<int> offeringsTriggerRange = new RangeNode<int>(600, 300, 3000);
         #endregion
 
         #region Doedre Effigy
-        public ToggleNode doedreEffigyEnabled { get; set; }
-        public RangeNode<int> doedreEffigyDelay { get; set; }
+        public ToggleNode doedreEffigyEnabled = new ToggleNode(false);
+        public RangeNode<int> doedreEffigyDelay = new RangeNode<int>(600, 500, 2000);
         #endregion
 
         #region Flask
-        public ToggleNode useSpeed4 { get; set; }
-        public ToggleNode useSpeed5 { get; set; }
-        public ToggleNode useSpeedMoving { get; set; }
-        public ToggleNode useSpeedAttack { get; set; }
+        public ToggleNode useSpeed4 = new ToggleNode(false);
+        public ToggleNode useSpeed5 = new ToggleNode(false);
+        public ToggleNode useSpeedMoving = new ToggleNode(false);
+        public ToggleNode useSpeedAttack = new ToggleNode(false);
 
         #endregion
 
         #region Mines
-        public ToggleNode minesEnabled { get; set; }
-        public RangeNode<int> minesDelay { get; set; }
-        public RangeNode<int> minesMin { get; set; }
-        public RangeNode<int> minesDetonateRange { get; set; }
+        public ToggleNode minesEnabled = new ToggleNode(false);
+        public RangeNode<int> minesDelay = new RangeNode<int>(1000, 250, 3000);
+        public RangeNode<int> minesMin = new RangeNode<int>(1, 1, 20);
+        public RangeNode<int> minesDetonateRange = new RangeNode<int>(50, 10, 200);
 
 
         #endregion
 
         #region AutoAttack Cyclone / Nova etc.
-        public ToggleNode autoAttackEnabled { get; set; }
-        public ToggleNode autoAttackLeftMouseCheck { get; set; }
-        public HotkeyNode autoAttackPickItKey { get; set; }
-        public RangeNode<int> autoAttackRange { get; set; }
+        public ToggleNode autoAttackEnabled = new ToggleNode(false);
+        public ToggleNode autoAttackLeftMouseCheck = new ToggleNode(true);
+        public HotkeyNode autoAttackPickItKey = new HotkeyNode(Keys.Space);
+        public RangeNode<int> autoAttackRange = new RangeNode<int>(500, 100, 2000);
 
 
         #endregion
 
         #region Auto Golem
-        public ToggleNode autoGolemEnabled { get; set; }
-        public RangeNode<int> autoGolemChaosMax { get; set; }
-        public RangeNode<int> autoGolemFireMax { get; set; }
-        public RangeNode<int> autoGolemIceMax { get; set; }
-        public RangeNode<int> autoGolemLightningMax { get; set; }
-        public RangeNode<int> autoGolemRockMax { get; set; }
-        public RangeNode<int> autoBoneMax { get; set; }
-        public RangeNode<int> autoGolemDropBearMax { get; set; }
+        public ToggleNode autoGolemEnabled = new ToggleNode(false);
+        public RangeNode<int> autoGolemChaosMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoGolemFireMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoGolemIceMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoGolemLightningMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoGolemRockMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoBoneMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
 
 
         #endregion
 
         #region Tempest Shield
-        public ToggleNode tempestShieldEnabled { get; set; }
-        public RangeNode<int> tempestShieldTriggerRange { get; set; }
-        public RangeNode<int> tempestShieldMinEnemys { get; set; }
+        public ToggleNode tempestShieldEnabled = new ToggleNode(false);
+        public RangeNode<int> tempestShieldTriggerRange = new RangeNode<int>(1200, 100, 1200);
+        public RangeNode<int> tempestShieldMinEnemys = new RangeNode<int>(1, 0, 50);
+
+        public ToggleNode tempestShieldUseWhileCasting = new ToggleNode(true);
         #endregion
 
         #region Any Vaal Skill
-        public ToggleNode anyVaalEnabled { get; set; }
-        public RangeNode<int> anyVaalTriggerRange { get; set; }
-        public RangeNode<int> anyVaalMinEnemys { get; set; }
-        public RangeNode<float> anyVaalHpPct { get; set; }
-        public RangeNode<float> anyVaalEsPct { get; set; }
+        public ToggleNode anyVaalEnabled = new ToggleNode(false);
+        public RangeNode<int> anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
+        public RangeNode<int> anyVaalMinEnemys = new RangeNode<int>(0, 0, 50);
+        public RangeNode<float> anyVaalHpPct = new RangeNode<float>(35f, 0f, 100f);
+        public RangeNode<float> anyVaalEsPct = new RangeNode<float>(0f, 0f, 100f);
         #endregion
 
         #region Custom Skill
-        public ToggleNode customEnabled { get; set; }
-        public RangeNode<int> customTriggerRange { get; set; }
-        public RangeNode<int> customMinEnemys { get; set; }
-        public RangeNode<float> customHpPct { get; set; }
-        public RangeNode<float> customEsPct { get; set; }
-        public RangeNode<int> customCooldown { get; set; }
-        public HotkeyNode customKey { get; set; }
+        public ToggleNode customEnabled = new ToggleNode(false);
+        public RangeNode<int> customTriggerRange = new RangeNode<int>(500, 100, 2000);
+        public RangeNode<int> customMinEnemys = new RangeNode<int>(1, 0, 50);
+        public RangeNode<float> customHpPct = new RangeNode<float>(100, 0f, 100f);
+        public RangeNode<float> customEsPct = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<int> customCooldown = new RangeNode<int>(4000, 1000, 10000);
+        public HotkeyNode customKey = new HotkeyNode(Keys.T);
         #endregion
 
         #region Brand Recall
-        public ToggleNode brandRecallEnabled { get; set; }
-        public RangeNode<int> brandRecallTriggerRange { get; set; }
-        public RangeNode<int> brandRecallMinEnemys { get; set; }
-        public RangeNode<int> brandRecallCooldown { get; set; }
-        public RangeNode<int> brandRecallMinBrands { get; set; }
+        public ToggleNode brandRecallEnabled = new ToggleNode(false);
+        public RangeNode<int> brandRecallTriggerRange = new RangeNode<int>(500, 100, 2000);
+        public RangeNode<int> brandRecallMinEnemys = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> brandRecallCooldown = new RangeNode<int>(3100, 1000, 10000);
+        public RangeNode<int> brandRecallMinBrands = new RangeNode<int>(0, 0, 10);
         #endregion
 
         #region Input Keys
-        [Menu("boundSkill2:")]
-        public HotkeyNode InputKey1 { get; set; }
-
-        [Menu("boundSkill4:")]
-        public HotkeyNode InputKey3 { get; set; }
-
-        [Menu("boundSkill5:")]
-        public HotkeyNode InputKey4 { get; set; }
-
-        [Menu("boundSkill6:")]
-        public HotkeyNode InputKey5 { get; set; }
-
-        [Menu("boundSkill7:")]
-        public HotkeyNode InputKey6 { get; set; }
-
-        [Menu("boundSkill8:")]
-        public HotkeyNode InputKey7 { get; set; }
-
-        [Menu("boundSkill9:")]
-        public HotkeyNode InputKey8 { get; set; }
-
-        [Menu("boundSkill10:")]
-        public HotkeyNode InputKey9 { get; set; }
-
-        [Menu("boundSkill11:")]
-        public HotkeyNode InputKey10 { get; set; }
-
-        [Menu("boundSkill12:")]
-        public HotkeyNode InputKey11 { get; set; }
-
-        [Menu("boundSkill13:")]
-        public HotkeyNode InputKey12 { get; set; }
+        public HotkeyNode InputKey1 = new HotkeyNode(Keys.Z);
+        public HotkeyNode InputKey3 = new HotkeyNode(Keys.Q);
+        public HotkeyNode InputKey4 = new HotkeyNode(Keys.W);
+        public HotkeyNode InputKey5 = new HotkeyNode(Keys.E);
+        public HotkeyNode InputKey6 = new HotkeyNode(Keys.R);
+        public HotkeyNode InputKey7 = new HotkeyNode(Keys.T);
+        public HotkeyNode InputKey8 = new HotkeyNode(Keys.NumPad1);
+        public HotkeyNode InputKey9 = new HotkeyNode(Keys.NumPad2);
+        public HotkeyNode InputKey10 = new HotkeyNode(Keys.NumPad3);
+        public HotkeyNode InputKey11 = new HotkeyNode(Keys.NumPad4);
+        public HotkeyNode InputKey12 = new HotkeyNode(Keys.NumPad5);
         #endregion
 
         #region Confirm
-        public ToggleNode confirm1 { get; set; }
-        public ToggleNode confirm2 { get; set; }
-        public ToggleNode confirm3 { get; set; }
-        public ToggleNode confirm4 { get; set; }
-        public ToggleNode confirm5 { get; set; }
+        public ToggleNode confirm1 = new ToggleNode(false);
+        public ToggleNode confirm2 = new ToggleNode(false);
+        public ToggleNode confirm3 = new ToggleNode(false);
+        public ToggleNode confirm4 = new ToggleNode(false);
+        public ToggleNode confirm5 = new ToggleNode(false);
         #endregion
 
         public ToggleNode Enable { get; set; }
         public CoPilotSettings()
         {
             Enable = new ToggleNode(false);
-            debugMode = new ToggleNode(false);
-
-            autoQuitEnabled = new ToggleNode(false);
-            hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
-            esPctQuit = new RangeNode<float>(0f, 0f, 100f);
-            forcedAutoQuit = Keys.F4;
-
-            phaserunEnabled = new ToggleNode(false);
-            phaserunDelay = new RangeNode<int>(4000, 100, 4100);
-
-            moltenShellEnabled = new ToggleNode(false);
-            moltenShellDelay = new RangeNode<int>(4000, 100, 4100);           
-            moltenShellRange = new RangeNode<int>(550, 100, 1000);
-
-            enduringCryEnabled = new ToggleNode(false);
-            warCryTriggerRange = new RangeNode<int>(550, 100, 1000);
-            warCryCooldown = new RangeNode<int>(4000, 3330, 4100);
-            warCryKeepRage = new ToggleNode(false);
-            rallyingCryEnabled = new ToggleNode(false);
-
-            divineIreEnabled = new ToggleNode(false);
-            divineIreStacks = new RangeNode<int>(20, 1, 20);
-            divineIreWaitForInfused = new ToggleNode(false);
-
-            delveFlareEnabled = new ToggleNode(false);
-            delveFlareKey = Keys.D6;
-            delveFlareDebuffStacks = new RangeNode<int>(12, 1, 1000);
-            delveFlareHpBelow = new RangeNode<float>(75, 0, 100);
-            delveFlareEsBelow = new RangeNode<float>(0, 0, 100);
-
-            vortexEnabled = new ToggleNode(false);
-            vortexDelay = new RangeNode<int>(1800, 500, 1900);
-            vortexRange = new RangeNode<int>(300, 100, 1000);
-
-            bloodRageEnabled = new ToggleNode(false);
-            bloodRageDelay = new RangeNode<int>(1000, 1000, 10100);
-            bloodRageRange = new RangeNode<int>(300, 800, 3000);
-
-            offeringsEnabled = new ToggleNode(false);
-            offeringsMinEnemys = new RangeNode<int>(0, 0, 20);
-            offeringsTriggerRange = new RangeNode<int>(600, 300, 3000);
-
-            doedreEffigyEnabled = new ToggleNode(false);
-            doedreEffigyDelay = new RangeNode<int>(600, 500, 2000);
-
-            
-            useSpeed4 = new ToggleNode(false);
-            useSpeed5 = new ToggleNode(false);
-            useSpeedAttack = new ToggleNode(false);
-            useSpeedMoving = new ToggleNode(false);
-
-            minesEnabled = new ToggleNode(false);
-            minesDelay = new RangeNode<int>(1000, 250, 3000);
-            minesMin = new RangeNode<int>(1, 1, 20);
-            minesDetonateRange = new RangeNode<int>(50, 10, 200);
-
-            autoAttackEnabled = new ToggleNode(false);
-            autoAttackLeftMouseCheck = new ToggleNode(true);
-            autoAttackPickItKey = new HotkeyNode(Keys.Space);
-            autoAttackRange = new RangeNode<int>(500, 100, 2000);
-
-            autoGolemEnabled = new ToggleNode(false);
-            autoGolemChaosMax = new RangeNode<int>(0, 0, 15);
-            autoGolemFireMax = new RangeNode<int>(0, 0, 15);
-            autoGolemIceMax = new RangeNode<int>(0, 0, 15);
-            autoGolemLightningMax = new RangeNode<int>(0, 0, 15);
-            autoGolemRockMax = new RangeNode<int>(0, 0, 15);
-            autoBoneMax = new RangeNode<int>(0, 0, 15);
-            autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
-
-            tempestShieldEnabled = new ToggleNode(false);
-            tempestShieldTriggerRange = new RangeNode<int>(1200, 100, 1200);
-            tempestShieldMinEnemys = new RangeNode<int>(1, 0, 50);
-
-            anyVaalEnabled = new ToggleNode(false);
-            anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
-            anyVaalMinEnemys = new RangeNode<int>(0, 0, 50);
-            anyVaalHpPct = new RangeNode<float>(35f, 0f, 100f);
-            anyVaalEsPct = new RangeNode<float>(0f, 0f, 100f);
-
-            customEnabled = new ToggleNode(false);
-            customTriggerRange = new RangeNode<int>(500, 100, 2000);
-            customMinEnemys = new RangeNode<int>(1, 0, 50);
-            customHpPct = new RangeNode<float>(100, 0f, 100f);
-            customEsPct = new RangeNode<float>(0f, 0f, 100f);
-            customCooldown = new RangeNode<int>(4000, 1000, 10000);
-            customKey = new HotkeyNode(Keys.T);
-
-            brandRecallEnabled = new ToggleNode(false);
-            brandRecallTriggerRange = new RangeNode<int>(500, 100, 2000);
-            brandRecallMinEnemys = new RangeNode<int>(1, 0, 50);
-            brandRecallCooldown = new RangeNode<int>(3100, 1000, 10000);
-            brandRecallMinBrands = new RangeNode<int>(0, 0, 10);
-
-            InputKey1 = new HotkeyNode(Keys.Z);
-            InputKey3 = new HotkeyNode(Keys.Q);
-            InputKey4 = new HotkeyNode(Keys.W);
-            InputKey5 = new HotkeyNode(Keys.E);
-            InputKey6 = new HotkeyNode(Keys.R);
-            InputKey7 = new HotkeyNode(Keys.T);
-            InputKey8 = new HotkeyNode(Keys.NumPad1);
-            InputKey9 = new HotkeyNode(Keys.NumPad2);
-            InputKey10 = new HotkeyNode(Keys.NumPad3);
-            InputKey11 = new HotkeyNode(Keys.NumPad4);
-            InputKey12= new HotkeyNode(Keys.NumPad5);
-
-            confirm1 = new ToggleNode(false);
-            confirm2 = new ToggleNode(false);
-            confirm3 = new ToggleNode(false);
-            confirm4 = new ToggleNode(false);
-            confirm5 = new ToggleNode(false);
-
-
         }
     }
 }

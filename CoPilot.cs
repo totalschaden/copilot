@@ -637,7 +637,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if ((DateTime.Now - lastOfferings).TotalMilliseconds > 500 &&
+                                if (((!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking) || Settings.offeringsUseWhileCasting) && (DateTime.Now - lastOfferings).TotalMilliseconds > 500 &&
                                     (skill.Id == SkillInfo.spiritOffering.Id || skill.Id == SkillInfo.boneOffering.Id || skill.Id == SkillInfo.fleshOffering.Id))
                                 {
                                     if (GetMonsterWithin(Settings.offeringsTriggerRange) >= Settings.offeringsMinEnemys && !buffs.Exists(x => x.Name == SkillInfo.boneOffering.BuffName && x.Timer > 0.5) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
@@ -720,7 +720,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if (!isCasting && !isAttacking && (DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.Id == SkillInfo.tempestShield.Id)
+                                if (((!Settings.tempestShieldUseWhileCasting && !isCasting && !isAttacking) || Settings.tempestShieldUseWhileCasting) && (DateTime.Now - lastTempestShield).TotalMilliseconds > 1200 && skill.Id == SkillInfo.tempestShield.Id)
                                 {
                                     if (!buffs.Exists(x => x.Name == SkillInfo.tempestShield.BuffName && x.Timer > 1.0) && GetMonsterWithin(Settings.tempestShieldTriggerRange) >= Settings.tempestShieldMinEnemys)
                                     {

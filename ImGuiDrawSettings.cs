@@ -295,6 +295,7 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Offerings (This will get you stuck in Animation for your Casttime !)", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.offeringsEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.offeringsEnabled.Value);
+                    CoPilot.instance.Settings.offeringsUseWhileCasting.Value = ImGuiExtension.Checkbox("Use while Casting/Attacking", CoPilot.instance.Settings.offeringsUseWhileCasting.Value);
                     CoPilot.instance.Settings.offeringsMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys", CoPilot.instance.Settings.offeringsMinEnemys);
                     CoPilot.instance.Settings.offeringsTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.offeringsTriggerRange);
                 }
@@ -444,6 +445,7 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Tempest Shield", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.tempestShieldEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.tempestShieldEnabled.Value);
+                    CoPilot.instance.Settings.tempestShieldUseWhileCasting.Value = ImGuiExtension.Checkbox("Use while Casting/Attacking", CoPilot.instance.Settings.tempestShieldUseWhileCasting.Value);
                     CoPilot.instance.Settings.tempestShieldMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", CoPilot.instance.Settings.tempestShieldMinEnemys);
                     CoPilot.instance.Settings.tempestShieldTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.tempestShieldTriggerRange);
                 }
