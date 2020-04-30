@@ -160,7 +160,7 @@ namespace CoPilot
                 }
                 else if (skill.InternalName == "sigil_recall")
                 {
-                    tempestShield.Id = skill.Id;
+                    brandRecall.Id = skill.Id;
                 }
                 else if (skill.InternalName == "cyclone_channelled")
                 {
