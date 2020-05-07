@@ -59,6 +59,10 @@ namespace CoPilot
                     ImGui.NewLine();
                     ImGui.Text("The Top Left and Top Right Skill Slots are EXCLUDED!!! (Ingame bound skill 1 and 3) I recommend you use these for your Mouse.");
                     ImGui.NewLine();
+                    ImGui.Text("The Plugin is currently forced to use Timers for Cooldowns as there is no Proper Skill Api for Ready/Cooldown.");
+                    ImGui.NewLine();
+                    ImGui.Text("I STRONGLY recommend that you add 80-100ms extra delay to your Skill Settings, so a Skill wont be skipped sometimes.");
+                    ImGui.NewLine();
 
 
                     CoPilot.instance.Settings.confirm1.Value = ImGuiExtension.Checkbox("I did READ the text above.", CoPilot.instance.Settings.confirm1.Value);
@@ -84,6 +88,28 @@ namespace CoPilot
             }
             if (!CoPilot.instance.Settings.confirm5)
                 return;
+
+            try
+            {
+                // Donation
+                ImGui.PushStyleColor(ImGuiCol.Header, new System.Numerics.Vector4(0.454f, 0.031f, 0.768f, 1.000f));
+                ImGui.PushID(99999);
+                if (ImGui.TreeNodeEx("Donation", collapsingHeaderFlags))
+                {
+                    ImGui.Text("I was asked to add a way to donate, as im not using any online payment services the only way would be Amazon.de Wishlist.");
+                    ImGui.NewLine();
+                    ImGui.Text("Thanks to anyone who is considering this.");
+                    if(ImGui.Button("Open Wishlist"))
+                    {
+                        System.Diagnostics.Process.Start("https://www.amazon.de/hz/wishlist/ls/MZ543BDBC6PJ?ref_=wl_share");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+
             try
             {
                 // Auto Attack
