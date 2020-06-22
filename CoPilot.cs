@@ -58,7 +58,7 @@ namespace CoPilot
         private Entity flask5;
         private DateTime autoAttackRunning = new DateTime();
         private DateTime autoAttackUpdate = new DateTime();
-        private Golems golems = new Golems();
+        private Summons summons = new Summons();
 
         private Coroutine CoroutineWorker;
         private const string coroutineKeyPress = "KeyPress";
@@ -314,7 +314,7 @@ namespace CoPilot
                     if (Settings.offeringsEnabled)
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
                     if (Settings.autoGolemEnabled) { }
-                        golems.UpdateGolems();
+                        summons.UpdateSummons();
 
                     //int volaCount = GameController.Entities.Where(x => x.Path.Contains("VolatileDeadCore")).Count();
                     //LogError("Vola: " + volaCount.ToString());
@@ -501,47 +501,62 @@ namespace CoPilot
                         }
                         #endregion
 
-                        #region Auto Golem
-                        if (Settings.autoGolemEnabled)
+                        #region Auto Summon
+                        if (Settings.autoSummonEnabled)
                         {
                             try
                             {
-                                if ((golems.chaosElemental < Settings.autoGolemChaosMax || golems.fireElemental < Settings.autoGolemFireMax || golems.iceElemental < Settings.autoGolemIceMax
-                                    || golems.lightningGolem < Settings.autoGolemLightningMax || golems.rockGolem < Settings.autoGolemRockMax || golems.boneGolem < Settings.autoBoneMax
-                                    || golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
+                                if (Settings.autoGolemEnabled &&
+                                    (summons.chaosElemental < Settings.autoGolemChaosMax || 
+                                    summons.fireElemental < Settings.autoGolemFireMax || 
+                                    summons.iceElemental < Settings.autoGolemIceMax || 
+                                    summons.lightningGolem < Settings.autoGolemLightningMax || 
+                                    summons.rockGolem < Settings.autoGolemRockMax || 
+                                    summons.boneGolem < Settings.autoBoneMax || 
+                                    summons.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
                                     && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0)
                                 {
-                                    if (skill.Id == SkillInfo.chaosGolem.Id && golems.chaosElemental < Settings.autoGolemChaosMax)
+                                    if (skill.Id == SkillInfo.chaosGolem.Id && summons.chaosElemental < Settings.autoGolemChaosMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.Id == SkillInfo.flameGolem.Id && golems.fireElemental < Settings.autoGolemFireMax)
+                                    else if (skill.Id == SkillInfo.flameGolem.Id && summons.fireElemental < Settings.autoGolemFireMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.Id == SkillInfo.iceGolem.Id && golems.iceElemental < Settings.autoGolemIceMax)
+                                    else if (skill.Id == SkillInfo.iceGolem.Id && summons.iceElemental < Settings.autoGolemIceMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.Id == SkillInfo.lightningGolem.Id && golems.lightningGolem < Settings.autoGolemLightningMax)
+                                    else if (skill.Id == SkillInfo.lightningGolem.Id && summons.lightningGolem < Settings.autoGolemLightningMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.Id == SkillInfo.stoneGolem.Id && golems.rockGolem < Settings.autoGolemRockMax)
+                                    else if (skill.Id == SkillInfo.stoneGolem.Id && summons.rockGolem < Settings.autoGolemRockMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.Id == SkillInfo.carrionGolem.Id && golems.boneGolem < Settings.autoBoneMax)
+                                    else if (skill.Id == SkillInfo.carrionGolem.Id && summons.boneGolem < Settings.autoBoneMax)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
                                     }
-                                    else if (skill.Id == SkillInfo.ursaGolem.Id && golems.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
+                                    else if (skill.Id == SkillInfo.ursaGolem.Id && summons.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        lastAutoGolem = DateTime.Now;
+                                    }
+                                }
+                                if (Settings.autoZombieEnabled && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0
+                                    && skill.Id == SkillInfo.raiseZombie.Id && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
+                                {
+                                    skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out int maxZombies);
+                                    if (summons.zombies < maxZombies)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;

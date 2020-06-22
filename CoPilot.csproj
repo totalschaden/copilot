@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoPilot.cs" />
-    <Compile Include="Golems.cs" />
+    <Compile Include="Summons.cs" />
     <Compile Include="ImGuiDrawSettings.cs" />
     <Compile Include="ImGuiExtension.cs" />
     <Compile Include="CoPilotSettings.cs" />

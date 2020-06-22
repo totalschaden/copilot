@@ -135,14 +135,15 @@ namespace CoPilot
             try
             {
                 // Auto Golem
-                if (CoPilot.instance.Settings.autoGolemEnabled)
+                if (CoPilot.instance.Settings.autoSummonEnabled)
                     ImGui.PushStyleColor(ImGuiCol.Header, green);
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(2);
-                if (ImGui.TreeNodeEx("Auto Golem", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Auto Summon", collapsingHeaderFlags))
                 {
-                    CoPilot.instance.Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoGolemEnabled.Value);
+                    CoPilot.instance.Settings.autoSummonEnabled.Value = ImGuiExtension.Checkbox("Auto Summons", CoPilot.instance.Settings.autoSummonEnabled.Value);
+                    CoPilot.instance.Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Auto Golem", CoPilot.instance.Settings.autoGolemEnabled.Value);
                     CoPilot.instance.Settings.autoGolemChaosMax.Value = ImGuiExtension.IntSlider("Chaos Golems max.", CoPilot.instance.Settings.autoGolemChaosMax);
                     CoPilot.instance.Settings.autoGolemFireMax.Value = ImGuiExtension.IntSlider("Flame Golems max.", CoPilot.instance.Settings.autoGolemFireMax);
                     CoPilot.instance.Settings.autoGolemIceMax.Value = ImGuiExtension.IntSlider("Ice Golems max.", CoPilot.instance.Settings.autoGolemIceMax);
@@ -150,6 +151,7 @@ namespace CoPilot
                     CoPilot.instance.Settings.autoGolemRockMax.Value = ImGuiExtension.IntSlider("Stone Golems max.", CoPilot.instance.Settings.autoGolemRockMax);
                     CoPilot.instance.Settings.autoBoneMax.Value = ImGuiExtension.IntSlider("Carrion Golems max.", CoPilot.instance.Settings.autoBoneMax);
                     CoPilot.instance.Settings.autoGolemDropBearMax.Value = ImGuiExtension.IntSlider("Beastial Ursa Max.", CoPilot.instance.Settings.autoGolemDropBearMax);
+                    CoPilot.instance.Settings.autoZombieEnabled.Value = ImGuiExtension.Checkbox("Auto Zombies", CoPilot.instance.Settings.autoZombieEnabled.Value);
                 }
             }
             catch (Exception e)

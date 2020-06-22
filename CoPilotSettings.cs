@@ -101,7 +101,8 @@ namespace CoPilot
 
         #endregion
 
-        #region Auto Golem
+        #region Auto Summon
+        public ToggleNode autoSummonEnabled = new ToggleNode(false);
         public ToggleNode autoGolemEnabled = new ToggleNode(false);
         public RangeNode<int> autoGolemChaosMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemFireMax = new RangeNode<int>(0, 0, 15);
@@ -110,6 +111,8 @@ namespace CoPilot
         public RangeNode<int> autoGolemRockMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoBoneMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
+
+        public ToggleNode autoZombieEnabled = new ToggleNode(false);
 
 
         #endregion

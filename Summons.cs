@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoPilot
 {
-    class Golems
+    class Summons
     {
         internal int chaosElemental;
         internal int fireElemental;
@@ -17,12 +17,13 @@ namespace CoPilot
         internal int rockGolem;
         internal int boneGolem;
         internal int dropBearUniqueSummoned;
+        internal int zombies;
 
         internal DateTime lastUpdate = DateTime.Now;
         
-        internal void UpdateGolems()
+        internal void UpdateSummons()
         {
-            if ((DateTime.Now - lastUpdate).TotalMilliseconds < 100)
+            if ((DateTime.Now - lastUpdate).TotalMilliseconds < 250)
                 return;
             lastUpdate = DateTime.Now;
 
@@ -33,6 +34,7 @@ namespace CoPilot
             rockGolem = 0;
             boneGolem = 0;
             dropBearUniqueSummoned = 0;
+            zombies = 0;
 
             foreach(var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
             {
@@ -50,6 +52,8 @@ namespace CoPilot
                     boneGolem++;
                 else if (obj.Entity.Path.Contains("DropBearUniqueSummoned"))
                     dropBearUniqueSummoned++;
+                else if (obj.Entity.Path.Contains("RaisedZombie"))
+                    zombies++;
             }
         }
     }
