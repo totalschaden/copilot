@@ -311,7 +311,7 @@ namespace CoPilot
                     playerPosition = GameController.Player.Pos;
                     enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
 
-                    if (Settings.offeringsEnabled)
+                    if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
                     if (Settings.autoGolemEnabled) { }
                         summons.UpdateSummons();
