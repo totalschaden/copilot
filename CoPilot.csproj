@@ -105,7 +105,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)..\..\PH\Plugins\Compiled\CoPilot"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)..\..\PH\Plugins\Compiled\CoPilot"
+copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)..\..\PoeHelper\Plugins\Compiled\CoPilot"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
