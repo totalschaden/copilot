@@ -209,7 +209,7 @@ namespace CoPilot
                 }
                 else if (skill.InternalName == "flicker_strike")
                 {
-
+                    flickerStrike.Id = skill.Id;
                 }
             }
         }
