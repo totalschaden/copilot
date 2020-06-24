@@ -316,8 +316,10 @@ namespace CoPilot
                     vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
 
                     playerPosition = GameController.Player.Pos;
-                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
-
+                    // Bugged in 3.11 Hud, Monsters shown as isDead true for whatever reason.
+                    //enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
+                    // Use thif for now.
+                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0);
                     if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
                     if (Settings.autoGolemEnabled) { }
