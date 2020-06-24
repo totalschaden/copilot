@@ -37,19 +37,51 @@ namespace CoPilot
         internal static Skill cyclone = new Skill();
         internal static Skill iceNova = new Skill();
         internal static Skill raiseZombie = new Skill();
+        internal static Skill flickerStrike = new Skill();
 
-
-
-        internal static void UpdateSkillInfo()
+        internal static void ResetSkills()
         {
-            if ((DateTime.Now - lastUpdate).TotalMilliseconds < 10000)
+            enduringCry = new Skill();
+            rallyingCry = new Skill();
+            boneOffering = new Skill();
+            spiritOffering = new Skill();
+            fleshOffering = new Skill();
+            phaserun = new Skill();
+            moltenShell = new Skill();
+            steelSkin = new Skill();
+            boneArmour = new Skill();
+            arcaneCloak = new Skill();
+            bloodRage = new Skill();
+            chaosGolem = new Skill();
+            flameGolem = new Skill();
+            iceGolem = new Skill();
+            lightningGolem = new Skill();
+            stoneGolem = new Skill();
+            carrionGolem = new Skill();
+            ursaGolem = new Skill();
+            vortex = new Skill();
+            divineIre = new Skill();
+            scourgeArror = new Skill();
+            bladeFlurry = new Skill();
+            doedreEffigy = new Skill();
+            tempestShield = new Skill();
+            brandRecall = new Skill();
+            cyclone = new Skill();
+            iceNova = new Skill();
+            raiseZombie = new Skill();
+            flickerStrike = new Skill();
+        }
+
+        internal static void UpdateSkillInfo(bool force = false)
+        {
+            if (!force && (DateTime.Now - lastUpdate).TotalMilliseconds < 10000)
                 return;
             lastUpdate = DateTime.Now;
             foreach (var skill in CoPilot.instance.skills)
             {
                 if (!skill.IsOnSkillBar)
                     continue;
-                if(skill.InternalName == "enduring_cry")
+                if (skill.InternalName == "enduring_cry")
                 {
                     enduringCry.Id = skill.Id;
                 }
@@ -174,6 +206,10 @@ namespace CoPilot
                 else if (skill.InternalName == "raise_zombie")
                 {
                     raiseZombie.Id = skill.Id;
+                }
+                else if (skill.InternalName == "flicker_strike")
+                {
+
                 }
             }
         }

@@ -279,6 +279,13 @@ namespace CoPilot
                 return Settings.InputKey12.Value;
             else return Keys.Escape;
         }
+
+        public override void AreaChange(AreaInstance area)
+        {
+            base.AreaChange(area);
+            SkillInfo.ResetSkills();
+            SkillInfo.UpdateSkillInfo(true);
+        }
         public override void DrawSettings()
         {
             //base.DrawSettings();
@@ -751,12 +758,13 @@ namespace CoPilot
                         }
                         #endregion
 
-                        #region AutoAttack Cyclone / Nova / etc.
+                        #region AutoAttack Cyclone / Nova / 
                         if (Settings.autoAttackEnabled)
                         {
                             try
                             {
-                                if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 && (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id))
+                                if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 && 
+                                    (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id || skill.Id == SkillInfo.flickerStrike.Id))
                                 {
                                     autoAttackUpdate = DateTime.Now;
                                     if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck.Value) &&

@@ -118,7 +118,7 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(1);
-                if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / ...", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / Flicker", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoAttackEnabled.Value);
                     CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value);
