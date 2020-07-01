@@ -252,7 +252,7 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(7);
-                if (ImGui.TreeNodeEx("Divine Ire / Blade Flurry / Scourge Arrow", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Divine Ire / Blade Flurry / Scourge Arrow (Do NOT bind on Mousekeys!!!)", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.divineIreEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.divineIreEnabled.Value);
                     CoPilot.instance.Settings.divineIreStacks.Value = ImGuiExtension.IntSlider("Stacks", CoPilot.instance.Settings.divineIreStacks);

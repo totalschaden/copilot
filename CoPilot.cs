@@ -664,7 +664,7 @@ namespace CoPilot
                                 if (((!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking) || Settings.offeringsUseWhileCasting) && (DateTime.Now - lastOfferings).TotalMilliseconds > 500 &&
                                     (skill.Id == SkillInfo.spiritOffering.Id || skill.Id == SkillInfo.boneOffering.Id || skill.Id == SkillInfo.fleshOffering.Id))
                                 {
-                                    if (GetMonsterWithin(Settings.offeringsTriggerRange) >= Settings.offeringsMinEnemys && !buffs.Exists(x => x.Name == SkillInfo.boneOffering.BuffName && x.Timer > 0.5) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
+                                    if (GetMonsterWithin(Settings.offeringsTriggerRange) >= Settings.offeringsMinEnemys && !buffs.Exists(x => x.Name == "active_offering" ) && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastOfferings = DateTime.Now;
