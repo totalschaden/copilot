@@ -63,6 +63,10 @@ namespace CoPilot
                     ImGui.NewLine();
                     ImGui.Text("I STRONGLY recommend that you add 80-100ms extra delay to your Skill Settings, so a Skill wont be skipped sometimes.");
                     ImGui.NewLine();
+                    ImGui.Text("Unhappy with Cooldown Slider ? Set your own Value with STRG/CTRL + Mouseclick");
+                    ImGui.NewLine();
+                    ImGui.Text("Using Auto Attack and Cyclone for example? If you want to Cyclone yourself, put it on Right Mouse Slot, and have Cyclone in the Slot before that one.");
+                    ImGui.NewLine();
 
 
                     CoPilot.instance.Settings.confirm1.Value = ImGuiExtension.Checkbox("I did READ the text above.", CoPilot.instance.Settings.confirm1.Value);
@@ -257,8 +261,6 @@ namespace CoPilot
                     CoPilot.instance.Settings.divineIreEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.divineIreEnabled.Value);
                     CoPilot.instance.Settings.divineIreStacks.Value = ImGuiExtension.IntSlider("Stacks", CoPilot.instance.Settings.divineIreStacks);
                     CoPilot.instance.Settings.divineIreWaitForInfused.Value = ImGuiExtension.Checkbox("Wait for Infused Channeling Support", CoPilot.instance.Settings.divineIreWaitForInfused.Value);
-
-
                 }
             }
             catch (Exception e)
@@ -282,7 +284,6 @@ namespace CoPilot
                     CoPilot.instance.Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enduring Cry Enabled", CoPilot.instance.Settings.enduringCryEnabled.Value);
                     CoPilot.instance.Settings.warCryTriggerRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.warCryTriggerRange);
                     CoPilot.instance.Settings.rallyingCryEnabled.Value = ImGuiExtension.Checkbox("Rallying Cry Enabled", CoPilot.instance.Settings.rallyingCryEnabled.Value);
-
                 }
             }
             catch (Exception e)
