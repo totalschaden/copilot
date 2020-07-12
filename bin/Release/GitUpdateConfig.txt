@@ -1,7 +1,0 @@
-Owner: Totalschaden
-Name: CoPilot
-Repository
-
-Ignore:
-*
-!CoPilot.dll
