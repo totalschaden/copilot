@@ -36,9 +36,8 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExileCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\PoeHelper\ExileCore.dll</HintPath>
+    <Reference Include="ExileCore">
+      <HintPath>..\..\..\ExileCore.dll</HintPath>
     </Reference>
     <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>

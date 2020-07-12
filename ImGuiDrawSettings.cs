@@ -354,31 +354,6 @@ namespace CoPilot
                 CoPilot.instance.LogError(e.ToString());
             }
 
-
-
-
-            try
-            {
-                // Speed Flasks
-                if (CoPilot.instance.Settings.useSpeed4 || CoPilot.instance.Settings.useSpeed5)
-                    ImGui.PushStyleColor(ImGuiCol.Header, green);
-                else
-                    ImGui.PushStyleColor(ImGuiCol.Header, red);
-                ImGui.PushID(12);
-                if (ImGui.TreeNodeEx("Speed Flask", collapsingHeaderFlags))
-                {
-                    CoPilot.instance.Settings.useSpeed4.Value = ImGuiExtension.Checkbox("Flask 4 Enabled", CoPilot.instance.Settings.useSpeed4.Value);
-                    CoPilot.instance.Settings.useSpeed5.Value = ImGuiExtension.Checkbox("Flask 5 Enabled", CoPilot.instance.Settings.useSpeed5.Value);
-                    CoPilot.instance.Settings.useSpeedMoving.Value = ImGuiExtension.Checkbox("Use when Moving", CoPilot.instance.Settings.useSpeedMoving.Value);
-                    CoPilot.instance.Settings.useSpeedAttack.Value = ImGuiExtension.Checkbox("Use when Attacking", CoPilot.instance.Settings.useSpeedAttack.Value);
-                }
-            }
-            catch (Exception e)
-            {
-                CoPilot.instance.LogError(e.ToString());
-            }
-
-
             try
             {
                 // Vortex

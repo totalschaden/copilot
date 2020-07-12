@@ -54,8 +54,7 @@ namespace CoPilot
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
         Vector3 playerPosition;
-        private Entity flask4;
-        private Entity flask5;
+
         private DateTime autoAttackRunning = new DateTime();
         private DateTime autoAttackUpdate = new DateTime();
         private Summons summons = new Summons();
@@ -808,67 +807,6 @@ namespace CoPilot
                             {
                                 KeyPress(Settings.delveFlareKey.Value);
                                 lastDelveFlare = DateTime.Now;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            LogError(e.ToString());
-                        }
-                    }
-                    #endregion
-
-                    #region Speed Flask
-                    if ((Settings.useSpeed4 || Settings.useSpeed5))
-                    {
-                        try
-                        {
-                            if ((DateTime.Now - lastFlask).TotalMilliseconds > 500 && ((Settings.useSpeedAttack && isAttacking) || (Settings.useSpeedMoving && isMoving)) && !buffs.Exists(x => x.Name == "flask_utility_sprint"))
-                            {
-                                flask4 = GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.InventoryPosition.X == 3)?.Item;
-                                flask5 = GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.InventoryPosition.X == 4)?.Item;
-
-                                if (Settings.useSpeed4 && Settings.useSpeed5 && flask4 != null && flask4.Address != 0x00 && flask5 != null && flask5.Address != 0x00)
-                                {
-                                    var charges4 = flask4.GetComponent<Charges>();
-                                    var charges5 = flask5.GetComponent<Charges>();
-                                    if (charges4.NumCharges >= charges4.ChargesPerUse && charges5.NumCharges >= charges5.ChargesPerUse)
-                                    {
-                                        if (charges4.NumCharges > charges5.NumCharges)
-                                        {
-                                            KeyPress(Keys.D4, false);
-                                            lastFlask = DateTime.Now;
-                                        }
-                                        else if (charges5.NumCharges > charges4.NumCharges)
-                                        {
-                                            KeyPress(Keys.D5, false);
-                                            lastFlask = DateTime.Now;
-                                        }
-                                        else
-                                        {
-                                            KeyPress(Keys.D4, false);
-                                            lastFlask = DateTime.Now;
-                                        }
-                                    }
-
-                                }
-                                else if (Settings.useSpeed4 && flask4 != null && flask4.Address != 0x00)
-                                {
-                                    var charges4 = flask4.GetComponent<Charges>();
-                                    if (charges4.NumCharges >= charges4.ChargesPerUse)
-                                    {
-                                        KeyPress(Keys.D4, false);
-                                        lastFlask = DateTime.Now;
-                                    }
-                                }
-                                else if (Settings.useSpeed5 && flask5 != null && flask5.Address != 0x00)
-                                {
-                                    var charges5 = flask5.GetComponent<Charges>();
-                                    if (charges5.NumCharges >= charges5.ChargesPerUse)
-                                    {
-                                        KeyPress(Keys.D5, false);
-                                        lastFlask = DateTime.Now;
-                                    }
-                                }
                             }
                         }
                         catch (Exception e)

@@ -75,14 +75,6 @@ namespace CoPilot
         public RangeNode<int> doedreEffigyDelay = new RangeNode<int>(600, 500, 2000);
         #endregion
 
-        #region Flask
-        public ToggleNode useSpeed4 = new ToggleNode(false);
-        public ToggleNode useSpeed5 = new ToggleNode(false);
-        public ToggleNode useSpeedMoving = new ToggleNode(false);
-        public ToggleNode useSpeedAttack = new ToggleNode(false);
-
-        #endregion
-
         #region Mines
         public ToggleNode minesEnabled = new ToggleNode(false);
         public RangeNode<int> minesDelay = new RangeNode<int>(1000, 250, 3000);
