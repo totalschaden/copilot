@@ -20,7 +20,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\Compiled\CoPilot\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -105,8 +105,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)..\..\PH\Plugins\Compiled\CoPilot"
-copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)..\..\PoeHelper\Plugins\Compiled\CoPilot"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)..\..\Compiled\CoPilot"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
