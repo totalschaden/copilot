@@ -43,7 +43,6 @@ namespace CoPilot
         private DateTime lastVortex = new DateTime();
         private DateTime lastBloodRage = new DateTime();
         private DateTime lastdoedreEffigy = new DateTime();
-        private DateTime lastFlask = new DateTime();
         private DateTime lastStackSkill = new DateTime();
         private DateTime lastCustom = new DateTime();
         private DateTime lastOfferings = new DateTime();
@@ -82,6 +81,7 @@ namespace CoPilot
             if (instance == null)
                 instance = this;
             GameController.LeftPanel.WantUse(() => Settings.Enable);
+            SkillInfo.UpdateSkillInfo(true);
             return true;
         }
         public int GetMonsterWithin(float maxDistance, MonsterRarity rarity = MonsterRarity.White)
@@ -278,12 +278,21 @@ namespace CoPilot
                 return Settings.InputKey12.Value;
             else return Keys.Escape;
         }
-
+        private IEnumerator WaitForSkillsAfterAreaChange()
+        {
+            while (skills == null || GameController.IsLoading)
+            {
+                yield return new WaitTime(20);
+            }
+            SkillInfo.UpdateSkillInfo(true);
+        }
         public override void AreaChange(AreaInstance area)
         {
             base.AreaChange(area);
             SkillInfo.ResetSkills();
-            SkillInfo.UpdateSkillInfo(true);
+            Coroutine skillCoroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
+            Core.ParallelRunner.Run(skillCoroutine);
+
         }
         public override void DrawSettings()
         {
@@ -359,9 +368,6 @@ namespace CoPilot
                     if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.IsVisible)
                         return;
 
-                    // Cache Skill Ids
-                    SkillInfo.UpdateSkillInfo();
-                    
 
                     // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
                     // Currently thats unanavailable in API.
