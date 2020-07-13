@@ -59,6 +59,7 @@ namespace CoPilot
         private Summons summons = new Summons();
 
         private Coroutine CoroutineWorker;
+        Coroutine skillCoroutine;
         private const string coroutineKeyPress = "KeyPress";
         internal static CoPilot instance;
 
@@ -81,7 +82,8 @@ namespace CoPilot
             if (instance == null)
                 instance = this;
             GameController.LeftPanel.WantUse(() => Settings.Enable);
-            SkillInfo.UpdateSkillInfo(true);
+            skillCoroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
+            Core.ParallelRunner.Run(skillCoroutine);
             return true;
         }
         public int GetMonsterWithin(float maxDistance, MonsterRarity rarity = MonsterRarity.White)
@@ -280,7 +282,7 @@ namespace CoPilot
         }
         private IEnumerator WaitForSkillsAfterAreaChange()
         {
-            while (skills == null || GameController.IsLoading)
+            while (skills == null || localPlayer == null || GameController.IsLoading)
             {
                 yield return new WaitTime(20);
             }
