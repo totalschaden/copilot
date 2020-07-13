@@ -286,6 +286,7 @@ namespace CoPilot
             {
                 yield return new WaitTime(20);
             }
+            yield return new WaitTime(1000);
             SkillInfo.UpdateSkillInfo(true);
         }
         public override void AreaChange(AreaInstance area)
