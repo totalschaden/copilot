@@ -53,8 +53,10 @@ namespace CoPilot
 
         #region Vortex
         public ToggleNode vortexEnabled = new ToggleNode(false);
+        public ToggleNode vortexFrostbolt = new ToggleNode(true);
         public RangeNode<int> vortexDelay = new RangeNode<int>(1800, 500, 1900);
         public RangeNode<int> vortexRange = new RangeNode<int>(300, 100, 1000);
+
         #endregion
 
         #region BloodRage

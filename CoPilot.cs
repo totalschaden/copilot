@@ -594,7 +594,7 @@ namespace CoPilot
                             {
                                 if ((DateTime.Now - lastVortex).TotalMilliseconds > Settings.vortexDelay.Value && skill.Id == SkillInfo.vortex.Id)
                                 {
-                                    if (GetMonsterWithin(Settings.vortexRange) >= 1)
+                                    if (GetMonsterWithin(Settings.vortexRange) >= 1 || (Settings.vortexFrostbolt && skills.Any(x => x.Id == SkillInfo.frostbolt.Id && x.SkillUseStage > 2) ))
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastVortex = DateTime.Now;

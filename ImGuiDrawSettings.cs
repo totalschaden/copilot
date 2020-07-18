@@ -365,6 +365,7 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Vortex", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.vortexEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.vortexEnabled.Value);
+                    CoPilot.instance.Settings.vortexFrostbolt.Value = ImGuiExtension.Checkbox("When Frostbolt's flying", CoPilot.instance.Settings.vortexFrostbolt.Value);
                     CoPilot.instance.Settings.vortexDelay.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.vortexDelay);
                     CoPilot.instance.Settings.vortexRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.vortexRange);
                 }
