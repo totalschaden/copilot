@@ -282,9 +282,9 @@ namespace CoPilot
         }
         private IEnumerator WaitForSkillsAfterAreaChange()
         {
-            while (skills == null || localPlayer == null || GameController.IsLoading)
+            while (skills == null || localPlayer == null || GameController.IsLoading || !GameController.InGame)
             {
-                yield return new WaitTime(20);
+                yield return new WaitTime(200);
             }
             yield return new WaitTime(1000);
             SkillInfo.UpdateSkillInfo(true);
@@ -351,12 +351,23 @@ namespace CoPilot
                     {
                         try
                         {
-                            if (localPlayer.IsValid)
+                            if ((Math.Round(player.HPPercentage, 3) * 100 < Settings.hpPctQuit.Value || player.MaxES > 0 && (Math.Round(player.ESPercentage, 3) * 100 < Settings.esPctQuit.Value)))
                             {
-                                if ((Math.Round(player.HPPercentage, 3) * 100 < Settings.hpPctQuit.Value || player.MaxES > 0 && (Math.Round(player.ESPercentage, 3) * 100 < Settings.esPctQuit.Value)))
-                                {
-                                    Quit();
-                                }
+                                Quit();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+                    }
+                    if (Settings.autoQuitGuardian)
+                    {
+                        try
+                        {
+                            if (Math.Round(summons.GetAnimatedGuardianHpp()) * 100 < Settings.guardianHpPct.Value)
+                            {
+                                Quit();
                             }
                         }
                         catch (Exception e)
@@ -368,7 +379,7 @@ namespace CoPilot
 
 
                     // Do not Cast anything while we are untouchable or Chat is Open
-                    if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.IsVisible)
+                    if (buffs.Exists(x => x.Name == "grace_period") /*|| GameController.IngameState.IngameUi.ChatBox.IsVisible*/) // Chatbox always true since 08.08.2020 offset
                         return;
 
 
@@ -663,7 +674,6 @@ namespace CoPilot
                             }
                         }
                         #endregion
-
                         #region Offerings
                         if (Settings.offeringsEnabled)
                         {
@@ -685,7 +695,6 @@ namespace CoPilot
                             }
                         }
                         #endregion
-
                         #region Any Vaal Skill
                         if (Settings.anyVaalEnabled)
                         {
@@ -708,7 +717,6 @@ namespace CoPilot
                             }
                         }
                         #endregion
-
                         #region Brand Recall
                         if (Settings.brandRecallEnabled)
                         {
@@ -746,7 +754,6 @@ namespace CoPilot
                             }
                         }
                         #endregion
-
                         #region Tempest Shield
                         if (Settings.tempestShieldEnabled)
                         {
@@ -767,7 +774,6 @@ namespace CoPilot
                             }
                         }
                         #endregion
-
                         #region AutoAttack Cyclone / Nova / 
                         if (Settings.autoAttackEnabled)
                         {
@@ -797,6 +803,25 @@ namespace CoPilot
                                         Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
                                         autoAttackRunning = DateTime.MinValue;
                                     }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+                        #region Convocation
+                        if (Settings.convocationEnabled)
+                        {
+                            try
+                            {
+                                if (skill.Id == SkillInfo.convocation.Id)
+                                {                                
+                                    if (GetMonsterWithin(1000, MonsterRarity.Unique) == 0 && Math.Round(summons.GetLowestMinionHpp()) * 100 < Settings.convocationHp.Value)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    }                                    
                                 }
                             }
                             catch (Exception e)

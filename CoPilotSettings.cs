@@ -16,8 +16,14 @@ namespace CoPilot
         public HotkeyNode forcedAutoQuit = new HotkeyNode(Keys.F4);
         public RangeNode<float> hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
         public RangeNode<float> esPctQuit = new RangeNode<float>(0f, 0f, 100f);
+        public ToggleNode autoQuitGuardian = new ToggleNode(false);
+        public RangeNode<float> guardianHpPct = new RangeNode<float>(35f, 0f, 100f);
         #endregion
 
+        #region Convocation
+        public ToggleNode convocationEnabled = new ToggleNode(false);
+        public RangeNode<float> convocationHp = new RangeNode<float>(35f, 0f, 100f);
+        #endregion
         #region Phaserun
         public ToggleNode phaserunEnabled = new ToggleNode(false);
         public RangeNode<int> phaserunDelay = new RangeNode<int>(4000, 100, 4100);
@@ -98,6 +104,8 @@ namespace CoPilot
         #region Auto Summon
         public ToggleNode autoSummonEnabled = new ToggleNode(false);
         public ToggleNode autoGolemEnabled = new ToggleNode(false);
+        
+
         public RangeNode<int> autoGolemChaosMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemFireMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemIceMax = new RangeNode<int>(0, 0, 15);

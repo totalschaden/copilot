@@ -178,6 +178,9 @@ namespace CoPilot
                     CoPilot.instance.Settings.hpPctQuit.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.hpPctQuit);
                     CoPilot.instance.Settings.esPctQuit.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.esPctQuit);
                     CoPilot.instance.Settings.forcedAutoQuit.Value = ImGuiExtension.HotkeySelector("Force Quit Key: " + CoPilot.instance.Settings.forcedAutoQuit.Value, CoPilot.instance.Settings.forcedAutoQuit.Value);
+                    CoPilot.instance.Settings.autoQuitGuardian.Value = ImGuiExtension.Checkbox("Guardian Auto Quit", CoPilot.instance.Settings.autoQuitGuardian.Value);
+                    CoPilot.instance.Settings.guardianHpPct.Value = ImGuiExtension.FloatSlider("Guardian HP%", CoPilot.instance.Settings.guardianHpPct);
+
                 }
             }
             catch (Exception e)
@@ -460,7 +463,23 @@ namespace CoPilot
                 CoPilot.instance.LogError(e.ToString());
             }
 
-
+            try
+            {
+                if (CoPilot.instance.Settings.convocationEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(18);
+                if (ImGui.TreeNodeEx("Convocation", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.convocationEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.convocationEnabled.Value);
+                    CoPilot.instance.Settings.guardianHpPct.Value = ImGuiExtension.FloatSlider("Summon HP% below", CoPilot.instance.Settings.guardianHpPct);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
 
             try
             {

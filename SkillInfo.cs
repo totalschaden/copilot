@@ -39,6 +39,7 @@ namespace CoPilot
         internal static Skill raiseZombie = new Skill();
         internal static Skill flickerStrike = new Skill();
         internal static Skill frostbolt = new Skill();
+        internal static Skill convocation = new Skill();
 
         internal static void ResetSkills()
         {
@@ -72,6 +73,7 @@ namespace CoPilot
             raiseZombie = new Skill();
             flickerStrike = new Skill();
             frostbolt = new Skill();
+            convocation = new Skill();
         }
 
         internal static void UpdateSkillInfo(bool force = false)
@@ -216,6 +218,10 @@ namespace CoPilot
                 else if (skill.InternalName == "frost_bolt")
                 {
                     frostbolt.Id = skill.Id;
+                }
+                else if (skill.InternalName == "convocation")
+                {
+                    convocation.Id = skill.Id;
                 }
             }
         }

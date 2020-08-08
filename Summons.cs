@@ -56,5 +56,27 @@ namespace CoPilot
                     zombies++;
             }
         }
+
+        public float GetLowestMinionHpp()
+        {
+            float hpp = 100;
+            foreach(var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x != null && x.Entity != null && x.Entity.GetComponent<Life>() != null))
+            {
+                if (obj.Entity.GetComponent<Life>().HPPercentage < hpp)
+                    hpp = obj.Entity.GetComponent<Life>().HPPercentage;
+            }
+            return hpp;
+        }
+
+        public float GetAnimatedGuardianHpp()
+        {
+            float hpp = 100;
+            DeployedObject animatedGuardian = null;
+            animatedGuardian = CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.FirstOrDefault(x => x.Entity != null && x.Entity.GetComponent<Life>() != null && x.Entity.Path.Contains("AnimatedArmour"));
+            if (animatedGuardian != null)
+                return animatedGuardian.Entity.GetComponent<Life>().HPPercentage;
+            else
+                return hpp;
+        }
     }
 }
