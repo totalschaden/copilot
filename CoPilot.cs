@@ -404,7 +404,7 @@ namespace CoPilot
                                     if (Settings.enduringCryEnabled && Settings.rallyingCryEnabled && skills.Exists(x => x.Id == SkillInfo.enduringCry.Id) && skills.Exists(x => x.Id == SkillInfo.rallyingCry.Id))
                                     {
                                         if (GetMonsterWithin(Settings.warCryTriggerRange) >= 1 || player.HPPercentage < 0.90f || (Settings.warCryKeepRage &&
-                                            ((DateTime.Now - lastWarCry).TotalMilliseconds > 3.8)) || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))
+                                            ((DateTime.Now - lastWarCry).TotalMilliseconds > 3800 || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))))
                                         {
                                             if (!buffs.Exists(x => x.Name == "endurance_charge" && x.Timer * 1000 > Settings.warCryCooldown.Value + 100) ||
                                                 buffs.Exists(x => x.Name == "inspiring_cry" && x.Timer * 1000 > Settings.warCryCooldown.Value + 100))
@@ -428,7 +428,7 @@ namespace CoPilot
                                     else if (Settings.enduringCryEnabled || Settings.rallyingCryEnabled)
                                     {
                                         if (GetMonsterWithin(Settings.warCryTriggerRange) >= 1 || player.HPPercentage < 0.90f || (Settings.warCryKeepRage &&
-                                            ((DateTime.Now - lastWarCry).TotalMilliseconds > 3.8)) || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))
+                                            ((DateTime.Now - lastWarCry).TotalMilliseconds > 3800 || !buffs.Exists(b => b.Name == "rage" && b.Charges >= 50))))
                                         {
                                             if (Settings.enduringCryEnabled && skill.Id == SkillInfo.enduringCry.Id)
                                             {
