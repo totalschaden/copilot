@@ -4,12 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoPilot
 {
     internal class ImGuiDrawSettings 
     {
+        public static void SetText(string p_Text)
+        {
+            Thread STAThread = new Thread(
+                delegate ()
+                {
+                // Use a fully qualified name for Clipboard otherwise it
+                // will end up calling itself.
+                System.Windows.Forms.Clipboard.SetText(p_Text);
+                });
+            STAThread.SetApartmentState(ApartmentState.STA);
+            STAThread.Start();
+            STAThread.Join();
+        }
         internal static void DrawImGuiSettings()
         {
             System.Numerics.Vector4 green = new System.Numerics.Vector4(0.102f, 0.388f, 0.106f, 1.000f);
@@ -100,12 +114,18 @@ namespace CoPilot
                 ImGui.PushID(99999);
                 if (ImGui.TreeNodeEx("Donation", collapsingHeaderFlags))
                 {
-                    ImGui.Text("I was asked to add a way to donate, as im not using any online payment services the only way would be Amazon.de Wishlist.");
-                    ImGui.NewLine();
                     ImGui.Text("Thanks to anyone who is considering this.");
-                    if(ImGui.Button("Open Wishlist"))
+                    if(ImGui.Button("Open Amazon.de Wishlist"))
                     {
                         System.Diagnostics.Process.Start("https://www.amazon.de/hz/wishlist/ls/MZ543BDBC6PJ?ref_=wl_share");
+                    }
+                    if (ImGui.Button("Copy BTC Adress"))
+                    {
+                        SetText("bc1qwjpdf9q3n94e88m3z398udjagach5u56txwpkh");
+                    }
+                    if (ImGui.Button("Copy ETH Adress"))
+                    {
+                        SetText("0x78Af12D08B32f816dB9788C5Cf3122693143ed78");
                     }
                 }
             }
