@@ -20,10 +20,16 @@ namespace CoPilot
         public RangeNode<float> guardianHpPct = new RangeNode<float>(35f, 0f, 100f);
         #endregion
 
+        #region Auto Quit
+        public ToggleNode mirageEnabled = new ToggleNode(false);
+        public RangeNode<int> mirageRange = new RangeNode<int>(70, 0, 1000);
+        #endregion
+
         #region Convocation
         public ToggleNode convocationEnabled = new ToggleNode(false);
         public RangeNode<float> convocationHp = new RangeNode<float>(35f, 0f, 100f);
         #endregion
+
         #region Phaserun
         public ToggleNode phaserunEnabled = new ToggleNode(false);
         public RangeNode<int> phaserunDelay = new RangeNode<int>(4000, 100, 4100);

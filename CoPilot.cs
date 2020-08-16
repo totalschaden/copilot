@@ -49,6 +49,7 @@ namespace CoPilot
         private DateTime lastAutoGolem = new DateTime();
         private DateTime lastBrandRecall = new DateTime();
         private DateTime lastTempestShield = new DateTime();
+        private DateTime lastMirage = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -393,7 +394,16 @@ namespace CoPilot
                         if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 || player.CurMana < manaCost)
                             continue;
 
-
+                        if (Settings.mirageEnabled)
+                        {
+                            skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out int mirage);
+                            if ((DateTime.Now - lastMirage).TotalMilliseconds > 500 && mirage >= 1 && CountEnemysAroundMouse(Settings.mirageRange.Value) > 0 &&
+                                !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
+                            {
+                                KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                lastMirage = DateTime.Now;
+                            }
+                        }
                         #region Enduring Cry / Rallying Cry
                         if (Settings.enduringCryEnabled || Settings.rallyingCryEnabled)
                         {

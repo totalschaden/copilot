@@ -503,6 +503,26 @@ namespace CoPilot
 
             try
             {
+                if (CoPilot.instance.Settings.mirageEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(19);
+                if (ImGui.TreeNodeEx("Mirage Archer", collapsingHeaderFlags))
+                {
+                    ImGui.Text("Currently only check if an enemy is near mouse, recommend < 75 range when only firing 1 arrow.");
+                    ImGui.Text("Works alot better with Volley/GMP, Increase Range by try&error");
+                    CoPilot.instance.Settings.mirageEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.mirageEnabled.Value);
+                    CoPilot.instance.Settings.mirageRange.Value = ImGuiExtension.IntSlider("Enemy Range near Mouse", CoPilot.instance.Settings.mirageRange);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+
+            try
+            {
                 if (CoPilot.instance.Settings.minesEnabled)
                     ImGui.PushStyleColor(ImGuiCol.Header, green);
                 else
