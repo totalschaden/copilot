@@ -20,7 +20,7 @@ namespace CoPilot
         public RangeNode<float> guardianHpPct = new RangeNode<float>(35f, 0f, 100f);
         #endregion
 
-        #region Auto Quit
+        #region Mirage Archer
         public ToggleNode mirageEnabled = new ToggleNode(false);
         public RangeNode<int> mirageRange = new RangeNode<int>(70, 0, 1000);
         #endregion
