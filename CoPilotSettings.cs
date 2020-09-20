@@ -31,6 +31,7 @@ namespace CoPilot
         public RangeNode<int> convocationMobRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionPct = new RangeNode<int>(50, 0, 100);
+        public RangeNode<int> convocationCooldown = new RangeNode<int>(3100, 100, 3100);
         #endregion
 
         #region Phaserun

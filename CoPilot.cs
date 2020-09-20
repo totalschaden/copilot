@@ -50,6 +50,7 @@ namespace CoPilot
         private DateTime lastBrandRecall = new DateTime();
         private DateTime lastTempestShield = new DateTime();
         private DateTime lastMirage = new DateTime();
+        private DateTime lastConvocation = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -846,7 +847,7 @@ namespace CoPilot
                         {
                             try
                             {
-                                if (skill.Id == SkillInfo.convocation.Id)
+                                if (skill.Id == SkillInfo.convocation.Id && (DateTime.Now - lastConvocation).TotalMilliseconds > Settings.convocationCooldown)
                                 {
                                     if (GetMonsterWithin(2000, MonsterRarity.Unique) > 0)
                                         return;
