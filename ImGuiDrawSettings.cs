@@ -494,6 +494,9 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.convocationEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.convocationEnabled.Value);
                     CoPilot.instance.Settings.guardianHpPct.Value = ImGuiExtension.FloatSlider("Summon HP% below", CoPilot.instance.Settings.guardianHpPct);
+                    CoPilot.instance.Settings.convocationMobRange.Value = ImGuiExtension.IntSlider("Mob Trigger Range", CoPilot.instance.Settings.convocationMobRange);
+                    CoPilot.instance.Settings.convocationMinnionRange.Value = ImGuiExtension.IntSlider("Minnion Range", CoPilot.instance.Settings.convocationMinnionRange);
+                    CoPilot.instance.Settings.convocationMinnionPct.Value = ImGuiExtension.IntSlider("min. % Minnions in Range", CoPilot.instance.Settings.convocationMinnionPct);
                 }
             }
             catch (Exception e)

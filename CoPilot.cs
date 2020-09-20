@@ -87,6 +87,26 @@ namespace CoPilot
             Core.ParallelRunner.Run(skillCoroutine);
             return true;
         }
+        public int GetMinnionsWithin(float maxDistance)
+        {
+            int count = 0;
+            float maxDistanceSquare = maxDistance * maxDistance;
+            foreach (var minnion in summons.minnions)
+            {
+                var monsterPosition = minnion.Pos;
+
+                var xDiff = playerPosition.X - monsterPosition.X;
+                var yDiff = playerPosition.Y - monsterPosition.Y;
+                var monsterDistanceSquare = (xDiff * xDiff + yDiff * yDiff);
+
+                if (monsterDistanceSquare <= maxDistanceSquare)
+                {
+                    count++;
+                }
+
+            }
+            return count;
+        }
         public int GetMonsterWithin(float maxDistance, MonsterRarity rarity = MonsterRarity.White)
         {
             int count = 0;
@@ -827,11 +847,17 @@ namespace CoPilot
                             try
                             {
                                 if (skill.Id == SkillInfo.convocation.Id)
-                                {                                
-                                    if (GetMonsterWithin(1000, MonsterRarity.Unique) == 0 && Math.Round(summons.GetLowestMinionHpp()) * 100 < Settings.convocationHp.Value)
+                                {
+                                    if (GetMonsterWithin(2000, MonsterRarity.Unique) > 0)
+                                        return;
+                                    if (Math.Round(summons.GetLowestMinionHpp()) * 100 < Settings.convocationHp.Value)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    }                                    
+                                    }           
+                                    else if (GetMonsterWithin(Settings.convocationMobRange) > 0 && (GetMinnionsWithin(Settings.convocationMinnionRange) / summons.minnions.Count) * 100 <= Settings.convocationMinnionPct)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    }
                                 }
                             }
                             catch (Exception e)

@@ -28,6 +28,9 @@ namespace CoPilot
         #region Convocation
         public ToggleNode convocationEnabled = new ToggleNode(false);
         public RangeNode<float> convocationHp = new RangeNode<float>(35f, 0f, 100f);
+        public RangeNode<int> convocationMobRange = new RangeNode<int>(300, 0, 4000);
+        public RangeNode<int> convocationMinnionRange = new RangeNode<int>(300, 0, 4000);
+        public RangeNode<int> convocationMinnionPct = new RangeNode<int>(50, 0, 100);
         #endregion
 
         #region Phaserun
