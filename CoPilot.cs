@@ -330,11 +330,12 @@ namespace CoPilot
         {
             if (Settings.Enable)
             {
-                if ((WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
+                if (Settings.autoQuitHotkeyEnabled && (WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
                 {
-                    LogMessage("Panic Quit...");
+                    LogMessage("Copilot: Panic Quit...");
                     Quit();
                 }
+
 
                 if (!GameController.Area.CurrentArea.IsHideout && !GameController.Area.CurrentArea.IsTown /*&& !IngameUi.StashElement.IsVisible && !IngameUi.OpenRightPanel.IsVisible*/ )
                 {
@@ -821,7 +822,7 @@ namespace CoPilot
                                         {
                                             Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
                                             if (Settings.debugMode.Value)
-                                                LogMessage("Detected Key Priority Problem due to User Input, fixing.");
+                                                LogMessage("Copilot: Detected Key Priority Problem due to User Input, fixing.");
                                         }
                                         if (!Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) && !Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value))
                                         {

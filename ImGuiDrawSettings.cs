@@ -196,10 +196,11 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.autoQuitEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoQuitEnabled.Value);
                     CoPilot.instance.Settings.hpPctQuit.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.hpPctQuit);
-                    CoPilot.instance.Settings.esPctQuit.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.esPctQuit);
-                    CoPilot.instance.Settings.forcedAutoQuit.Value = ImGuiExtension.HotkeySelector("Force Quit Key: " + CoPilot.instance.Settings.forcedAutoQuit.Value, CoPilot.instance.Settings.forcedAutoQuit.Value);
+                    CoPilot.instance.Settings.esPctQuit.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.esPctQuit);                    
                     CoPilot.instance.Settings.autoQuitGuardian.Value = ImGuiExtension.Checkbox("Guardian Auto Quit", CoPilot.instance.Settings.autoQuitGuardian.Value);
                     CoPilot.instance.Settings.guardianHpPct.Value = ImGuiExtension.FloatSlider("Guardian HP%", CoPilot.instance.Settings.guardianHpPct);
+                    CoPilot.instance.Settings.autoQuitHotkeyEnabled.Value = ImGuiExtension.Checkbox("Hotkey Enabled", CoPilot.instance.Settings.autoQuitHotkeyEnabled.Value);
+                    CoPilot.instance.Settings.forcedAutoQuit.Value = ImGuiExtension.HotkeySelector("Force Quit Hotkey: " + CoPilot.instance.Settings.forcedAutoQuit.Value, CoPilot.instance.Settings.forcedAutoQuit.Value);
 
                 }
             }

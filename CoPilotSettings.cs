@@ -13,11 +13,13 @@ namespace CoPilot
 
         #region Auto Quit
         public ToggleNode autoQuitEnabled = new ToggleNode(false);
+        public ToggleNode autoQuitHotkeyEnabled = new ToggleNode(true);
         public HotkeyNode forcedAutoQuit = new HotkeyNode(Keys.F4);
         public RangeNode<float> hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
         public RangeNode<float> esPctQuit = new RangeNode<float>(0f, 0f, 100f);
         public ToggleNode autoQuitGuardian = new ToggleNode(false);
         public RangeNode<float> guardianHpPct = new RangeNode<float>(35f, 0f, 100f);
+
         #endregion
 
         #region Mirage Archer
