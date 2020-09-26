@@ -131,6 +131,13 @@ namespace CoPilot
 
 
         #endregion
+        public ToggleNode autoCurseEnabled = new ToggleNode(false);
+        public RangeNode<int> autoCurseRange = new RangeNode<int>(300, 100, 1000);
+        public RangeNode<int> autoCurseCooldown = new RangeNode<int>(1000, 100, 5000);
+        public RangeNode<int> autoCurseMinEnemys = new RangeNode<int>(5, 1, 20);
+        #region Auto Curse
+
+        #endregion
 
         #region Tempest Shield
         public ToggleNode tempestShieldEnabled = new ToggleNode(false);

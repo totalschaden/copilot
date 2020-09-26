@@ -51,6 +51,7 @@ namespace CoPilot
         private DateTime lastTempestShield = new DateTime();
         private DateTime lastMirage = new DateTime();
         private DateTime lastConvocation = new DateTime();
+        private DateTime lastCurse = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -173,6 +174,40 @@ namespace CoPilot
             }
             //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
             return count;
+        }
+
+        public int CountNonCursedEnemysAroundMouse(float maxDistance)
+        {
+            int count = 0;
+            float maxDistanceSquare = maxDistance * maxDistance;
+            foreach (var enemy in enemys)
+            {
+                var monsterPosition = enemy.Pos;
+                var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
+                var cursorPosition = MouseTools.GetCursorPosition();
+
+                var xDiff = screenPosition.X - cursorPosition.X;
+                var yDiff = screenPosition.Y - cursorPosition.Y;
+                var monsterDistanceSquare = (xDiff * xDiff + yDiff * yDiff);
+                if (monsterDistanceSquare <= maxDistanceSquare && !EntityHasCurse(enemy))
+                {
+                    if (enemy.Rarity == MonsterRarity.Unique)
+                        return 0;
+                    count++;
+                }
+            }
+            //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
+            return count;
+        }
+
+        public bool EntityHasCurse(Entity entity)
+        {
+            if (entity.GetComponent<Life>().Buffs.Exists(x => 
+            x.Name == SkillInfo.punishment.BuffName))
+            {
+                return true;
+            }
+            return false;
         }
 
         // Taken from ->
@@ -864,6 +899,27 @@ namespace CoPilot
                                     }           
                                     else if (GetMonsterWithin(Settings.convocationMobRange) > 0 && (GetMinnionsWithin(Settings.convocationMinnionRange) / summons.minnions.Count) * 100 <= Settings.convocationMinnionPct)
                                     {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+
+                        #region Auto Curse
+                        if (Settings.convocationEnabled)
+                        {
+                            try
+                            {
+                                if (skill.Id == SkillInfo.punishment.Id && (DateTime.Now - lastCurse).TotalMilliseconds > Settings.autoCurseCooldown)
+                                {
+                                    if (CountNonCursedEnemysAroundMouse(Settings.autoCurseRange) >= Settings.autoCurseMinEnemys)
+                                    {
+                                        lastCurse = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     }
                                 }

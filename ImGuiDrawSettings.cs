@@ -534,6 +534,26 @@ namespace CoPilot
 
             try
             {
+                if (CoPilot.instance.Settings.autoCurseEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(20);
+                if (ImGui.TreeNodeEx("Auto Curse (Testing: Only Punishment atm)", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.autoCurseEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoCurseEnabled.Value);
+                    CoPilot.instance.Settings.autoCurseCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.autoCurseCooldown);
+                    CoPilot.instance.Settings.autoCurseRange.Value = ImGuiExtension.IntSlider("Enemy Range near Mouse", CoPilot.instance.Settings.autoCurseRange);
+                    CoPilot.instance.Settings.autoCurseMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys not Cursed", CoPilot.instance.Settings.autoCurseMinEnemys);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+
+            try
+            {
                 if (CoPilot.instance.Settings.minesEnabled)
                     ImGui.PushStyleColor(ImGuiCol.Header, green);
                 else
