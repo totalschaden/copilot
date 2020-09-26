@@ -574,7 +574,7 @@ namespace CoPilot
                                     summons.rockGolem < Settings.autoGolemRockMax || 
                                     summons.boneGolem < Settings.autoBoneMax || 
                                     summons.dropBearUniqueSummoned < Settings.autoGolemDropBearMax)
-                                    && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0)
+                                    && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(Settings.autoGolemAvoidRange) == 0)
                                 {
                                     if (skill.Id == SkillInfo.chaosGolem.Id && summons.chaosElemental < Settings.autoGolemChaosMax)
                                     {
@@ -706,6 +706,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region Offerings
                         if (Settings.offeringsEnabled)
                         {
@@ -727,6 +728,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region Any Vaal Skill
                         if (Settings.anyVaalEnabled)
                         {
@@ -749,6 +751,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region Brand Recall
                         if (Settings.brandRecallEnabled)
                         {
@@ -786,6 +789,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region Tempest Shield
                         if (Settings.tempestShieldEnabled)
                         {
@@ -806,6 +810,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region AutoAttack Cyclone / Nova / 
                         if (Settings.autoAttackEnabled)
                         {
@@ -843,6 +848,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region Convocation
                         if (Settings.convocationEnabled)
                         {
@@ -850,7 +856,7 @@ namespace CoPilot
                             {
                                 if (skill.Id == SkillInfo.convocation.Id && (DateTime.Now - lastConvocation).TotalMilliseconds > Settings.convocationCooldown)
                                 {
-                                    if (GetMonsterWithin(2000, MonsterRarity.Unique) > 0)
+                                    if (GetMonsterWithin(Settings.convocationAvoidUniqueRange, MonsterRarity.Unique) > 0)
                                         return;
                                     if (Math.Round(summons.GetLowestMinionHpp()) * 100 < Settings.convocationHp.Value)
                                     {

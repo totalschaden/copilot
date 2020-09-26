@@ -168,6 +168,8 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.autoSummonEnabled.Value = ImGuiExtension.Checkbox("Auto Summons", CoPilot.instance.Settings.autoSummonEnabled.Value);
                     CoPilot.instance.Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Auto Golem", CoPilot.instance.Settings.autoGolemEnabled.Value);
+                    CoPilot.instance.Settings.autoZombieEnabled.Value = ImGuiExtension.Checkbox("Auto Zombies", CoPilot.instance.Settings.autoZombieEnabled.Value);
+                    CoPilot.instance.Settings.autoGolemAvoidRange.Value = ImGuiExtension.IntSlider("Do not use when Enemys within", CoPilot.instance.Settings.autoGolemAvoidRange);
                     CoPilot.instance.Settings.autoGolemChaosMax.Value = ImGuiExtension.IntSlider("Chaos Golems max.", CoPilot.instance.Settings.autoGolemChaosMax);
                     CoPilot.instance.Settings.autoGolemFireMax.Value = ImGuiExtension.IntSlider("Flame Golems max.", CoPilot.instance.Settings.autoGolemFireMax);
                     CoPilot.instance.Settings.autoGolemIceMax.Value = ImGuiExtension.IntSlider("Ice Golems max.", CoPilot.instance.Settings.autoGolemIceMax);
@@ -175,7 +177,7 @@ namespace CoPilot
                     CoPilot.instance.Settings.autoGolemRockMax.Value = ImGuiExtension.IntSlider("Stone Golems max.", CoPilot.instance.Settings.autoGolemRockMax);
                     CoPilot.instance.Settings.autoBoneMax.Value = ImGuiExtension.IntSlider("Carrion Golems max.", CoPilot.instance.Settings.autoBoneMax);
                     CoPilot.instance.Settings.autoGolemDropBearMax.Value = ImGuiExtension.IntSlider("Beastial Ursa Max.", CoPilot.instance.Settings.autoGolemDropBearMax);
-                    CoPilot.instance.Settings.autoZombieEnabled.Value = ImGuiExtension.Checkbox("Auto Zombies", CoPilot.instance.Settings.autoZombieEnabled.Value);
+                    
                 }
             }
             catch (Exception e)
@@ -494,12 +496,15 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Convocation", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.convocationEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.convocationEnabled.Value);
+                    CoPilot.instance.Settings.convocationAvoidUniqueRange.Value = ImGuiExtension.IntSlider("Do not use when Unique Enemy within", CoPilot.instance.Settings.convocationAvoidUniqueRange);
                     CoPilot.instance.Settings.convocationCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.convocationCooldown);
                     CoPilot.instance.Settings.guardianHpPct.Value = ImGuiExtension.FloatSlider("Summon HP% below", CoPilot.instance.Settings.guardianHpPct);
                     CoPilot.instance.Settings.convocationMobRange.Value = ImGuiExtension.IntSlider("Mob Trigger Range", CoPilot.instance.Settings.convocationMobRange);
                     CoPilot.instance.Settings.convocationMinnionRange.Value = ImGuiExtension.IntSlider("Minnion Range", CoPilot.instance.Settings.convocationMinnionRange);
                     CoPilot.instance.Settings.convocationMinnionPct.Value = ImGuiExtension.IntSlider("min. % Minnions in Range", CoPilot.instance.Settings.convocationMinnionPct);
-                    
+
+                    ImGui.Text("This will Summon your Minnions when min% minnions are not within Minnion Range, and there is an enemys within Mob Trigger Range.");
+
                 }
             }
             catch (Exception e)

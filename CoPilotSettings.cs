@@ -34,6 +34,7 @@ namespace CoPilot
         public RangeNode<int> convocationMinnionRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionPct = new RangeNode<int>(50, 0, 100);
         public RangeNode<int> convocationCooldown = new RangeNode<int>(3100, 100, 3100);
+        public RangeNode<int> convocationAvoidUniqueRange = new RangeNode<int>(1000, 100, 2000);
         #endregion
 
         #region Phaserun
@@ -125,7 +126,7 @@ namespace CoPilot
         public RangeNode<int> autoGolemRockMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoBoneMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
-
+        public RangeNode<int> autoGolemAvoidRange = new RangeNode<int>(1000, 100, 2000);
         public ToggleNode autoZombieEnabled = new ToggleNode(false);
 
 
