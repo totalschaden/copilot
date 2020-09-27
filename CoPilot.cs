@@ -895,10 +895,12 @@ namespace CoPilot
                                         return;
                                     if (Math.Round(summons.GetLowestMinionHpp()) * 100 < Settings.convocationHp.Value)
                                     {
+                                        lastConvocation = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     }           
                                     else if (GetMonsterWithin(Settings.convocationMobRange) > 0 && (GetMinnionsWithin(Settings.convocationMinnionRange) / summons.minnions.Count) * 100 <= Settings.convocationMinnionPct)
                                     {
+                                        lastConvocation = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     }
                                 }
