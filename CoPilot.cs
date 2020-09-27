@@ -913,7 +913,7 @@ namespace CoPilot
                         #endregion
 
                         #region Auto Curse
-                        if (Settings.convocationEnabled)
+                        if (Settings.autoCurseEnabled)
                         {
                             try
                             {
