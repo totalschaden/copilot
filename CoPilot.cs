@@ -359,7 +359,8 @@ namespace CoPilot
             //base.DrawSettings();
 
             // Draw Custom GUI
-            ImGuiDrawSettings.DrawImGuiSettings();            
+            if (Settings.Enable)
+                ImGuiDrawSettings.DrawImGuiSettings();
         }
         public override void Render()
         {
@@ -437,7 +438,7 @@ namespace CoPilot
 
 
                     // Do not Cast anything while we are untouchable or Chat is Open
-                    if (buffs.Exists(x => x.Name == "grace_period") /*|| GameController.IngameState.IngameUi.ChatBox.IsVisible*/) // Chatbox always true since 08.08.2020 offset
+                    if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible)
                         return;
 
 
@@ -451,16 +452,25 @@ namespace CoPilot
                         if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 || player.CurMana < manaCost)
                             continue;
 
+                        #region Mirage Archer
                         if (Settings.mirageEnabled)
                         {
-                            skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out int mirage);
-                            if ((DateTime.Now - lastMirage).TotalMilliseconds > 500 && mirage >= 1 && CountEnemysAroundMouse(Settings.mirageRange.Value) > 0 &&
-                                !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
+                            try
                             {
-                                KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                lastMirage = DateTime.Now;
+                                skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out int mirage);
+                                if ((DateTime.Now - lastMirage).TotalMilliseconds > 500 && mirage >= 1 && CountEnemysAroundMouse(Settings.mirageRange.Value) > 0 &&
+                                !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
+                                {
+                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    lastMirage = DateTime.Now;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
                             }
                         }
+                        #endregion
                         #region Enduring Cry / Rallying Cry
                         if (Settings.enduringCryEnabled || Settings.rallyingCryEnabled)
                         {
