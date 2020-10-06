@@ -373,7 +373,8 @@ namespace CoPilot
                 }
 
 
-                if (!GameController.Area.CurrentArea.IsHideout && !GameController.Area.CurrentArea.IsTown /*&& !IngameUi.StashElement.IsVisible && !IngameUi.OpenRightPanel.IsVisible*/ )
+                if (!GameController.Area.CurrentArea.IsHideout && !GameController.Area.CurrentArea.IsTown && !GameController.IngameState.IngameUi.StashElement.IsVisible && 
+                    !GameController.IngameState.IngameUi.NpcDialog.IsVisible && !GameController.IngameState.IngameUi.SellWindow.IsVisible)
                 {
 
                     localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
@@ -394,13 +395,6 @@ namespace CoPilot
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
                     if (Settings.autoGolemEnabled) { }
                         summons.UpdateSummons();
-
-                    //int volaCount = GameController.Entities.Where(x => x.Path.Contains("VolatileDeadCore")).Count();
-                    //LogError("Vola: " + volaCount.ToString());
-
-                    // Feature request
-                    //  LeHeupOfSoupheute um 19:49 Uhr
-                    //  Would it be possible to add convocate on nearby enemies? Pretty please
 
                     // Option for Cyclone on destroyable stuff ?
                     // Chest isTargetable && !isOpen && isHostile
@@ -471,6 +465,7 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
                         #region Enduring Cry / Rallying Cry
                         if (Settings.enduringCryEnabled || Settings.rallyingCryEnabled)
                         {
@@ -942,6 +937,26 @@ namespace CoPilot
                             }
                         }
                         #endregion
+
+                        #region Detonate Mines ( to be done )
+                        if (Settings.minesEnabled)
+                        {
+                            try
+                            {
+                                var remoteMines = localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x.Entity != null && x.Entity.Path == "Metadata/MiscellaneousObjects/RemoteMine").ToList();
+
+                                // Removed Logic
+                                // What should a proper Detonator do and when ?
+                                // Detonate Mines when they have the chance to hit a target (Range), include min. mines ?
+                                // Internal delay 500-1000ms ?
+                                // Removing/Filter enemys that are not "deployed" yet / invunerale from enemys list ? 
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
                     }
 
                     #region Delve Flare
@@ -974,30 +989,6 @@ namespace CoPilot
                                     KeyPress(Settings.customKey);
                                     lastCustom = DateTime.Now;
                                 }
-
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            LogError(e.ToString());
-                        }
-                    }
-                    #endregion
-
-                    #region Detonate Mines ( to be done )
-                    if (Settings.minesEnabled)
-                    {
-                        try
-                        {
-                            if (GCD())
-                            {
-                                var remoteMines = localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x.Entity != null && x.Entity.Path == "Metadata/MiscellaneousObjects/RemoteMine").ToList();
-
-                                // Removed Logic
-                                // What should a proper Detonator do and when ?
-                                // Detonate Mines when they have the chance to hit a target (Range), include min. mines ?
-                                // Internal delay 500-1000ms ?
-                                // Removing/Filter enemys that are not "deployed" yet / invunerale from enemys list ? 
 
                             }
                         }
