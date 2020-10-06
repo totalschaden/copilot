@@ -652,11 +652,11 @@ namespace CoPilot
                                         lastAutoGolem = DateTime.Now;
                                     }
                                 }
-                                if (Settings.autoZombieEnabled && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200 && !isCasting && !isAttacking && GetMonsterWithin(600) == 0
-                                    && skill.Id == SkillInfo.raiseZombie.Id && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0)
+                                if (Settings.autoZombieEnabled && skill.Id == SkillInfo.raiseZombie.Id)
                                 {
                                     skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out int maxZombies);
-                                    if (summons.zombies < maxZombies)
+                                    if (summons.zombies < maxZombies && !isCasting && !isAttacking && GetMonsterWithin(600) == 0
+                                    && CountCorpsesAroundMouse(mouseAutoSnapRange) > 0 && (DateTime.Now - lastAutoGolem).TotalMilliseconds > 1200)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         lastAutoGolem = DateTime.Now;
