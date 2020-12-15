@@ -554,6 +554,24 @@ namespace CoPilot
 
             try
             {
+                if (CoPilot.instance.Settings.bladeVortex)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(21);
+                if (ImGui.TreeNodeEx("Blade Cortex", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.bladeVortex.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bladeVortex.Value);
+                    CoPilot.instance.Settings.bladeVortexCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.bladeVortexCooldown);
+                    CoPilot.instance.Settings.bladeVortexRange.Value = ImGuiExtension.IntSlider("Enemy Range", CoPilot.instance.Settings.bladeVortexRange);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+            try
+            {
                 if (CoPilot.instance.Settings.minesEnabled)
                     ImGui.PushStyleColor(ImGuiCol.Header, green);
                 else

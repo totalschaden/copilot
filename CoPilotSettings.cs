@@ -128,15 +128,19 @@ namespace CoPilot
         public RangeNode<int> autoGolemDropBearMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemAvoidRange = new RangeNode<int>(1000, 100, 2000);
         public ToggleNode autoZombieEnabled = new ToggleNode(false);
-
-
         #endregion
+
+        #region Auto Curse
         public ToggleNode autoCurseEnabled = new ToggleNode(false);
         public RangeNode<int> autoCurseRange = new RangeNode<int>(300, 100, 1000);
         public RangeNode<int> autoCurseCooldown = new RangeNode<int>(1000, 100, 5000);
         public RangeNode<int> autoCurseMinEnemys = new RangeNode<int>(5, 1, 20);
-        #region Auto Curse
+        #endregion
 
+        #region Blade Vortex
+        public ToggleNode bladeVortex = new ToggleNode(false);
+        public RangeNode<int> bladeVortexRange = new RangeNode<int>(300, 100, 1000);
+        public RangeNode<int> bladeVortexCooldown = new RangeNode<int>(2750, 100, 5000);
         #endregion
 
         #region Tempest Shield

@@ -52,6 +52,7 @@ namespace CoPilot
         private DateTime lastMirage = new DateTime();
         private DateTime lastConvocation = new DateTime();
         private DateTime lastCurse = new DateTime();
+        private DateTime lastBladeVortex = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -126,7 +127,6 @@ namespace CoPilot
                 {
                     count++;
                 }
-
             }
             return count;
         }
@@ -385,19 +385,13 @@ namespace CoPilot
                     isMoving = localPlayer.GetComponent<Actor>().isMoving;
                     skills = localPlayer.GetComponent<Actor>().ActorSkills;
                     vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
-
                     playerPosition = GameController.Player.Pos;
-                    // Bugged in 3.11 Hud, Monsters shown as isDead true for whatever reason.
-                    //enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && !x.IsDead && x.IsAlive && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
-                    // Use thif for now.
-                    enemys = GameController.Entities.Where(x => x.IsValid && x.IsHostile && !x.IsHidden && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
+
+                    enemys = GameController.Entities.Where(x => x != null && x.IsValid && x.IsHostile && !x.IsHidden && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
                     if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
                         corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
                     if (Settings.autoGolemEnabled) { }
                         summons.UpdateSummons();
-
-                    // Option for Cyclone on destroyable stuff ?
-                    // Chest isTargetable && !isOpen && isHostile
 
                     #region Auto Quit
                     if (Settings.autoQuitEnabled)
@@ -430,11 +424,9 @@ namespace CoPilot
                     }
                     #endregion
 
-
                     // Do not Cast anything while we are untouchable or Chat is Open
                     if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible)
                         return;
-
 
                     // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
                     // Currently thats unanavailable in API.
@@ -927,6 +919,27 @@ namespace CoPilot
                                     if (CountNonCursedEnemysAroundMouse(Settings.autoCurseRange) >= Settings.autoCurseMinEnemys)
                                     {
                                         lastCurse = DateTime.Now;
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+
+                        #region Blade Vortex
+                        if (Settings.bladeVortex)
+                        {
+                            try
+                            {
+                                if (skill.Id == SkillInfo.bladeVortex.Id)
+                                {
+                                    if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x => x.Name == "blade_vortex_counter" && x.Charges >= 10) && (DateTime.Now - lastBladeVortex).TotalMilliseconds > Settings.bladeVortexCooldown)
+                                    {
+                                        lastBladeVortex = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     }
                                 }
