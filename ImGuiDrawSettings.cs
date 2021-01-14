@@ -570,6 +570,25 @@ namespace CoPilot
             {
                 CoPilot.instance.LogError(e.ToString());
             }
+
+            try
+            {
+                if (CoPilot.instance.Settings.bladeBlast)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(22);
+                if (ImGui.TreeNodeEx("Blade Blast", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.bladeBlast.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bladeBlast.Value);
+                    CoPilot.instance.Settings.bladeBlastCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.bladeBlastCooldown);
+                    CoPilot.instance.Settings.bladeBlastEntityRange.Value = ImGuiExtension.IntSlider("Entity Mouse Range", CoPilot.instance.Settings.bladeBlastEntityRange);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
             try
             {
                 if (CoPilot.instance.Settings.minesEnabled)

@@ -53,6 +53,7 @@ namespace CoPilot
         private DateTime lastConvocation = new DateTime();
         private DateTime lastCurse = new DateTime();
         private DateTime lastBladeVortex = new DateTime();
+        private DateTime lastBladeBlast = new DateTime();
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -173,6 +174,34 @@ namespace CoPilot
                 }
             }
             //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
+            return count;
+        }
+
+        public int CountBladeBlastEnitytiesNearMouse(float maxDistance)
+        {
+            int count = 0;
+            float maxDistanceSquare = maxDistance * maxDistance;
+            var bladeEntities = GameController.Entities.Where(x => x.IsValid && !x.IsTransitioned && x.Path.Contains("GroundBlade"));
+            // Server Effect Entity from Blade Blast ?
+            // If Blade Blast already active, we dont need to cast again.
+            if (GameController.Entities.Any(x => x.Path.Contains("ServerEffect") && x.IsValid && bladeEntities.Any(y => y.GetComponent<Positioned>()?.WorldPos == x.GetComponent<Positioned>()?.WorldPos)))
+                return 0;
+                
+            foreach (var entity in bladeEntities)
+            {
+                var monsterPosition = entity.Pos;
+                var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
+                var cursorPosition = MouseTools.GetCursorPosition();
+
+                var xDiff = screenPosition.X - cursorPosition.X;
+                var yDiff = screenPosition.Y - cursorPosition.Y;
+                var monsterDistanceSquare = (xDiff * xDiff + yDiff * yDiff);
+
+                if (monsterDistanceSquare <= maxDistanceSquare)
+                {
+                    count++;
+                }
+            }
             return count;
         }
 
@@ -940,6 +969,27 @@ namespace CoPilot
                                     if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x => x.Name == "blade_vortex_counter" && x.Charges >= 10) && (DateTime.Now - lastBladeVortex).TotalMilliseconds > Settings.bladeVortexCooldown)
                                     {
                                         lastBladeVortex = DateTime.Now;
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+
+                        #region Blade Blast
+                        if (Settings.bladeBlast)
+                        {
+                            try
+                            {
+                                if (skill.Id == SkillInfo.bladeBlast.Id)
+                                {
+                                    if (!isCasting && !isAttacking && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0 && (DateTime.Now - lastBladeBlast).TotalMilliseconds > Settings.bladeBlastCooldown)
+                                    {
+                                        lastBladeBlast = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     }
                                 }

@@ -42,6 +42,7 @@ namespace CoPilot
         internal static Skill convocation = new Skill();
         internal static Skill punishment = new Skill();
         internal static Skill bladeVortex = new Skill();
+        internal static Skill bladeBlast = new Skill();
 
         internal static void ResetSkills()
         {
@@ -78,6 +79,7 @@ namespace CoPilot
             convocation = new Skill();
             punishment = new Skill();
             bladeVortex = new Skill();
+            bladeBlast = new Skill();
         }
 
         internal static void UpdateSkillInfo(bool force = false)
@@ -236,6 +238,10 @@ namespace CoPilot
                 {
                     bladeVortex.Id = skill.Id;
                     bladeVortex.BuffName = "new_new_blade_vortex";
+                }
+                else if (skill.InternalName == "blade_burst")
+                {
+                    bladeBlast.Id = skill.Id;
                 }
             }
         }
