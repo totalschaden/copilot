@@ -10,11 +10,13 @@ namespace CoPilot
     {
         private string buffName;
         private ushort id;
+        private int cooldown;
 
-        public Skill (string buffname = "", ushort id = 0)
+        public Skill (string buffname = "", ushort id = 0, int cooldown = 0)
         {
             this.buffName = buffname;
             this.id = id;
+            this.cooldown = cooldown;
         }
         public string BuffName
         {
@@ -25,6 +27,11 @@ namespace CoPilot
         {
             get { return id;  }
             set { id = value; }
+        }
+        public int Cooldown
+        {
+            get { return Cooldown; }
+            set { cooldown = value; }
         }
     } 
 }

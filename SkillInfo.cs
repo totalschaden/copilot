@@ -81,7 +81,10 @@ namespace CoPilot
             bladeVortex = new Skill();
             bladeBlast = new Skill();
         }
+        internal static void CooldownCounter()
+        {
 
+        }
         internal static void UpdateSkillInfo(bool force = false)
         {
             if (!force && (DateTime.Now - lastUpdate).TotalMilliseconds < 10000)

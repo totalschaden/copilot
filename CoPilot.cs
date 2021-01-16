@@ -54,6 +54,8 @@ namespace CoPilot
         private DateTime lastCurse = new DateTime();
         private DateTime lastBladeVortex = new DateTime();
         private DateTime lastBladeBlast = new DateTime();
+        private int bladeBlastUseIndex = 0;
+        private int lastBladeBlastUseIndex = 0;
         private readonly int delay = 70;
         private IEnumerable<Entity> enemys;
         private IEnumerable<Entity> corpses;
@@ -176,7 +178,22 @@ namespace CoPilot
             //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
             return count;
         }
-
+        public bool ShouldBladeBlast(int currentBladeBlastIndex)
+        {
+            int bladeFallUseIndex = GameController.Game.IngameState.Data.LocalPlayer.GetComponent<Actor>().ActorSkills.Find(x => x.InternalName == "bladefall").TotalUses;
+            if (currentBladeBlastIndex > lastBladeBlastUseIndex)
+            {
+                lastBladeBlastUseIndex = currentBladeBlastIndex;
+                bladeBlastUseIndex = bladeFallUseIndex;
+                return false;
+            }
+            
+            if (bladeFallUseIndex > bladeBlastUseIndex )
+            {
+                return true;
+            }
+            return false;
+        }
         public int CountBladeBlastEnitytiesNearMouse(float maxDistance)
         {
             int count = 0;
@@ -184,8 +201,10 @@ namespace CoPilot
             var bladeEntities = GameController.Entities.Where(x => x.IsValid && !x.IsTransitioned && x.Path.Contains("GroundBlade"));
             // Server Effect Entity from Blade Blast ?
             // If Blade Blast already active, we dont need to cast again.
+            // Too Slow
             if (GameController.Entities.Any(x => x.Path.Contains("ServerEffect") && x.IsValid && bladeEntities.Any(y => y.GetComponent<Positioned>()?.WorldPos == x.GetComponent<Positioned>()?.WorldPos)))
                 return 0;
+            
                 
             foreach (var entity in bladeEntities)
             {
@@ -379,6 +398,9 @@ namespace CoPilot
         {
             base.AreaChange(area);
             SkillInfo.ResetSkills();
+            bladeBlastUseIndex = 0;
+            lastBladeBlastUseIndex = 0;
+
             Coroutine skillCoroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
             Core.ParallelRunner.Run(skillCoroutine);
 
@@ -454,7 +476,7 @@ namespace CoPilot
                     #endregion
 
                     // Do not Cast anything while we are untouchable or Chat is Open
-                    if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible)
+                    if (buffs.Exists(x => x.Name == "grace_period")) // 3.13 needs offset fix|| GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible)
                         return;
 
                     // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
@@ -987,7 +1009,7 @@ namespace CoPilot
                             {
                                 if (skill.Id == SkillInfo.bladeBlast.Id)
                                 {
-                                    if (!isCasting && !isAttacking && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0 && (DateTime.Now - lastBladeBlast).TotalMilliseconds > Settings.bladeBlastCooldown)
+                                    if (!isCasting && !isAttacking && ShouldBladeBlast(skill.TotalUses) /* && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0*/ && (DateTime.Now - lastBladeBlast).TotalMilliseconds > Settings.bladeBlastCooldown)
                                     {
                                         lastBladeBlast = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
