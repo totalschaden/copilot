@@ -559,7 +559,7 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(21);
-                if (ImGui.TreeNodeEx("Blade Cortex", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Blade Vortex", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.bladeVortex.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bladeVortex.Value);
                     CoPilot.instance.Settings.bladeVortexCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.bladeVortexCooldown);
@@ -581,6 +581,7 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Blade Blast", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.bladeBlast.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bladeBlast.Value);
+                    CoPilot.instance.Settings.bladeBlastFastMode.Value = ImGuiExtension.Checkbox("Fast Mode", CoPilot.instance.Settings.bladeBlastFastMode.Value);
                     CoPilot.instance.Settings.bladeBlastCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.bladeBlastCooldown);
                     CoPilot.instance.Settings.bladeBlastEntityRange.Value = ImGuiExtension.IntSlider("Entity Mouse Range", CoPilot.instance.Settings.bladeBlastEntityRange);
                 }

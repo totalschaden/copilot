@@ -1009,7 +1009,7 @@ namespace CoPilot
                             {
                                 if (skill.Id == SkillInfo.bladeBlast.Id)
                                 {
-                                    if (!isCasting && !isAttacking && ShouldBladeBlast(skill.TotalUses) /* && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0*/ && (DateTime.Now - lastBladeBlast).TotalMilliseconds > Settings.bladeBlastCooldown)
+                                    if (!isCasting && !isAttacking && (Settings.bladeBlastFastMode && ShouldBladeBlast(skill.TotalUses)  || !Settings.bladeBlastFastMode && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0) && (DateTime.Now - lastBladeBlast).TotalMilliseconds > Settings.bladeBlastCooldown)
                                     {
                                         lastBladeBlast = DateTime.Now;
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));

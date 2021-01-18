@@ -145,6 +145,7 @@ namespace CoPilot
 
         #region Blade Blast
         public ToggleNode bladeBlast = new ToggleNode(false);
+        public ToggleNode bladeBlastFastMode = new ToggleNode(false);
         public RangeNode<int> bladeBlastEntityRange = new RangeNode<int>(300, 100, 1000);
         public RangeNode<int> bladeBlastCooldown = new RangeNode<int>(500, 100, 5000);
         #endregion
