@@ -33,26 +33,21 @@ namespace CoPilot
         public RangeNode<int> convocationMobRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionPct = new RangeNode<int>(50, 0, 100);
-        public RangeNode<int> convocationCooldown = new RangeNode<int>(3100, 100, 3100);
         public RangeNode<int> convocationAvoidUniqueRange = new RangeNode<int>(1000, 100, 2000);
         #endregion
 
         #region Phaserun
         public ToggleNode phaserunEnabled = new ToggleNode(false);
-        public RangeNode<int> phaserunDelay = new RangeNode<int>(4000, 100, 4100);
         #endregion
 
         #region Molten Shell
         public ToggleNode moltenShellEnabled = new ToggleNode(false);
-        public RangeNode<int> moltenShellDelay = new RangeNode<int>(4000, 100, 4100);
         public RangeNode<int> moltenShellRange = new RangeNode<int>(550, 100, 1000);
         #endregion
 
-        #region War Cry
+        #region Enduring Cry
         public ToggleNode enduringCryEnabled = new ToggleNode(false);
-        public RangeNode<int> warCryCooldown = new RangeNode<int>(4000, 3330, 4100);
         public RangeNode<int> warCryTriggerRange = new RangeNode<int>(550, 100, 1000);
-        public ToggleNode rallyingCryEnabled = new ToggleNode(false);
         public ToggleNode warCryKeepRage = new ToggleNode(false);
         #endregion
 
@@ -73,14 +68,12 @@ namespace CoPilot
         #region Vortex
         public ToggleNode vortexEnabled = new ToggleNode(false);
         public ToggleNode vortexFrostbolt = new ToggleNode(true);
-        public RangeNode<int> vortexDelay = new RangeNode<int>(1800, 500, 1900);
         public RangeNode<int> vortexRange = new RangeNode<int>(300, 100, 1000);
 
         #endregion
 
         #region BloodRage
         public ToggleNode bloodRageEnabled = new ToggleNode(false);
-        public RangeNode<int> bloodRageDelay = new RangeNode<int>(1000, 1000, 10100);
         public RangeNode<int> bloodRageRange = new RangeNode<int>(300, 800, 3000);
         #endregion
 
@@ -93,7 +86,6 @@ namespace CoPilot
 
         #region Doedre Effigy
         public ToggleNode doedreEffigyEnabled = new ToggleNode(false);
-        public RangeNode<int> doedreEffigyDelay = new RangeNode<int>(600, 500, 2000);
         #endregion
 
         #region Mines
@@ -110,6 +102,7 @@ namespace CoPilot
         public ToggleNode autoAttackLeftMouseCheck = new ToggleNode(true);
         public HotkeyNode autoAttackPickItKey = new HotkeyNode(Keys.Space);
         public RangeNode<int> autoAttackRange = new RangeNode<int>(500, 100, 2000);
+        public ToggleNode autoAttackCurseCheck = new ToggleNode(false);
 
 
         #endregion
@@ -140,14 +133,12 @@ namespace CoPilot
         #region Blade Vortex
         public ToggleNode bladeVortex = new ToggleNode(false);
         public RangeNode<int> bladeVortexRange = new RangeNode<int>(300, 100, 1000);
-        public RangeNode<int> bladeVortexCooldown = new RangeNode<int>(2750, 100, 5000);
         #endregion
 
         #region Blade Blast
         public ToggleNode bladeBlast = new ToggleNode(false);
         public ToggleNode bladeBlastFastMode = new ToggleNode(false);
         public RangeNode<int> bladeBlastEntityRange = new RangeNode<int>(300, 100, 1000);
-        public RangeNode<int> bladeBlastCooldown = new RangeNode<int>(500, 100, 5000);
         #endregion
 
         #region Tempest Shield
@@ -180,7 +171,6 @@ namespace CoPilot
         public ToggleNode brandRecallEnabled = new ToggleNode(false);
         public RangeNode<int> brandRecallTriggerRange = new RangeNode<int>(500, 100, 2000);
         public RangeNode<int> brandRecallMinEnemys = new RangeNode<int>(1, 0, 50);
-        public RangeNode<int> brandRecallCooldown = new RangeNode<int>(3100, 1000, 10000);
         public RangeNode<int> brandRecallMinBrands = new RangeNode<int>(0, 0, 10);
         #endregion
 

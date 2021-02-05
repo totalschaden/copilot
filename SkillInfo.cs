@@ -1,6 +1,9 @@
-﻿using System;
+﻿using ExileCore;
+using ExileCore.PoEMemory.MemoryObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -81,10 +84,22 @@ namespace CoPilot
             bladeVortex = new Skill();
             bladeBlast = new Skill();
         }
-        internal static void CooldownCounter()
+        internal static void ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
         {
+            if (skill.Cooldown > 0)
+                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)Time.TotalMilliseconds);
 
+            if (skill.Cooldown == 0 && actorSkill.TotalUses != skill.LastUsed)
+            {
+                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown : customCooldown;
+                skill.LastUsed = actorSkill.TotalUses;
+            }            
         }
+        internal static void SetCooldown(Skill skill)
+        {
+                          
+        }
+
         internal static void UpdateSkillInfo(bool force = false)
         {
             if (!force && (DateTime.Now - lastUpdate).TotalMilliseconds < 10000)
@@ -247,6 +262,12 @@ namespace CoPilot
                     bladeBlast.Id = skill.Id;
                 }
             }
+        }
+        static public float MoveTowards(float cur, float tar, float max)
+        {
+            if (Math.Abs(tar - cur) <= max)
+                return tar;
+            return cur + Math.Sign(tar - cur) * max;
         }
     }
 }

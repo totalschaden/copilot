@@ -223,7 +223,6 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Blood Rage", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.bloodRageEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bloodRageEnabled.Value);
-                    CoPilot.instance.Settings.bloodRageDelay.Value = ImGuiExtension.IntSlider("Delay", CoPilot.instance.Settings.bloodRageDelay);
                     CoPilot.instance.Settings.bloodRageRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.bloodRageRange);
                 }
             }
@@ -266,7 +265,6 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Doedre Effigy", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.doedreEffigyEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.doedreEffigyEnabled.Value);
-                    CoPilot.instance.Settings.doedreEffigyDelay.Value = ImGuiExtension.IntSlider("min. Debuff Stacks", CoPilot.instance.Settings.doedreEffigyDelay);
                 }
             }
             catch (Exception e)
@@ -297,19 +295,17 @@ namespace CoPilot
 
             try
             {
-                // Warcrys
-                if (CoPilot.instance.Settings.enduringCryEnabled || CoPilot.instance.Settings.rallyingCryEnabled)
+                // Enduring Cry
+                if (CoPilot.instance.Settings.enduringCryEnabled)
                     ImGui.PushStyleColor(ImGuiCol.Header, green);
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(8);
-                if (ImGui.TreeNodeEx("Enduring Cry / Rallying Cry", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Enduring Cry", collapsingHeaderFlags))
                 {
-                    CoPilot.instance.Settings.warCryCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.warCryCooldown);
+                    CoPilot.instance.Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.enduringCryEnabled.Value);
+                    CoPilot.instance.Settings.warCryTriggerRange.Value = ImGuiExtension.IntSlider("Enemy within Range", CoPilot.instance.Settings.warCryTriggerRange);
                     CoPilot.instance.Settings.warCryKeepRage.Value = ImGuiExtension.Checkbox("Keep Rage Up", CoPilot.instance.Settings.warCryKeepRage.Value);
-                    CoPilot.instance.Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enduring Cry Enabled", CoPilot.instance.Settings.enduringCryEnabled.Value);
-                    CoPilot.instance.Settings.warCryTriggerRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.warCryTriggerRange);
-                    CoPilot.instance.Settings.rallyingCryEnabled.Value = ImGuiExtension.Checkbox("Rallying Cry Enabled", CoPilot.instance.Settings.rallyingCryEnabled.Value);
                 }
             }
             catch (Exception e)
@@ -329,7 +325,6 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Molten Shell / Steelskin / Bone Armour / Arcane Cloak", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.moltenShellEnabled.Value);
-                    CoPilot.instance.Settings.moltenShellDelay.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.moltenShellDelay);
                     CoPilot.instance.Settings.moltenShellRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.moltenShellRange);
                 }
             }
@@ -372,7 +367,6 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Phaserun", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.phaserunEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.phaserunEnabled.Value);
-                    CoPilot.instance.Settings.phaserunDelay.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.phaserunDelay);
                 }
             }
             catch (Exception e)
@@ -392,7 +386,6 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.vortexEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.vortexEnabled.Value);
                     CoPilot.instance.Settings.vortexFrostbolt.Value = ImGuiExtension.Checkbox("When Frostbolt's flying", CoPilot.instance.Settings.vortexFrostbolt.Value);
-                    CoPilot.instance.Settings.vortexDelay.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.vortexDelay);
                     CoPilot.instance.Settings.vortexRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.vortexRange);
                 }
             }
@@ -455,7 +448,6 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Brand Recall", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.brandRecallEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.brandRecallEnabled.Value);
-                    CoPilot.instance.Settings.brandRecallCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.brandRecallCooldown);
                     CoPilot.instance.Settings.brandRecallMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", CoPilot.instance.Settings.brandRecallMinEnemys);
                     CoPilot.instance.Settings.brandRecallTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.brandRecallTriggerRange);
                     CoPilot.instance.Settings.brandRecallMinBrands.Value = ImGuiExtension.IntSlider("min. Brands Summoned", CoPilot.instance.Settings.brandRecallMinBrands);
@@ -497,7 +489,6 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.convocationEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.convocationEnabled.Value);
                     CoPilot.instance.Settings.convocationAvoidUniqueRange.Value = ImGuiExtension.IntSlider("Do not use when Unique Enemy within", CoPilot.instance.Settings.convocationAvoidUniqueRange);
-                    CoPilot.instance.Settings.convocationCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.convocationCooldown);
                     CoPilot.instance.Settings.guardianHpPct.Value = ImGuiExtension.FloatSlider("Summon HP% below", CoPilot.instance.Settings.guardianHpPct);
                     CoPilot.instance.Settings.convocationMobRange.Value = ImGuiExtension.IntSlider("Mob Trigger Range", CoPilot.instance.Settings.convocationMobRange);
                     CoPilot.instance.Settings.convocationMinnionRange.Value = ImGuiExtension.IntSlider("Minnion Range", CoPilot.instance.Settings.convocationMinnionRange);
@@ -562,7 +553,6 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Blade Vortex", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.bladeVortex.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bladeVortex.Value);
-                    CoPilot.instance.Settings.bladeVortexCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.bladeVortexCooldown);
                     CoPilot.instance.Settings.bladeVortexRange.Value = ImGuiExtension.IntSlider("Enemy Range", CoPilot.instance.Settings.bladeVortexRange);
                 }
             }
@@ -582,7 +572,6 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.bladeBlast.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bladeBlast.Value);
                     CoPilot.instance.Settings.bladeBlastFastMode.Value = ImGuiExtension.Checkbox("Fast Mode", CoPilot.instance.Settings.bladeBlastFastMode.Value);
-                    CoPilot.instance.Settings.bladeBlastCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.bladeBlastCooldown);
                     CoPilot.instance.Settings.bladeBlastEntityRange.Value = ImGuiExtension.IntSlider("Entity Mouse Range", CoPilot.instance.Settings.bladeBlastEntityRange);
                 }
             }
