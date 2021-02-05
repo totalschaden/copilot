@@ -148,6 +148,7 @@ namespace CoPilot
                     CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value);
                     CoPilot.instance.Settings.autoAttackPickItKey.Value = ImGuiExtension.HotkeySelector("PickIt Key: " + CoPilot.instance.Settings.autoAttackPickItKey.Value, CoPilot.instance.Settings.autoAttackPickItKey.Value);
                     CoPilot.instance.Settings.autoAttackRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.autoAttackRange);
+                    CoPilot.instance.Settings.autoAttackCurseCheck.Value = ImGuiExtension.Checkbox("Line of Sight / Range Check with Curse, Ignores Range Setting!", CoPilot.instance.Settings.autoAttackCurseCheck.Value);
                 }
             }
             catch (Exception e)
