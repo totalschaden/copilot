@@ -13,6 +13,7 @@ namespace CoPilot
     internal static class SkillInfo
     {
         private static DateTime lastUpdate = DateTime.MinValue;
+        private static DateTime lastDelta = new DateTime();
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
         internal static Skill boneOffering = new Skill();
@@ -87,10 +88,13 @@ namespace CoPilot
         }
         internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
         {
-            
+
+            double deltaTime = (DateTime.Now - lastDelta).TotalMilliseconds;
+            lastDelta = DateTime.Now;
+
             if (skill.Cooldown > 0)
             {
-                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)CoPilot.instance.GameController.DeltaTime);
+                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)deltaTime);
                 return false;
             }
             
