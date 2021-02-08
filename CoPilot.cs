@@ -435,6 +435,8 @@ namespace CoPilot
                     if (Settings.autoGolemEnabled) { }
                         summons.UpdateSummons();
 
+                    SkillInfo.GetDeltaTime();
+
                     #region Auto Quit
                     if (Settings.autoQuitEnabled)
                     {
@@ -558,9 +560,9 @@ namespace CoPilot
                                     }
                                     else
                                     {
-                                        if (SkillInfo.moltenShell.Cooldown == -1)
+                                        if (SkillInfo.moltenShell.Cooldown == -1 && skill.Cooldown > 0)
                                         {
-                                            SkillInfo.moltenShell.Cooldown = skill.Cooldown*100;
+                                            SkillInfo.moltenShell.Cooldown = 0;
                                         }
                                     }
                                     if (SkillInfo.ManageCooldown(SkillInfo.moltenShell, skill))

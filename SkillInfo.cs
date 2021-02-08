@@ -13,7 +13,8 @@ namespace CoPilot
     internal static class SkillInfo
     {
         private static DateTime lastUpdate = DateTime.MinValue;
-        private static DateTime lastDelta = new DateTime();
+        private static long lastTime;
+        private static float deltaTime;
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
         internal static Skill boneOffering = new Skill();
@@ -86,12 +87,15 @@ namespace CoPilot
             bladeVortex = new Skill();
             bladeBlast = new Skill();
         }
+        public static void GetDeltaTime()
+        {
+            long now = DateTime.Now.Ticks;
+            float dT = (now - lastTime) / 1000;
+            lastTime = now;
+            deltaTime = dT;
+        }
         internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
         {
-
-            double deltaTime = (DateTime.Now - lastDelta).TotalMilliseconds;
-            lastDelta = DateTime.Now;
-
             if (skill.Cooldown > 0)
             {
                 skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)deltaTime);
@@ -100,7 +104,7 @@ namespace CoPilot
             
             if (skill.Cooldown == 0 && actorSkill.TotalUses != skill.LastUsed)
             {
-                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*100 : customCooldown;
+                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*1000 : customCooldown;
                 skill.LastUsed = actorSkill.TotalUses;
                 return false;
             }
