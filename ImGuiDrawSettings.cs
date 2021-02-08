@@ -127,6 +127,7 @@ namespace CoPilot
                     {
                         SetText("0x78Af12D08B32f816dB9788C5Cf3122693143ed78");
                     }
+                    CoPilot.instance.Settings.debugMode.Value = ImGuiExtension.Checkbox("Turn on Debug Mode", CoPilot.instance.Settings.debugMode.Value);
                 }
             }
             catch (Exception e)

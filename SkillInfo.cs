@@ -1,5 +1,6 @@
 ﻿using ExileCore;
 using ExileCore.PoEMemory.MemoryObjects;
+using ExileCore.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,16 +85,31 @@ namespace CoPilot
             bladeVortex = new Skill();
             bladeBlast = new Skill();
         }
-        internal static void ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
+        internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
         {
+            
             if (skill.Cooldown > 0)
-                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)Time.TotalMilliseconds);
-
+            {
+                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)CoPilot.instance.GameController.DeltaTime);
+                return false;
+            }
+            
             if (skill.Cooldown == 0 && actorSkill.TotalUses != skill.LastUsed)
             {
-                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown : customCooldown;
+                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*100 : customCooldown;
                 skill.LastUsed = actorSkill.TotalUses;
-            }            
+                return false;
+            }
+            if (!CoPilot.instance.GCD())
+                return false;
+            actorSkill.Stats.TryGetValue(GameStat.ManaCost, out int manaCost);
+            if (CoPilot.instance.player.CurMana < manaCost)
+            {
+                return false;
+            }
+            if (skill.Cooldown == 0)
+                return true;
+            return false;
         }
         internal static void SetCooldown(Skill skill)
         {
