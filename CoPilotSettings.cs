@@ -133,6 +133,8 @@ namespace CoPilot
         #region Blade Vortex
         public ToggleNode bladeVortex = new ToggleNode(false);
         public RangeNode<int> bladeVortexRange = new RangeNode<int>(300, 100, 1000);
+        public RangeNode<int> bladeVortexCount = new RangeNode<int>(10, 1, 10);
+        public RangeNode<int> bladeVortexUnleashCount = new RangeNode<int>(3, 1, 4);
         #endregion
 
         #region Blade Blast

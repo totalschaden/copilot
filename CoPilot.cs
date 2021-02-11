@@ -964,11 +964,13 @@ namespace CoPilot
                         {
                             try
                             {
-                                if (skill.Id == SkillInfo.bladeVortex.Id)
-                                {
-                                    if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill, 2500))
+                                if (skill.Id == SkillInfo.bladeVortex.Id)                                    
+                                {                                    
+                                    skill.Stats.TryGetValue(GameStat.VirtualSupportAnticipationChargeGainIntervalMs, out int unleashCooldown);
+                                    if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill, unleashCooldown > 0 ? unleashCooldown * Settings.bladeVortexUnleashCount : 0))
                                     {
-                                        if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x => x.Name == "blade_vortex_counter" && x.Charges >= 10))
+                                        
+                                        if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x => x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }

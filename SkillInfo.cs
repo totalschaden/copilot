@@ -90,7 +90,7 @@ namespace CoPilot
         public static void GetDeltaTime()
         {
             long now = DateTime.Now.Ticks;
-            float dT = (now - lastTime) / 100;
+            float dT = (now - lastTime) / 10000;
             lastTime = now;
             deltaTime = dT;
         }
