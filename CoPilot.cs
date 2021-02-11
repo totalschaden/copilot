@@ -389,6 +389,7 @@ namespace CoPilot
         {
             base.AreaChange(area);
             SkillInfo.ResetSkills();
+            skills = null;
             bladeBlastUseIndex = 0;
             lastBladeBlastUseIndex = 0;
 
@@ -965,7 +966,7 @@ namespace CoPilot
                             {
                                 if (skill.Id == SkillInfo.bladeVortex.Id)
                                 {
-                                    if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill))
+                                    if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill, 2500))
                                     {
                                         if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x => x.Name == "blade_vortex_counter" && x.Charges >= 10))
                                         {

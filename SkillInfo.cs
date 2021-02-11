@@ -90,7 +90,7 @@ namespace CoPilot
         public static void GetDeltaTime()
         {
             long now = DateTime.Now.Ticks;
-            float dT = (now - lastTime) / 1000;
+            float dT = (now - lastTime) / 100;
             lastTime = now;
             deltaTime = dT;
         }
@@ -104,7 +104,7 @@ namespace CoPilot
             
             if (skill.Cooldown == 0 && actorSkill.TotalUses != skill.LastUsed)
             {
-                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*1000 : customCooldown;
+                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*100 : customCooldown;
                 skill.LastUsed = actorSkill.TotalUses;
                 return false;
             }
