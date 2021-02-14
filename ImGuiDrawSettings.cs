@@ -585,6 +585,23 @@ namespace CoPilot
             {
                 CoPilot.instance.LogError(e.ToString());
             }
+
+            try
+            {
+                if (CoPilot.instance.Settings.autoMapTabber)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(23);
+                if (ImGui.TreeNodeEx("Auto Map Tabber", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.autoMapTabber.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoMapTabber.Value);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
             try
             {
                 if (CoPilot.instance.Settings.minesEnabled)

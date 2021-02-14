@@ -15,6 +15,10 @@ namespace CoPilot
         private static DateTime lastUpdate = DateTime.MinValue;
         private static long lastTime;
         private static float deltaTime;
+
+        // Pseudo Skills
+        internal static Skill autoMapTabber = new Skill();
+        // Skills
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
         internal static Skill boneOffering = new Skill();
@@ -118,6 +122,16 @@ namespace CoPilot
             if (skill.Cooldown == 0)
                 return true;
             return false;
+        }
+
+        internal static bool ManageCooldown(Skill skill)
+        {
+            if (skill.Cooldown > 0)
+            {
+                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)deltaTime);
+                return false;
+            }
+            return true;
         }
         internal static void SetCooldown(Skill skill)
         {

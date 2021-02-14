@@ -35,6 +35,7 @@ namespace CoPilot
         internal List<ActorVaalSkill> vaalSkills = new List<ActorVaalSkill>();
 
         private readonly int mouseAutoSnapRange = 250;
+        private float autoTabberCD = 200;
         private DateTime lastTimeAny = new DateTime();
         private DateTime lastDelveFlare = new DateTime();
         private DateTime lastStackSkill = new DateTime();
@@ -466,6 +467,24 @@ namespace CoPilot
                         {
                             LogError(e.ToString());
                         }
+                    }
+                    #endregion
+
+                    #region Auto Map Tabber
+                    try
+                    {
+                        if (Settings.autoMapTabber)
+                        {
+                            if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi.Map.SmallMiniMap.IsVisibleLocal)
+                            {
+                                KeyPress(Keys.Tab);
+                                SkillInfo.autoMapTabber.Cooldown = 250;
+                            }
+                        }                        
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e.ToString());
                     }
                     #endregion
 

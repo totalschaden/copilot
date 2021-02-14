@@ -178,6 +178,10 @@ namespace CoPilot
         public RangeNode<int> brandRecallMinBrands = new RangeNode<int>(0, 0, 10);
         #endregion
 
+        #region Auto Map Tabber
+        public ToggleNode autoMapTabber = new ToggleNode(false);
+        #endregion
+
         #region Input Keys
         public HotkeyNode InputKey1 = new HotkeyNode(Keys.Z);
         public HotkeyNode InputKey3 = new HotkeyNode(Keys.Q);
