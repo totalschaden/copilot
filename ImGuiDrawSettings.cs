@@ -50,6 +50,7 @@ namespace CoPilot
                     CoPilot.instance.Settings.InputKey10.Value = ImGuiExtension.HotkeySelector("Use bound skill 11 Key: " + CoPilot.instance.Settings.InputKey10.Value, CoPilot.instance.Settings.InputKey10.Value);
                     CoPilot.instance.Settings.InputKey11.Value = ImGuiExtension.HotkeySelector("Use bound skill 12 Key: " + CoPilot.instance.Settings.InputKey11.Value, CoPilot.instance.Settings.InputKey11.Value);
                     CoPilot.instance.Settings.InputKey12.Value = ImGuiExtension.HotkeySelector("Use bound skill 13 Key: " + CoPilot.instance.Settings.InputKey12.Value, CoPilot.instance.Settings.InputKey12.Value);
+                    CoPilot.instance.Settings.InputKeyPickIt.Value = ImGuiExtension.HotkeySelector("PickIt Key: " + CoPilot.instance.Settings.InputKeyPickIt.Value, CoPilot.instance.Settings.InputKeyPickIt.Value);
                 }
             }
             catch (Exception e)
@@ -147,7 +148,6 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoAttackEnabled.Value);
                     CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value);
-                    CoPilot.instance.Settings.autoAttackPickItKey.Value = ImGuiExtension.HotkeySelector("PickIt Key: " + CoPilot.instance.Settings.autoAttackPickItKey.Value, CoPilot.instance.Settings.autoAttackPickItKey.Value);
                     CoPilot.instance.Settings.autoAttackRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.autoAttackRange);
                     CoPilot.instance.Settings.autoAttackCurseCheck.Value = ImGuiExtension.Checkbox("Line of Sight / Range Check with Curse, Ignores Range Setting!", CoPilot.instance.Settings.autoAttackCurseCheck.Value);
                 }

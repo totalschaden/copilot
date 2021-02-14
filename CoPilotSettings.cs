@@ -102,7 +102,6 @@ namespace CoPilot
         #region AutoAttack Cyclone / Nova etc.
         public ToggleNode autoAttackEnabled = new ToggleNode(false);
         public ToggleNode autoAttackLeftMouseCheck = new ToggleNode(true);
-        public HotkeyNode autoAttackPickItKey = new HotkeyNode(Keys.Space);
         public RangeNode<int> autoAttackRange = new RangeNode<int>(500, 100, 2000);
         public ToggleNode autoAttackCurseCheck = new ToggleNode(false);
 
@@ -194,6 +193,7 @@ namespace CoPilot
         public HotkeyNode InputKey10 = new HotkeyNode(Keys.NumPad3);
         public HotkeyNode InputKey11 = new HotkeyNode(Keys.NumPad4);
         public HotkeyNode InputKey12 = new HotkeyNode(Keys.NumPad5);
+        public HotkeyNode InputKeyPickIt = new HotkeyNode(Keys.Space);
         #endregion
 
         #region Confirm

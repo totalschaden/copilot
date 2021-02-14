@@ -473,7 +473,7 @@ namespace CoPilot
                     #region Auto Map Tabber
                     try
                     {
-                        if (Settings.autoMapTabber)
+                        if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int)Settings.InputKeyPickIt.Value))
                         {
                             if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi.Map.SmallMiniMap.IsVisibleLocal)
                             {
@@ -897,7 +897,7 @@ namespace CoPilot
                                     (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id || skill.Id == SkillInfo.flickerStrike.Id))
                                 {
                                     autoAttackUpdate = DateTime.Now;
-                                    if ((Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value) && Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex))) || Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 50)
+                                    if ((Keyboard.IsKeyDown((int)Settings.InputKeyPickIt.Value) && Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex))) || Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 50)
                                     {
                                         Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
                                         if (Settings.debugMode.Value)
@@ -907,7 +907,7 @@ namespace CoPilot
                                     if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() || !Settings.autoAttackLeftMouseCheck.Value) 
                                         && ((!Settings.autoAttackCurseCheck && GetMonsterWithin(Settings.autoAttackRange) >= 1) || (Settings.autoAttackCurseCheck && enemys.Any(x => x.Buffs.Exists(b => b.Name.Contains("curse")))) ))
                                     {
-                                        if (!Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) && !Keyboard.IsKeyDown((int)Settings.autoAttackPickItKey.Value))
+                                        if (!Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) && !Keyboard.IsKeyDown((int)Settings.InputKeyPickIt.Value))
                                         {
                                             Keyboard.KeyDown(GetSkillInputKey(skill.SkillSlotIndex));
                                             autoAttackRunning = DateTime.Now;
