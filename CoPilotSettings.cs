@@ -43,6 +43,8 @@ namespace CoPilot
         #region Molten Shell
         public ToggleNode moltenShellEnabled = new ToggleNode(false);
         public RangeNode<int> moltenShellRange = new RangeNode<int>(550, 100, 1000);
+        public RangeNode<float> moltenShellHpPct = new RangeNode<float>(100, 0f, 100f);
+        public RangeNode<float> moltenShellEsPct = new RangeNode<float>(0f, 0f, 100f);
         #endregion
 
         #region Enduring Cry

@@ -328,6 +328,8 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.moltenShellEnabled.Value);
                     CoPilot.instance.Settings.moltenShellRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.moltenShellRange);
+                    CoPilot.instance.Settings.moltenShellHpPct.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.moltenShellHpPct);
+                    CoPilot.instance.Settings.moltenShellEsPct.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.moltenShellEsPct);
                 }
             }
             catch (Exception e)

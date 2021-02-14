@@ -568,7 +568,7 @@ namespace CoPilot
                                     }
                                     if (SkillInfo.ManageCooldown(SkillInfo.moltenShell, skill))
                                     {
-                                        if (GetMonsterWithin(Settings.moltenShellRange) >= 1)
+                                        if (GetMonsterWithin(Settings.moltenShellRange) >= 1 && (Math.Round(player.HPPercentage, 3) * 100 <= Settings.moltenShellHpPct.Value || player.MaxES > 0 && (Math.Round(player.ESPercentage, 3) * 100 < Settings.moltenShellEsPct.Value)))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }
