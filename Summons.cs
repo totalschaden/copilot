@@ -19,7 +19,7 @@ namespace CoPilot
         internal int boneGolem;
         internal int dropBearUniqueSummoned;
         internal int zombies;
-        internal List<Entity> minnions = new List<Entity>();
+        internal int holyRelict;
 
         internal DateTime lastUpdate = DateTime.Now;
         
@@ -37,49 +37,46 @@ namespace CoPilot
             boneGolem = 0;
             dropBearUniqueSummoned = 0;
             zombies = 0;
-            minnions.Clear();
+            holyRelict = 0;
+
             foreach(var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
             {
                 if (obj.Entity.Path.Contains("ChaosElemental"))
                 {
                     chaosElemental++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("FireElemental"))
                 {
                     fireElemental++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("IceElemental"))
                 {
                     iceElemental++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("LightningGolem"))
                 {
                     lightningGolem++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("RockGolem"))
                 {
                     rockGolem++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("BoneGolem"))
                 {
                     boneGolem++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("DropBearUniqueSummoned"))
                 {
                     dropBearUniqueSummoned++;
-                    minnions.Add(obj.Entity);
                 }                    
                 else if (obj.Entity.Path.Contains("RaisedZombie"))
                 {
                     zombies++;
-                    minnions.Add(obj.Entity);
-                }                    
+                }
+                else if (obj.Entity.Metadata.EndsWith("HolyLivingRelic"))
+                {
+                    holyRelict++;
+                }
             }
         }
 

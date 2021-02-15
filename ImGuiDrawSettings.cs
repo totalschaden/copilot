@@ -170,6 +170,7 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.autoSummonEnabled.Value = ImGuiExtension.Checkbox("Auto Summons", CoPilot.instance.Settings.autoSummonEnabled.Value);
                     CoPilot.instance.Settings.autoGolemEnabled.Value = ImGuiExtension.Checkbox("Auto Golem", CoPilot.instance.Settings.autoGolemEnabled.Value);
+                    CoPilot.instance.Settings.autoHolyRelictEnabled.Value = ImGuiExtension.Checkbox("Auto Holy Relict", CoPilot.instance.Settings.autoHolyRelictEnabled.Value);
                     CoPilot.instance.Settings.autoZombieEnabled.Value = ImGuiExtension.Checkbox("Auto Zombies", CoPilot.instance.Settings.autoZombieEnabled.Value);
                     CoPilot.instance.Settings.autoGolemAvoidRange.Value = ImGuiExtension.IntSlider("Do not use when Enemys within", CoPilot.instance.Settings.autoGolemAvoidRange);
                     CoPilot.instance.Settings.autoGolemChaosMax.Value = ImGuiExtension.IntSlider("Chaos Golems max.", CoPilot.instance.Settings.autoGolemChaosMax);

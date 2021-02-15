@@ -18,6 +18,7 @@ namespace CoPilot
 
         // Pseudo Skills
         internal static Skill autoMapTabber = new Skill();
+        internal static Skill autoSummon = new Skill();
         // Skills
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
@@ -53,6 +54,7 @@ namespace CoPilot
         internal static Skill punishment = new Skill();
         internal static Skill bladeVortex = new Skill();
         internal static Skill bladeBlast = new Skill();
+        internal static Skill holyRelict = new Skill();
 
         internal static void ResetSkills()
         {
@@ -90,6 +92,7 @@ namespace CoPilot
             punishment = new Skill();
             bladeVortex = new Skill();
             bladeBlast = new Skill();
+            holyRelict = new Skill();
         }
         public static void GetDeltaTime()
         {
@@ -298,6 +301,10 @@ namespace CoPilot
                 else if (skill.InternalName == "blade_burst")
                 {
                     bladeBlast.Id = skill.Id;
+                }
+                else if (skill.InternalName == "summon_relic")
+                {
+                    holyRelict.Id = skill.Id;
                 }
             }
         }

@@ -111,7 +111,8 @@ namespace CoPilot
         #region Auto Summon
         public ToggleNode autoSummonEnabled = new ToggleNode(false);
         public ToggleNode autoGolemEnabled = new ToggleNode(false);
-        
+        public ToggleNode autoHolyRelictEnabled = new ToggleNode(false);
+
 
         public RangeNode<int> autoGolemChaosMax = new RangeNode<int>(0, 0, 15);
         public RangeNode<int> autoGolemFireMax = new RangeNode<int>(0, 0, 15);
