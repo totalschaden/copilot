@@ -603,6 +603,37 @@ namespace CoPilot
             {
                 CoPilot.instance.LogError(e.ToString());
             }
+
+            try
+            {
+                if (CoPilot.instance.Settings.berserkEnabled)
+                    ImGui.PushStyleColor(ImGuiCol.Header, green);
+                else
+                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushID(24);
+                if (ImGui.TreeNodeEx("Berserk", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.berserkEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.berserkEnabled.Value);
+                    CoPilot.instance.Settings.berserkRange.Value = ImGuiExtension.IntSlider("Mob Trigger Range", CoPilot.instance.Settings.berserkRange);
+                    CoPilot.instance.Settings.berserkMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.berserkMinAny);
+                    CoPilot.instance.Settings.berserkMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.berserkMinRare);
+                    CoPilot.instance.Settings.berserkMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.berserkMinUnique);
+                    CoPilot.instance.Settings.berserkMinRage.Value = ImGuiExtension.IntSlider("min Rage. Even 0 will be > min set in Skill.", CoPilot.instance.Settings.berserkMinRage);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+
+
+
+
+
+
+
+
+
             try
             {
                 if (CoPilot.instance.Settings.minesEnabled)

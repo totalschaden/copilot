@@ -182,6 +182,16 @@ namespace CoPilot
         public ToggleNode autoMapTabber = new ToggleNode(false);
         #endregion
 
+        #region Berserk
+        public ToggleNode berserkEnabled = new ToggleNode(false);
+        public RangeNode<int> berserkMinRage = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> berserkRange = new RangeNode<int>(500, 100, 1000);
+        public RangeNode<int> berserkMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> berserkMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> berserkMinUnique = new RangeNode<int>(0, 0, 50);
+
+        #endregion
+
         #region Input Keys
         public HotkeyNode InputKey1 = new HotkeyNode(Keys.Z);
         public HotkeyNode InputKey3 = new HotkeyNode(Keys.Q);

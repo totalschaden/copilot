@@ -124,6 +124,52 @@ namespace CoPilot
             return count;
         }
 
+        public bool MonsterCheck(int range, int minAny, int minRare, int minUnique)
+        {
+            int any = 0, rare = 0, unique = 0;
+            foreach (var monster in enemys)
+            {
+                if (monster.Rarity <= MonsterRarity.Magic)
+                {
+                    if(Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                    {
+                        any++;
+                    }
+                } 
+                else if (monster.Rarity == MonsterRarity.Rare)
+                {
+                    if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                    {
+                        rare++;
+                    }
+                }
+                else if (monster.Rarity == MonsterRarity.Unique)
+                {
+                    if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                    {
+                        unique++;
+                    }
+                }                
+            }
+            if (minUnique > 0 && unique >= minUnique)
+            {
+                return true;
+            }
+            if (minRare > 0 && rare >= minRare)
+            {
+                return true;
+            }
+            if (minAny > 0 && any >= minAny)
+            {
+                return true;
+            }
+            if (minAny == 0 && minRare == 0 && minUnique == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public int CountCorpsesAroundMouse(float maxDistance)
         {
             int count = 0;
@@ -592,6 +638,43 @@ namespace CoPilot
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }
                                     }                                    
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                LogError(e.ToString());
+                            }
+                        }
+                        #endregion
+
+                        #region Berseker
+                        if (Settings.berserkEnabled)
+                        {
+                            try
+                            {
+                                if (skill.Id == SkillInfo.berserk.Id)
+                                {
+                                    // Cooldown reset starts on Buff expire
+                                    if (buffs.Exists(x => x.Name == SkillInfo.berserk.BuffName))
+                                    {
+                                        SkillInfo.berserk.Cooldown = -1;
+                                    }
+                                    else
+                                    {
+                                        if (SkillInfo.berserk.Cooldown == -1 && skill.Cooldown > 0)
+                                        {
+                                            SkillInfo.berserk.Cooldown = 0;
+                                        }
+                                    }
+                                    if (SkillInfo.ManageCooldown(SkillInfo.berserk, skill))
+                                    {
+                                        skill.Stats.TryGetValue(GameStat.BerserkMinimumRage, out int minRage);
+                                        if (buffs.Exists(x => x.Name == "rage" && x.Charges >= minRage && x.Charges >= Settings.berserkMinRage) && 
+                                            MonsterCheck(Settings.berserkRange, Settings.berserkMinAny, Settings.berserkMinRare, Settings.berserkMinUnique))
+                                        {
+                                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        }
+                                    }
                                 }
                             }
                             catch (Exception e)
