@@ -227,6 +227,9 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.bloodRageEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.bloodRageEnabled.Value);
                     CoPilot.instance.Settings.bloodRageRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.bloodRageRange);
+                    CoPilot.instance.Settings.bloodRageMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.bloodRageMinAny);
+                    CoPilot.instance.Settings.bloodRageMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.bloodRageMinRare);
+                    CoPilot.instance.Settings.bloodRageMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.bloodRageMinUnique);
                 }
             }
             catch (Exception e)
@@ -309,6 +312,9 @@ namespace CoPilot
                     CoPilot.instance.Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.enduringCryEnabled.Value);
                     CoPilot.instance.Settings.warCryTriggerRange.Value = ImGuiExtension.IntSlider("Enemy within Range", CoPilot.instance.Settings.warCryTriggerRange);
                     CoPilot.instance.Settings.warCryKeepRage.Value = ImGuiExtension.Checkbox("Keep Rage Up", CoPilot.instance.Settings.warCryKeepRage.Value);
+                    CoPilot.instance.Settings.warCryMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.warCryMinAny);
+                    CoPilot.instance.Settings.warCryMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.warCryMinRare);
+                    CoPilot.instance.Settings.warCryMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.warCryMinUnique);
                 }
             }
             catch (Exception e)
@@ -327,10 +333,13 @@ namespace CoPilot
                 ImGui.PushID(9);
                 if (ImGui.TreeNodeEx("Molten Shell / Steelskin / Bone Armour / Arcane Cloak", collapsingHeaderFlags))
                 {
-                    CoPilot.instance.Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.moltenShellEnabled.Value);
-                    CoPilot.instance.Settings.moltenShellRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.moltenShellRange);
+                    CoPilot.instance.Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.moltenShellEnabled.Value);                    
                     CoPilot.instance.Settings.moltenShellHpPct.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.moltenShellHpPct);
                     CoPilot.instance.Settings.moltenShellEsPct.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.moltenShellEsPct);
+                    CoPilot.instance.Settings.moltenShellRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.moltenShellRange);
+                    CoPilot.instance.Settings.moltenShellMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.moltenShellMinAny);
+                    CoPilot.instance.Settings.moltenShellMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.moltenShellMinRare);
+                    CoPilot.instance.Settings.moltenShellMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.moltenShellMinUnique);
                 }
             }
             catch (Exception e)
@@ -351,8 +360,10 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.offeringsEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.offeringsEnabled.Value);
                     CoPilot.instance.Settings.offeringsUseWhileCasting.Value = ImGuiExtension.Checkbox("Use while Casting/Attacking", CoPilot.instance.Settings.offeringsUseWhileCasting.Value);
-                    CoPilot.instance.Settings.offeringsMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys", CoPilot.instance.Settings.offeringsMinEnemys);
                     CoPilot.instance.Settings.offeringsTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.offeringsTriggerRange);
+                    CoPilot.instance.Settings.offeringsMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.offeringsMinAny);
+                    CoPilot.instance.Settings.offeringsMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.offeringsMinRare);
+                    CoPilot.instance.Settings.offeringsMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.offeringsMinUnique);
                 }
             }
             catch (Exception e)
@@ -392,6 +403,9 @@ namespace CoPilot
                     CoPilot.instance.Settings.vortexEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.vortexEnabled.Value);
                     CoPilot.instance.Settings.vortexFrostbolt.Value = ImGuiExtension.Checkbox("When Frostbolt's flying", CoPilot.instance.Settings.vortexFrostbolt.Value);
                     CoPilot.instance.Settings.vortexRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.vortexRange);
+                    CoPilot.instance.Settings.vortexMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.vortexMinAny);
+                    CoPilot.instance.Settings.vortexMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.vortexMinRare);
+                    CoPilot.instance.Settings.vortexMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.vortexMinUnique);
                 }
             }
             catch (Exception e)
@@ -409,10 +423,12 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Any Vaal Skill", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.anyVaalEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.anyVaalEnabled.Value);
-                    CoPilot.instance.Settings.anyVaalMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", CoPilot.instance.Settings.anyVaalMinEnemys);
                     CoPilot.instance.Settings.anyVaalTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.anyVaalTriggerRange);
                     CoPilot.instance.Settings.anyVaalHpPct.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.anyVaalHpPct);
                     CoPilot.instance.Settings.anyVaalEsPct.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.anyVaalEsPct);
+                    CoPilot.instance.Settings.anyVaalMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.anyVaalMinAny);
+                    CoPilot.instance.Settings.anyVaalMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.anyVaalMinRare);
+                    CoPilot.instance.Settings.anyVaalMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.anyVaalMinUnique);
                 }
             }
             catch (Exception e)
@@ -432,10 +448,12 @@ namespace CoPilot
                     CoPilot.instance.Settings.customEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.customEnabled.Value);
                     CoPilot.instance.Settings.customKey.Value = ImGuiExtension.HotkeySelector("Key: " + CoPilot.instance.Settings.customKey.Value, CoPilot.instance.Settings.customKey);
                     CoPilot.instance.Settings.customCooldown.Value = ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.customCooldown);
-                    CoPilot.instance.Settings.customMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", CoPilot.instance.Settings.customMinEnemys);
                     CoPilot.instance.Settings.customTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.customTriggerRange);
                     CoPilot.instance.Settings.customHpPct.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.customHpPct);
                     CoPilot.instance.Settings.customEsPct.Value = ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.customEsPct);
+                    CoPilot.instance.Settings.customMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.customMinAny);
+                    CoPilot.instance.Settings.customMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.customMinRare);
+                    CoPilot.instance.Settings.customMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.customMinUnique);
                 }
             }
             catch (Exception e)
@@ -474,8 +492,10 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.tempestShieldEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.tempestShieldEnabled.Value);
                     CoPilot.instance.Settings.tempestShieldUseWhileCasting.Value = ImGuiExtension.Checkbox("Use while Casting/Attacking", CoPilot.instance.Settings.tempestShieldUseWhileCasting.Value);
-                    CoPilot.instance.Settings.tempestShieldMinEnemys.Value = ImGuiExtension.IntSlider("min. Enemys in Trigger Range", CoPilot.instance.Settings.tempestShieldMinEnemys);
                     CoPilot.instance.Settings.tempestShieldTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.tempestShieldTriggerRange);
+                    CoPilot.instance.Settings.tempestShieldMinAny.Value = ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.anyVaalMinAny);
+                    CoPilot.instance.Settings.tempestShieldMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.anyVaalMinRare);
+                    CoPilot.instance.Settings.tempestShieldMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.anyVaalMinUnique);
                 }
             }
             catch (Exception e)

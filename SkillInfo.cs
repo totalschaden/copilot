@@ -19,6 +19,7 @@ namespace CoPilot
         // Pseudo Skills
         internal static Skill autoMapTabber = new Skill();
         internal static Skill autoSummon = new Skill();
+        internal static Skill VaalSkill = new Skill();
         // Skills
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
@@ -103,7 +104,7 @@ namespace CoPilot
             lastTime = now;
             deltaTime = dT;
         }
-        internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
+        internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill)
         {
             if (skill.Cooldown > 0)
             {
@@ -111,22 +112,20 @@ namespace CoPilot
                 return false;
             }
             
-            if (skill.Cooldown == 0 && actorSkill.TotalUses != skill.LastUsed)
+            if (actorSkill.RemainingUses <= 0  && actorSkill.IsOnCooldown)
             {
-                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*100 : customCooldown;
-                skill.LastUsed = actorSkill.TotalUses;
                 return false;
             }
             if (!CoPilot.instance.GCD())
                 return false;
+
             actorSkill.Stats.TryGetValue(GameStat.ManaCost, out int manaCost);
             if (CoPilot.instance.player.CurMana < manaCost)
             {
                 return false;
             }
-            if (skill.Cooldown == 0)
-                return true;
-            return false;
+
+            return true;
         }
 
         internal static bool ManageCooldown(Skill skill)

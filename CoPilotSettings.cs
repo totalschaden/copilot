@@ -44,13 +44,19 @@ namespace CoPilot
         public ToggleNode moltenShellEnabled = new ToggleNode(false);
         public RangeNode<int> moltenShellRange = new RangeNode<int>(550, 100, 1000);
         public RangeNode<float> moltenShellHpPct = new RangeNode<float>(100, 0f, 100f);
-        public RangeNode<float> moltenShellEsPct = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<float> moltenShellEsPct = new RangeNode<float>(0f, 0f, 100f); 
+        public RangeNode<int> moltenShellMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> moltenShellMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> moltenShellMinUnique = new RangeNode<int>(0, 0, 50);
         #endregion
 
         #region Enduring Cry
         public ToggleNode enduringCryEnabled = new ToggleNode(false);
         public RangeNode<int> warCryTriggerRange = new RangeNode<int>(550, 100, 1000);
         public ToggleNode warCryKeepRage = new ToggleNode(false);
+        public RangeNode<int> warCryMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> warCryMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> warCryMinUnique = new RangeNode<int>(0, 0, 50);
         #endregion
 
         #region Divine Ire / Blade Flurry / Scourge Arrow
@@ -71,19 +77,27 @@ namespace CoPilot
         public ToggleNode vortexEnabled = new ToggleNode(false);
         public ToggleNode vortexFrostbolt = new ToggleNode(true);
         public RangeNode<int> vortexRange = new RangeNode<int>(300, 100, 1000);
+        public RangeNode<int> vortexMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> vortexMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> vortexMinUnique = new RangeNode<int>(0, 0, 50);
 
         #endregion
 
         #region BloodRage
         public ToggleNode bloodRageEnabled = new ToggleNode(false);
         public RangeNode<int> bloodRageRange = new RangeNode<int>(300, 800, 3000);
+        public RangeNode<int> bloodRageMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> bloodRageMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> bloodRageMinUnique = new RangeNode<int>(0, 0, 50);
         #endregion
 
         #region Offerings
         public ToggleNode offeringsEnabled = new ToggleNode(false);
         public ToggleNode offeringsUseWhileCasting = new ToggleNode(true);
-        public RangeNode<int> offeringsMinEnemys = new RangeNode<int>(0, 0, 20);
         public RangeNode<int> offeringsTriggerRange = new RangeNode<int>(600, 300, 3000);
+        public RangeNode<int> offeringsMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> offeringsMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> offeringsMinUnique = new RangeNode<int>(0, 0, 50);
         #endregion
 
         #region Doedre Effigy
@@ -148,23 +162,28 @@ namespace CoPilot
         #region Tempest Shield
         public ToggleNode tempestShieldEnabled = new ToggleNode(false);
         public RangeNode<int> tempestShieldTriggerRange = new RangeNode<int>(1200, 100, 1200);
-        public RangeNode<int> tempestShieldMinEnemys = new RangeNode<int>(1, 0, 50);
-
+        public RangeNode<int> tempestShieldMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> tempestShieldMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> tempestShieldMinUnique = new RangeNode<int>(0, 0, 50);
         public ToggleNode tempestShieldUseWhileCasting = new ToggleNode(true);
         #endregion
 
         #region Any Vaal Skill
-        public ToggleNode anyVaalEnabled = new ToggleNode(false);
-        public RangeNode<int> anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
-        public RangeNode<int> anyVaalMinEnemys = new RangeNode<int>(0, 0, 50);
+        public ToggleNode anyVaalEnabled = new ToggleNode(false);        
         public RangeNode<float> anyVaalHpPct = new RangeNode<float>(35f, 0f, 100f);
         public RangeNode<float> anyVaalEsPct = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<int> anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
+        public RangeNode<int> anyVaalMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> anyVaalMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> anyVaalMinUnique = new RangeNode<int>(0, 0, 50);
         #endregion
 
         #region Custom Skill
         public ToggleNode customEnabled = new ToggleNode(false);
         public RangeNode<int> customTriggerRange = new RangeNode<int>(500, 100, 2000);
-        public RangeNode<int> customMinEnemys = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> customMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> customMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> customMinUnique = new RangeNode<int>(0, 0, 50);
         public RangeNode<float> customHpPct = new RangeNode<float>(100, 0f, 100f);
         public RangeNode<float> customEsPct = new RangeNode<float>(0f, 0f, 100f);
         public RangeNode<int> customCooldown = new RangeNode<int>(4000, 1000, 10000);
