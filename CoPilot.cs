@@ -45,8 +45,8 @@ namespace CoPilot
         private int bladeBlastUseIndex = 0;
         private int lastBladeBlastUseIndex = 0;
         private readonly int delay = 70;
-        private IEnumerable<Entity> enemys;
-        private IEnumerable<Entity> corpses;
+        private List<Entity> enemys = new List<Entity>();
+        private List<Entity> corpses = new List<Entity>();
         Vector3 playerPosition;
 
         private DateTime autoAttackRunning = new DateTime();
@@ -99,7 +99,6 @@ namespace CoPilot
         public int GetMonsterWithin(float maxDistance, MonsterRarity rarity = MonsterRarity.White)
         {
             int count = 0;
-
             foreach (var monster in enemys)
             {
                 if (monster.Rarity < rarity) { continue; }
@@ -442,6 +441,22 @@ namespace CoPilot
             if (Settings.Enable)
                 ImGuiDrawSettings.DrawImGuiSettings();
         }
+
+        public bool HasStat (Entity monster, GameStat stat)
+        {
+            try
+            {
+                int value = (int)(monster?.GetComponent<Stats>()?.StatDictionary?[stat]);
+                if (value > 0)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         public override void Render()
         {
             if (Settings.Enable)
@@ -467,9 +482,10 @@ namespace CoPilot
                     vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
                     playerPosition = GameController.Player.Pos;
 
-                    enemys = GameController.Entities.Where(x => x != null && x.IsValid && x.IsHostile && !x.IsHidden && x.IsTargetable && x.GetComponent<Monster>() != null && x.GetComponent<Life>() != null && x.GetComponent<Life>().CurHP > 0 && !x.Buffs.Exists(b => b.Name == "hidden_monster_disable_minions"));
+                    enemys = GameController.Entities.Where(x => x != null && x.IsValid && x.IsAlive && x.IsHostile && !x.IsHidden && x.IsTargetable && x.HasComponent<Monster>() && x.HasComponent<Life>() && x.GetComponent<Life>().CurHP > 0 && !HasStat(x,GameStat.CannotBeDamaged) &&
+                    GameController.Window.GetWindowRectangleTimeCache.Contains(GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
                     if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
-                        corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.GetComponent<Monster>() != null);
+                        corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.HasComponent<Monster>()).ToList();
                     if (Settings.autoGolemEnabled) { }
                         summons.UpdateSummons();
 
@@ -525,7 +541,7 @@ namespace CoPilot
                     #endregion
 
                     // Do not Cast anything while we are untouchable or Chat is Open
-                    if (buffs.Exists(x => x.Name == "grace_period")) // 3.13 needs offset fix|| GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible)
+                    if (buffs.Exists(x => x.Name == "grace_period") || GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible)
                         return;
 
                     // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
