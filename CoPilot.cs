@@ -277,7 +277,7 @@ namespace CoPilot
 
         public bool EntityHasCurse(Entity entity)
         {
-            if (entity.GetComponent<Life>().Buffs.Exists(x => 
+            if (entity.GetComponent<Buffs>().BuffsList.Exists(x => 
             x.Name == SkillInfo.punishment.BuffName))
             {
                 return true;
@@ -474,7 +474,7 @@ namespace CoPilot
 
                     localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
                     player = localPlayer.GetComponent<Life>();
-                    buffs = player.Buffs;
+                    buffs = localPlayer.GetComponent<Buffs>().BuffsList;
                     isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
                     isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
                     isMoving = localPlayer.GetComponent<Actor>().isMoving;
