@@ -474,7 +474,7 @@ namespace CoPilot
 
                     localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
                     player = localPlayer.GetComponent<Life>();
-                    buffs = localPlayer.GetComponent<ExileCore.PoEMemory.Components.Buffs>.BuffsList;
+                    buffs = localPlayer.GetComponent<ExileCore.PoEMemory.Components.Buffs>().BuffsList;
                     isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
                     isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
                     isMoving = localPlayer.GetComponent<Actor>().isMoving;
