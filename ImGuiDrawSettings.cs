@@ -144,12 +144,12 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(1);
-                if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / Flicker", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Auto Attack with Cyclone / Nova / Flicker / Sweep", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.autoAttackEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoAttackEnabled.Value);
                     CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value = ImGuiExtension.Checkbox("Pause on Left Mouse Pressed", CoPilot.instance.Settings.autoAttackLeftMouseCheck.Value);
                     CoPilot.instance.Settings.autoAttackRange.Value = ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.autoAttackRange);
-                    CoPilot.instance.Settings.autoAttackCurseCheck.Value = ImGuiExtension.Checkbox("Line of Sight / Range Check with Curse, Ignores Range Setting!", CoPilot.instance.Settings.autoAttackCurseCheck.Value);
+                    CoPilot.instance.Settings.autoAttackCurseCheck.Value = ImGuiExtension.Checkbox("Line of Sight Check with Curse / RaiderExposeAura, Ignores Range Setting!", CoPilot.instance.Settings.autoAttackCurseCheck.Value);
                 }
             }
             catch (Exception e)
@@ -197,7 +197,7 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(3);
-                if (ImGui.TreeNodeEx("Auto Quit", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Auto Quit (This requires HUD started as Admin !)", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.autoQuitEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoQuitEnabled.Value);
                     CoPilot.instance.Settings.hpPctQuit.Value = ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.hpPctQuit);

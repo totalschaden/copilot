@@ -970,7 +970,7 @@ namespace CoPilot
                             try
                             {
                                 if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 && 
-                                    (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id || skill.Id == SkillInfo.flickerStrike.Id))
+                                    (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id || skill.Id == SkillInfo.flickerStrike.Id || skill.Id == SkillInfo.sweep.Id))
                                 {
                                     autoAttackUpdate = DateTime.Now;
                                     if ((Keyboard.IsKeyDown((int)Settings.InputKeyPickIt.Value) && Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex))) || Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) && !isAttacking && autoAttackRunning > DateTime.MinValue && (DateTime.Now - autoAttackRunning).TotalMilliseconds > 50)
