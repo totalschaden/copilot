@@ -42,8 +42,9 @@ namespace CoPilot
         private DateTime lastMirage = new DateTime();
         private DateTime lastCurse = new DateTime();
 
-        private int bladeBlastUseIndex = 0;
-        private int lastBladeBlastUseIndex = 0;
+        private bool bladeBlastReady = false;
+        private bool updateBladeBlast = false;
+
         private readonly int delay = 70;
         private List<Entity> enemys = new List<Entity>();
         private List<Entity> corpses = new List<Entity>();
@@ -201,21 +202,18 @@ namespace CoPilot
             //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
             return count;
         }
-        public bool ShouldBladeBlast(int currentBladeBlastIndex)
+        public void UpdateBladeBlast()
         {
-            int bladeFallUseIndex = GameController.Game.IngameState.Data.LocalPlayer.GetComponent<Actor>().ActorSkills.Find(x => x.InternalName == "bladefall").TotalUses;
-            if (currentBladeBlastIndex > lastBladeBlastUseIndex)
+            ActorSkill bladefall = GameController.Game.IngameState.Data.LocalPlayer.GetComponent<Actor>().ActorSkills.Find(x => x.InternalName == "bladefall");
+            if (bladefall.IsUsing && updateBladeBlast)
             {
-                lastBladeBlastUseIndex = currentBladeBlastIndex;
-                bladeBlastUseIndex = bladeFallUseIndex;
-                return false;
+                bladeBlastReady = true;
+                updateBladeBlast = false;
             }
-            
-            if (bladeFallUseIndex > bladeBlastUseIndex )
+            if (!bladefall.IsUsing)
             {
-                return true;
+                updateBladeBlast = true;
             }
-            return false;
         }
         public int CountBladeBlastEnitytiesNearMouse(float maxDistance)
         {
@@ -426,8 +424,8 @@ namespace CoPilot
             base.AreaChange(area);
             SkillInfo.ResetSkills();
             skills = null;
-            bladeBlastUseIndex = 0;
-            lastBladeBlastUseIndex = 0;
+            bladeBlastReady = false;
+            updateBladeBlast = true;
 
             Coroutine skillCoroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
             Core.ParallelRunner.Run(skillCoroutine);
@@ -1085,13 +1083,16 @@ namespace CoPilot
                         {
                             try
                             {
-                                if (skill.Id == SkillInfo.bladeBlast.Id)
+                                if (skill.Id == SkillInfo.bladeBlast.Id )
                                 {
-                                    if (SkillInfo.ManageCooldown(SkillInfo.bladeBlast, skill))
-                                    {
-                                        if (!isCasting && !isAttacking && (Settings.bladeBlastFastMode && ShouldBladeBlast(skill.TotalUses) || !Settings.bladeBlastFastMode && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0))
+                                    UpdateBladeBlast();
+                                    // Temporary Fix for TC Fork 
+                                    if (!skill.IsOnCooldown) //(SkillInfo.ManageCooldown(SkillInfo.bladeBlast, skill)) 
+                                    {                                        
+                                        if (!isCasting && !isAttacking && (Settings.bladeBlastFastMode && bladeBlastReady || !Settings.bladeBlastFastMode && CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                            bladeBlastReady = false;
                                         }
                                     }                                    
                                 }
