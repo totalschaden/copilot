@@ -480,12 +480,32 @@ namespace CoPilot
                     vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
                     playerPosition = GameController.Player.Pos;
 
-                    enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x => x != null && x.IsAlive && x.IsHostile &&  x.HasComponent<Targetable>() && x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() && x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
+
+                    // Try Catch Madness: Fixing TC Fork Error Spam due to Entity Handling within the Hud.
+                    try
+                    {
+                        enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x => x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() && x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() && x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
                     GameController.Window.GetWindowRectangleTimeCache.Contains(GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
-                    if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
-                        corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.HasComponent<Monster>()).ToList();
-                    if (Settings.autoGolemEnabled) { }
+                    }
+                    catch
+                    {}
+                    try
+                    {
+                        if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
+                            corpses = GameController.Entities.Where(x => x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable && x.HasComponent<Monster>()).ToList();
+                    }
+                    catch
+                    { }
+                    try
+                    {
+                        if (Settings.autoGolemEnabled) { }
                         summons.UpdateSummons();
+                    }
+                    catch
+                    { }
+
+                    
+                    
 
                     SkillInfo.GetDeltaTime();
 
