@@ -380,7 +380,7 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(11);
-                if (ImGui.TreeNodeEx("Phaserun", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Phaserun / WitherStep", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.phaserunEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.phaserunEnabled.Value);
                     CoPilot.instance.Settings.phaserunUseLifeTap.Value = ImGuiExtension.Checkbox("LifeTap Mode", CoPilot.instance.Settings.phaserunUseLifeTap.Value);

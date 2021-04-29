@@ -592,20 +592,30 @@ namespace CoPilot
                         }
                         #endregion
 
-                        #region Phase Run
+                        #region Phase Run / WitherStep
                         if (Settings.phaserunEnabled)
                         {
                             try
                             {
+                                if (skill.Id == SkillInfo.witherStep.Id)
+                                {
+                                    if (SkillInfo.ManageCooldown(SkillInfo.witherStep, skill))
+                                    {
+                                        if (!isAttacking && isMoving )
+                                        {
+                                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        }
+                                    }
+                                }
                                 if (skill.Id == SkillInfo.phaserun.Id)
                                 {
                                     if(SkillInfo.ManageCooldown(SkillInfo.phaserun, skill))
                                     {
-                                        if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving && !buffs.Exists(b => b.Name == "slither") && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1)))
+                                        if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving && !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1)))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }
-                                        if (Settings.phaserunUseLifeTap && (!buffs.Exists(b => b.Name == "lifetab_buff" && b.Timer < 0.1) && MonsterCheck(1000,1,0,0) || !buffs.Exists(b => b.Name == "slither") && !buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1 && isMoving)))
+                                        if (Settings.phaserunUseLifeTap && (!buffs.Exists(b => b.Name == "lifetab_buff" && b.Timer < 0.1) && MonsterCheck(1000,1,0,0) || !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) && !buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1 && isMoving)))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }
