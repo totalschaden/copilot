@@ -604,6 +604,7 @@ namespace CoPilot
                                         if (!isAttacking && isMoving )
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                            SkillInfo.phaserun.Cooldown = 250;
                                         }
                                     }
                                 }
@@ -611,11 +612,11 @@ namespace CoPilot
                                 {
                                     if(SkillInfo.ManageCooldown(SkillInfo.phaserun, skill))
                                     {
-                                        if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving && !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1)))
+                                        if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving && !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1)))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }
-                                        if (Settings.phaserunUseLifeTap && (!buffs.Exists(b => b.Name == "lifetap_buff" && b.Timer < 0.1) && MonsterCheck(1000,1,0,0) || !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) && !buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1 && isMoving)))
+                                        if (Settings.phaserunUseLifeTap && isMoving && ((!buffs.Exists(b => b.Name == "lifetap_buff" && b.Timer > 0.1) && MonsterCheck(1000,1,0,0)) || !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) && !buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1)))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }
