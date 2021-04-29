@@ -601,7 +601,11 @@ namespace CoPilot
                                 {
                                     if(SkillInfo.ManageCooldown(SkillInfo.phaserun, skill))
                                     {
-                                        if (!isAttacking && isMoving && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1)))
+                                        if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving && (!buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1)))
+                                        {
+                                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        }
+                                        if (Settings.phaserunUseLifeTap && (!buffs.Exists(b => b.Name == "lifetab_buff" && b.Timer < 0.1) && MonsterCheck(1000,1,0,0) || !buffs.Exists(b => b.Name == SkillInfo.phaserun.BuffName && b.Timer < 0.1 && isMoving)))
                                         {
                                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         }

@@ -38,6 +38,7 @@ namespace CoPilot
 
         #region Phaserun
         public ToggleNode phaserunEnabled = new ToggleNode(false);
+        public ToggleNode phaserunUseLifeTap = new ToggleNode(false);
         #endregion
 
         #region Molten Shell

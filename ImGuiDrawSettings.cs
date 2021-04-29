@@ -383,6 +383,7 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Phaserun", collapsingHeaderFlags))
                 {
                     CoPilot.instance.Settings.phaserunEnabled.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.phaserunEnabled.Value);
+                    CoPilot.instance.Settings.phaserunUseLifeTap.Value = ImGuiExtension.Checkbox("LifeTap Mode", CoPilot.instance.Settings.phaserunUseLifeTap.Value);
                 }
             }
             catch (Exception e)
