@@ -64,7 +64,7 @@ namespace CoPilot
                 else
                     ImGui.PushStyleColor(ImGuiCol.Header, red);
                 ImGui.PushID(1001);
-                if (ImGui.TreeNodeEx("Importand Informations", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Important Informations", collapsingHeaderFlags))
                 {
                     ImGui.Text("Go to Input Keys Tab, and set them According to your Ingame Settings -> Settings -> Input -> Use bound skill X");
                     ImGui.NewLine();
