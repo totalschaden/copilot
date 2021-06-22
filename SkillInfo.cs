@@ -14,7 +14,7 @@ namespace CoPilot
         internal static Skill autoMapTabber = new Skill();
         internal static Skill autoSummon = new Skill();
 
-        internal static Skill VaalSkill = new Skill();
+        internal static Skill vaalSkill = new Skill();
 
         // Skills
         internal static Skill enduringCry = new Skill();
@@ -119,9 +119,7 @@ namespace CoPilot
                 return false;
 
             actorSkill.Stats.TryGetValue(GameStat.ManaCost, out var manaCost);
-            if (CoPilot.instance.player.CurMana < manaCost) return false;
-
-            return true;
+            return CoPilot.instance.player.CurMana >= manaCost;
         }
 
         internal static bool ManageCooldown(Skill skill)

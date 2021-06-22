@@ -804,7 +804,7 @@ namespace CoPilot
                 if (Settings.anyVaalEnabled)
                     try
                     {
-                        if (SkillInfo.ManageCooldown(SkillInfo.VaalSkill, skill))
+                        if (SkillInfo.ManageCooldown(SkillInfo.vaalSkill, skill))
                             if (MonsterCheck(Settings.anyVaalTriggerRange, Settings.anyVaalMinAny,
                                 Settings.anyVaalMinRare, Settings.anyVaalMinUnique) && vaalSkills.Exists(x =>
                                 x.VaalSkillInternalName == skill.InternalName &&
@@ -949,8 +949,7 @@ namespace CoPilot
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 else if (GetMonsterWithin(Settings.convocationMobRange) > 0 &&
                                          GetMinnionsWithin(Settings.convocationMinnionRange) /
-                                         localPlayer.GetComponent<Actor>().DeployedObjects.Where(x =>
-                                             x != null && x.Entity != null && x.Entity.IsAlive).Count() *
+                                         localPlayer.GetComponent<Actor>().DeployedObjects.Count(x => x?.Entity != null && x.Entity.IsAlive) *
                                          100 <= Settings.convocationMinnionPct)
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                             }
@@ -1156,18 +1155,18 @@ namespace CoPilot
             private static extern int SetTcpEntry(IntPtr pTcprow);
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct MibTcprowOwnerPid
+            private struct MibTcprowOwnerPid
             {
                 public uint state;
-                public readonly uint localAddr;
+                private readonly uint localAddr;
 
-                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-                public readonly byte[] localPort;
+                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] 
+                private readonly byte[] localPort;
 
-                public readonly uint remoteAddr;
+                private readonly uint remoteAddr;
 
-                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-                public readonly byte[] remotePort;
+                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] 
+                private readonly byte[] remotePort;
 
                 public readonly uint owningPid;
             }
@@ -1181,15 +1180,7 @@ namespace CoPilot
 
             private enum TableClass
             {
-                TcpTableBasicListener,
-                TcpTableBasicConnections,
-                TcpTableBasicAll,
-                TcpTableOwnerPidListener,
-                TcpTableOwnerPidConnections,
-                TcpTableOwnerPidAll,
-                TcpTableOwnerModuleListener,
-                TcpTableOwnerModuleConnections,
-                TcpTableOwnerModuleAll
+                TcpTableOwnerPidAll
             }
         }
     }
@@ -1217,8 +1208,7 @@ namespace CoPilot
 
         private static WinApiMouse.Point GetCursorPosition()
         {
-            WinApiMouse.Point currentMousePoint;
-            return GetCursorPos(out currentMousePoint)
+            return GetCursorPos(out var currentMousePoint)
                 ? new WinApiMouse.Point(currentMousePoint.X, currentMousePoint.Y)
                 : new WinApiMouse.Point(0, 0);
         }
