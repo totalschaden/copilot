@@ -569,8 +569,8 @@ namespace CoPilot
                             {
                                 skill.Stats.TryGetValue(GameStat.BerserkMinimumRage, out var minRage);
                                 if (buffs.Exists(x =>
-                                        x.Name == "rage" && x.BuffCharges >= minRage &&
-                                        x.BuffCharges >= Settings.berserkMinRage) &&
+                                        x.Name == "rage" && x.Charges >= minRage &&
+                                        x.Charges >= Settings.berserkMinRage) &&
                                     MonsterCheck(Settings.berserkRange, Settings.berserkMinAny,
                                         Settings.berserkMinRare, Settings.berserkMinUnique))
                                 {
@@ -729,11 +729,11 @@ namespace CoPilot
                              skill.Id == SkillInfo.bladeFlurry.Id))
                             if (buffs.Exists(b =>
                                 b.Name == SkillInfo.divineIre.BuffName &&
-                                b.BuffCharges >= Settings.divineIreStacks.Value ||
+                                b.Charges >= Settings.divineIreStacks.Value ||
                                 b.Name == SkillInfo.bladeFlurry.BuffName &&
-                                b.BuffCharges >= Settings.divineIreStacks ||
+                                b.Charges >= Settings.divineIreStacks ||
                                 b.Name == SkillInfo.scourgeArror.BuffName &&
-                                b.BuffCharges >= Settings.divineIreStacks))
+                                b.Charges >= Settings.divineIreStacks))
                             {
                                 if (Settings.divineIreWaitForInfused)
                                     // Get delay here at some point ?
@@ -991,7 +991,7 @@ namespace CoPilot
                                 out var unleashCooldown);
                             if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill))
                                 if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x =>
-                                    x.Name == "blade_vortex_counter" && x.BuffCharges >= Settings.bladeVortexCount))
+                                    x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
                                 {
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     SkillInfo.bladeVortex.Cooldown = unleashCooldown > 0
@@ -1065,7 +1065,7 @@ namespace CoPilot
                     if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 &&
                         (player.ESPercentage < Settings.delveFlareEsBelow / 100 ||
                          player.HPPercentage < Settings.delveFlareHpBelow / 100) && buffs.Exists(x =>
-                            x.Name == "delve_degen_buff" && x.BuffCharges >= Settings.delveFlareDebuffStacks))
+                            x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
                     {
                         KeyPress(Settings.delveFlareKey.Value);
                         lastDelveFlare = DateTime.Now;
