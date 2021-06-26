@@ -378,9 +378,7 @@ namespace CoPilot
             skills = localPlayer.GetComponent<Actor>().ActorSkills;
             vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
             playerPosition = GameController.Player.Pos;
-
-
-            // Try Catch Madness: Fixing TC Fork Error Spam due to Entity Handling within the Hud.
+            
             enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x =>
                 x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() &&
                 x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() &&
@@ -1017,8 +1015,7 @@ namespace CoPilot
                         if (skill.Id == SkillInfo.bladeBlast.Id)
                         {
                             UpdateBladeBlast();
-                            // Temporary Fix for TC Fork 
-                            if (!skill.IsOnCooldown) //(SkillInfo.ManageCooldown(SkillInfo.bladeBlast, skill)) 
+                            if (!skill.IsOnCooldown && SkillInfo.ManageCooldown(SkillInfo.bladeBlast, skill)) 
                                 if (!isCasting && !isAttacking &&
                                     (Settings.bladeBlastFastMode && bladeBlastReady ||
                                      !Settings.bladeBlastFastMode &&
