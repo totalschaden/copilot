@@ -164,7 +164,7 @@ namespace CoPilot
         }
 
         // Hotkey Selector
-        public static IEnumerable<Keys> KeyCodes()
+        private static IEnumerable<Keys> KeyCodes()
         {
             return Enum.GetValues(typeof(Keys)).Cast<Keys>();
         }

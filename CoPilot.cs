@@ -285,27 +285,27 @@ namespace CoPilot
             switch (index)
             {
                 case 1:
-                    return Settings.InputKey1.Value;
+                    return Settings.inputKey1.Value;
                 case 3:
-                    return Settings.InputKey3.Value;
+                    return Settings.inputKey3.Value;
                 case 4:
-                    return Settings.InputKey4.Value;
+                    return Settings.inputKey4.Value;
                 case 5:
-                    return Settings.InputKey5.Value;
+                    return Settings.inputKey5.Value;
                 case 6:
-                    return Settings.InputKey6.Value;
+                    return Settings.inputKey6.Value;
                 case 7:
-                    return Settings.InputKey7.Value;
+                    return Settings.inputKey7.Value;
                 case 8:
-                    return Settings.InputKey8.Value;
+                    return Settings.inputKey8.Value;
                 case 9:
-                    return Settings.InputKey9.Value;
+                    return Settings.inputKey9.Value;
                 case 10:
-                    return Settings.InputKey10.Value;
+                    return Settings.inputKey10.Value;
                 case 11:
-                    return Settings.InputKey11.Value;
+                    return Settings.inputKey11.Value;
                 case 12:
-                    return Settings.InputKey12.Value;
+                    return Settings.inputKey12.Value;
                 default:
                     return Keys.Escape;
             }
@@ -431,7 +431,7 @@ namespace CoPilot
 
             try
             {
-                if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int) Settings.InputKeyPickIt.Value))
+                if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int) Settings.inputKeyPickIt.Value))
                     if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi
                         .Map.SmallMiniMap.IsVisibleLocal)
                     {
@@ -890,7 +890,7 @@ namespace CoPilot
                              skill.Id == SkillInfo.flickerStrike.Id || skill.Id == SkillInfo.sweep.Id))
                         {
                             autoAttackUpdate = DateTime.Now;
-                            if (Keyboard.IsKeyDown((int) Settings.InputKeyPickIt.Value) &&
+                            if (Keyboard.IsKeyDown((int) Settings.inputKeyPickIt.Value) &&
                                 Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)) ||
                                 Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)) &&
                                 !isAttacking &&
@@ -913,7 +913,7 @@ namespace CoPilot
                                             b.Name.Contains("curse") || b.Name == "raider_exposure_aura"))))
                             {
                                 if (!Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)) &&
-                                    !Keyboard.IsKeyDown((int) Settings.InputKeyPickIt.Value))
+                                    !Keyboard.IsKeyDown((int) Settings.inputKeyPickIt.Value))
                                 {
                                     Keyboard.KeyDown(GetSkillInputKey(skill.SkillSlotIndex));
                                     autoAttackRunning = DateTime.Now;
@@ -1172,7 +1172,7 @@ namespace CoPilot
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private readonly struct MibTcptableOwnerPid
+            private struct MibTcptableOwnerPid
             {
                 public readonly uint dwNumEntries;
                 private readonly MibTcprowOwnerPid table;

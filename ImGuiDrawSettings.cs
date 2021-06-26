@@ -38,42 +38,42 @@ namespace CoPilot
                 ImGui.PushID(1000);
                 if (ImGui.TreeNodeEx("Input Keys", collapsingHeaderFlags))
                 {
-                    CoPilot.instance.Settings.InputKey1.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 2 Key: " + CoPilot.instance.Settings.InputKey1.Value,
-                        CoPilot.instance.Settings.InputKey1.Value);
-                    CoPilot.instance.Settings.InputKey3.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 4 Key: " + CoPilot.instance.Settings.InputKey3.Value,
-                        CoPilot.instance.Settings.InputKey3.Value);
-                    CoPilot.instance.Settings.InputKey4.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 5 Key: " + CoPilot.instance.Settings.InputKey4.Value,
-                        CoPilot.instance.Settings.InputKey4.Value);
-                    CoPilot.instance.Settings.InputKey5.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 6 Key: " + CoPilot.instance.Settings.InputKey5.Value,
-                        CoPilot.instance.Settings.InputKey5.Value);
-                    CoPilot.instance.Settings.InputKey6.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 7 Key: " + CoPilot.instance.Settings.InputKey6.Value,
-                        CoPilot.instance.Settings.InputKey6.Value);
-                    CoPilot.instance.Settings.InputKey7.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 8 Key: " + CoPilot.instance.Settings.InputKey7.Value,
-                        CoPilot.instance.Settings.InputKey7.Value);
-                    CoPilot.instance.Settings.InputKey8.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 9 Key: " + CoPilot.instance.Settings.InputKey8.Value,
-                        CoPilot.instance.Settings.InputKey8.Value);
-                    CoPilot.instance.Settings.InputKey9.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 10 Key: " + CoPilot.instance.Settings.InputKey9.Value,
-                        CoPilot.instance.Settings.InputKey9.Value);
-                    CoPilot.instance.Settings.InputKey10.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 11 Key: " + CoPilot.instance.Settings.InputKey10.Value,
-                        CoPilot.instance.Settings.InputKey10.Value);
-                    CoPilot.instance.Settings.InputKey11.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 12 Key: " + CoPilot.instance.Settings.InputKey11.Value,
-                        CoPilot.instance.Settings.InputKey11.Value);
-                    CoPilot.instance.Settings.InputKey12.Value = ImGuiExtension.HotkeySelector(
-                        "Use bound skill 13 Key: " + CoPilot.instance.Settings.InputKey12.Value,
-                        CoPilot.instance.Settings.InputKey12.Value);
-                    CoPilot.instance.Settings.InputKeyPickIt.Value = ImGuiExtension.HotkeySelector(
-                        "PickIt Key: " + CoPilot.instance.Settings.InputKeyPickIt.Value,
-                        CoPilot.instance.Settings.InputKeyPickIt.Value);
+                    CoPilot.instance.Settings.inputKey1.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 2 Key: " + CoPilot.instance.Settings.inputKey1.Value,
+                        CoPilot.instance.Settings.inputKey1.Value);
+                    CoPilot.instance.Settings.inputKey3.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 4 Key: " + CoPilot.instance.Settings.inputKey3.Value,
+                        CoPilot.instance.Settings.inputKey3.Value);
+                    CoPilot.instance.Settings.inputKey4.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 5 Key: " + CoPilot.instance.Settings.inputKey4.Value,
+                        CoPilot.instance.Settings.inputKey4.Value);
+                    CoPilot.instance.Settings.inputKey5.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 6 Key: " + CoPilot.instance.Settings.inputKey5.Value,
+                        CoPilot.instance.Settings.inputKey5.Value);
+                    CoPilot.instance.Settings.inputKey6.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 7 Key: " + CoPilot.instance.Settings.inputKey6.Value,
+                        CoPilot.instance.Settings.inputKey6.Value);
+                    CoPilot.instance.Settings.inputKey7.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 8 Key: " + CoPilot.instance.Settings.inputKey7.Value,
+                        CoPilot.instance.Settings.inputKey7.Value);
+                    CoPilot.instance.Settings.inputKey8.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 9 Key: " + CoPilot.instance.Settings.inputKey8.Value,
+                        CoPilot.instance.Settings.inputKey8.Value);
+                    CoPilot.instance.Settings.inputKey9.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 10 Key: " + CoPilot.instance.Settings.inputKey9.Value,
+                        CoPilot.instance.Settings.inputKey9.Value);
+                    CoPilot.instance.Settings.inputKey10.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 11 Key: " + CoPilot.instance.Settings.inputKey10.Value,
+                        CoPilot.instance.Settings.inputKey10.Value);
+                    CoPilot.instance.Settings.inputKey11.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 12 Key: " + CoPilot.instance.Settings.inputKey11.Value,
+                        CoPilot.instance.Settings.inputKey11.Value);
+                    CoPilot.instance.Settings.inputKey12.Value = ImGuiExtension.HotkeySelector(
+                        "Use bound skill 13 Key: " + CoPilot.instance.Settings.inputKey12.Value,
+                        CoPilot.instance.Settings.inputKey12.Value);
+                    CoPilot.instance.Settings.inputKeyPickIt.Value = ImGuiExtension.HotkeySelector(
+                        "PickIt Key: " + CoPilot.instance.Settings.inputKeyPickIt.Value,
+                        CoPilot.instance.Settings.inputKeyPickIt.Value);
                 }
             }
             catch (Exception e)
