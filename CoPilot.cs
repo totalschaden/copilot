@@ -1177,7 +1177,15 @@ namespace CoPilot
 
             private enum TableClass
             {
-                TcpTableOwnerPidAll
+                TcpTableBasicListener,
+                TcpTableBasicConnections,
+                TcpTableBasicAll,
+                TcpTableOwnerPidListener,
+                TcpTableOwnerPidConnections,
+                TcpTableOwnerPidAll,
+                TcpTableOwnerModuleListener,
+                TcpTableOwnerModuleConnections,
+                TcpTableOwnerModuleAll
             }
         }
     }
