@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -272,7 +273,7 @@ namespace CoPilot
         {
             try
             {
-                CommandHandler.KillTCPConnectionForProcess(GameController.Window.Process.Id);
+                CommandHandler.KillTcpConnectionForProcess(GameController.Window.Process.Id);
             }
             catch (Exception e)
             {
@@ -1107,18 +1108,22 @@ namespace CoPilot
 
         // Taken from ->
         // https://www.reddit.com/r/pathofexiledev/comments/787yq7/c_logout_app_same_method_as_lutbot/
+        
+        // Wont work when Private, No Touchy Touchy !!!
+        // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
         public static partial class CommandHandler
         {
-            public static void KillTCPConnectionForProcess(int ProcessId)
+            public static void KillTcpConnectionForProcess(int processId)
             {
                 MibTcprowOwnerPid[] table;
-                var afInet = 2;
+                const int afInet = 2;
                 var buffSize = 0;
-                var ret = GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, TcpTableClass.TcpTableOwnerPidAll);
+                GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, TableClass.TcpTableOwnerPidAll);
                 var buffTable = Marshal.AllocHGlobal(buffSize);
                 try
                 {
-                    ret = GetExtendedTcpTable(buffTable, ref buffSize, true, afInet, TcpTableClass.TcpTableOwnerPidAll);
+                    var ret = GetExtendedTcpTable(buffTable, ref buffSize, true, afInet, TableClass.TcpTableOwnerPidAll);
                     if (ret != 0)
                         return;
                     var tab = (MibTcptableOwnerPid)Marshal.PtrToStructure(buffTable, typeof(MibTcptableOwnerPid));
@@ -1138,22 +1143,23 @@ namespace CoPilot
                 }
 
                 //Kill Path Connection
-                var PathConnection = table.FirstOrDefault(t => t.owningPid == ProcessId);
-                PathConnection.state = 12;
-                var ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(PathConnection));
-                Marshal.StructureToPtr(PathConnection, ptr, false);
+                var pathConnection = table.FirstOrDefault(t => t.owningPid == processId);
+                pathConnection.state = 12;
+                var ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(pathConnection));
+                Marshal.StructureToPtr(pathConnection, ptr, false);
                 SetTcpEntry(ptr);
 
 
             }
 
             [DllImport("iphlpapi.dll", SetLastError = true)]
-            private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TcpTableClass tblClass, uint reserved = 0);
+            private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TableClass tblClass, uint reserved = 0);
 
             [DllImport("iphlpapi.dll")]
             private static extern int SetTcpEntry(IntPtr pTcprow);
 
             [StructLayout(LayoutKind.Sequential)]
+            [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
             public struct MibTcprowOwnerPid
             {
                 public uint state;
@@ -1172,7 +1178,7 @@ namespace CoPilot
                 private readonly MibTcprowOwnerPid table;
             }
 
-            private enum TcpTableClass
+            private enum TableClass
             {
                 TcpTableBasicListener,
                 TcpTableBasicConnections,
