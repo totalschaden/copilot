@@ -1114,10 +1114,11 @@ namespace CoPilot
                 MibTcprowOwnerPid[] table;
                 var afInet = 2;
                 var buffSize = 0;
+                var ret = GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, TableClass.TcpTableOwnerPidAll);
                 var buffTable = Marshal.AllocHGlobal(buffSize);
                 try
                 {
-                    var ret = GetExtendedTcpTable(buffTable, ref buffSize, true, afInet,
+                    ret = GetExtendedTcpTable(buffTable, ref buffSize, true, afInet,
                         TableClass.TcpTableOwnerPidAll);
                     if (ret != 0)
                         return;
@@ -1177,15 +1178,7 @@ namespace CoPilot
 
             private enum TableClass
             {
-                TcpTableBasicListener,
-                TcpTableBasicConnections,
-                TcpTableBasicAll,
-                TcpTableOwnerPidListener,
-                TcpTableOwnerPidConnections,
                 TcpTableOwnerPidAll,
-                TcpTableOwnerModuleListener,
-                TcpTableOwnerModuleConnections,
-                TcpTableOwnerModuleAll
             }
         }
     }
