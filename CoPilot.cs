@@ -272,7 +272,7 @@ namespace CoPilot
         {
             try
             {
-                CommandHandler.KillTcpConnectionForProcess(GameController.Window.Process.Id);
+                CommandHandler.KillTCPConnectionForProcess(GameController.Window.Process.Id);
             }
             catch (Exception e)
             {
@@ -1107,29 +1107,29 @@ namespace CoPilot
 
         // Taken from ->
         // https://www.reddit.com/r/pathofexiledev/comments/787yq7/c_logout_app_same_method_as_lutbot/
-        private static class CommandHandler
+        public static partial class CommandHandler
         {
-            public static void KillTcpConnectionForProcess(int processId)
+            public static void KillTCPConnectionForProcess(int ProcessId)
             {
                 MibTcprowOwnerPid[] table;
                 var afInet = 2;
                 var buffSize = 0;
-                var ret = GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, TableClass.TcpTableOwnerPidAll);
+                var ret = GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, TcpTableClass.TcpTableOwnerPidAll);
                 var buffTable = Marshal.AllocHGlobal(buffSize);
                 try
                 {
-                    ret = GetExtendedTcpTable(buffTable, ref buffSize, true, afInet,
-                        TableClass.TcpTableOwnerPidAll);
+                    ret = GetExtendedTcpTable(buffTable, ref buffSize, true, afInet, TcpTableClass.TcpTableOwnerPidAll);
                     if (ret != 0)
                         return;
-                    var tab = (MibTcptableOwnerPid) Marshal.PtrToStructure(buffTable, typeof(MibTcptableOwnerPid));
-                    var rowPtr = (IntPtr) ((long) buffTable + Marshal.SizeOf(tab.dwNumEntries));
+                    var tab = (MibTcptableOwnerPid)Marshal.PtrToStructure(buffTable, typeof(MibTcptableOwnerPid));
+                    var rowPtr = (IntPtr)((long)buffTable + Marshal.SizeOf(tab.dwNumEntries));
                     table = new MibTcprowOwnerPid[tab.dwNumEntries];
                     for (var i = 0; i < tab.dwNumEntries; i++)
                     {
-                        var tcpRow = (MibTcprowOwnerPid) Marshal.PtrToStructure(rowPtr, typeof(MibTcprowOwnerPid));
+                        var tcpRow = (MibTcprowOwnerPid)Marshal.PtrToStructure(rowPtr, typeof(MibTcprowOwnerPid));
                         table[i] = tcpRow;
-                        rowPtr = (IntPtr) ((long) rowPtr + Marshal.SizeOf(tcpRow));
+                        rowPtr = (IntPtr)((long)rowPtr + Marshal.SizeOf(tcpRow));
+
                     }
                 }
                 finally
@@ -1138,47 +1138,51 @@ namespace CoPilot
                 }
 
                 //Kill Path Connection
-                var pathConnection = table.FirstOrDefault(t => t.owningPid == processId);
-                pathConnection.state = 12;
-                var ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(pathConnection));
-                Marshal.StructureToPtr(pathConnection, ptr, false);
+                var PathConnection = table.FirstOrDefault(t => t.owningPid == ProcessId);
+                PathConnection.state = 12;
+                var ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(PathConnection));
+                Marshal.StructureToPtr(PathConnection, ptr, false);
                 SetTcpEntry(ptr);
+
+
             }
 
             [DllImport("iphlpapi.dll", SetLastError = true)]
-            private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort,
-                int ipVersion, TableClass tblClass, uint reserved = 0);
+            private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TcpTableClass tblClass, uint reserved = 0);
 
             [DllImport("iphlpapi.dll")]
             private static extern int SetTcpEntry(IntPtr pTcprow);
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct MibTcprowOwnerPid
+            public struct MibTcprowOwnerPid
             {
                 public uint state;
-                private readonly uint localAddr;
+                public uint localAddr;
+                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public byte[] localPort;
+                public uint remoteAddr;
+                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public byte[] remotePort;
+                public uint owningPid;
 
-                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] 
-                private readonly byte[] localPort;
-
-                private readonly uint remoteAddr;
-
-                [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] 
-                private readonly byte[] remotePort;
-
-                public readonly uint owningPid;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct MibTcptableOwnerPid
+            public struct MibTcptableOwnerPid
             {
-                public readonly uint dwNumEntries;
+                public uint dwNumEntries;
                 private readonly MibTcprowOwnerPid table;
             }
 
-            private enum TableClass
+            private enum TcpTableClass
             {
+                TcpTableBasicListener,
+                TcpTableBasicConnections,
+                TcpTableBasicAll,
+                TcpTableOwnerPidListener,
+                TcpTableOwnerPidConnections,
                 TcpTableOwnerPidAll,
+                TcpTableOwnerModuleListener,
+                TcpTableOwnerModuleConnections,
+                TcpTableOwnerModuleAll
             }
         }
     }
