@@ -478,9 +478,21 @@ namespace CoPilot
                 if (Settings.rangedTriggerEnabled)
                     try
                     {
-                        skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
+                        
+                            skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
                         localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
                         localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
+                        
+                        if (Settings.debugMode)
+                        {
+                            LogError("MaxPowerCharges: " + maxPowerCharges);
+                            LogError("MaxFrenzyCharges: " + maxFrenzyCharges);
+                            LogError("Cooldown: " + skill.IsOnCooldown);
+                            LogError("Mouse: " + (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1));
+                            LogError("Monster: " + !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0));
+                            LogError("Frenzy: " + (skill.Id == SkillInfo.frenzy.Id));
+                            LogError("Frenzy Buff: " + (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges)));
+                        }
                         
                         if (skill.IsOnCooldown) continue;
                         if (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1 ||
