@@ -380,9 +380,8 @@ namespace CoPilot
                     Quit();
                 }
 
-
                 if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
-                    /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/
+                    /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
                     GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
                     GameController.IngameState.IngameUi.SellWindow.IsVisible) return;
 
@@ -395,25 +394,22 @@ namespace CoPilot
                 skills = localPlayer.GetComponent<Actor>().ActorSkills;
                 vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
                 playerPosition = GameController.Player.Pos;
-
+                
                 enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x =>
                     x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() &&
                     x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() &&
                     x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
                     GameController.Window.GetWindowRectangleTimeCache.Contains(
                         GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
-
-
+                
                 if (Settings.offeringsEnabled || Settings.autoZombieEnabled || Settings.generalCryEnabled)
                     corpses = GameController.Entities.Where(x =>
                         x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable &&
                         x.HasComponent<Monster>()).ToList();
-
-
+                
                 if (Settings.autoGolemEnabled) summons.UpdateSummons();
-
+                
                 SkillInfo.GetDeltaTime();
-
                 #region Auto Quit
 
                 if (Settings.autoQuitEnabled)
@@ -463,7 +459,7 @@ namespace CoPilot
 
                 // Do not Cast anything while we are untouchable or Chat is Open
                 if (buffs.Exists(x => x.Name == "grace_period") ||
-                    GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible ||
+                    /*GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible || */ // 3.15 Bugged 
                     !GameController.IsForeGroundCache)
                     return;
 
@@ -474,15 +470,14 @@ namespace CoPilot
                     if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 ||
                         !skill.CanBeUsed)
                         continue;
-
                     #region Ranged Trigger -> Mirage Archer / Frenzy
 
                     if (Settings.rangedTriggerEnabled)
                         try
                         {
                             skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
-                            localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
-                            localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
+                            localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumPowerCharges, out var maxPowerCharges);
+                            localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumFrenzyCharges, out var maxFrenzyCharges);
 
                             if (Settings.debugMode)
                             {
