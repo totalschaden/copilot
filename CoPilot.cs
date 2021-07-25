@@ -107,6 +107,20 @@ namespace CoPilot
 
             return count;
         }
+        
+        private int GetCorpseWithin(float maxDistance)
+        {
+            var count = 0;
+            foreach (var corpse in corpses)
+            {
+                var distance = Vector2.Distance(new Vector2(corpse.Pos.X, corpse.Pos.Y),
+                    new Vector2(playerPosition.X, playerPosition.Y));
+
+                if (distance <= maxDistance) count++;
+            }
+
+            return count;
+        }
 
         private bool MonsterCheck(int range, int minAny, int minRare, int minUnique)
         {
@@ -388,7 +402,7 @@ namespace CoPilot
                     GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
 
 
-            if (Settings.offeringsEnabled || Settings.autoZombieEnabled)
+            if (Settings.offeringsEnabled || Settings.autoZombieEnabled || Settings.generalCryEnabled)
                 corpses = GameController.Entities.Where(x =>
                     x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable &&
                     x.HasComponent<Monster>()).ToList();
@@ -447,7 +461,7 @@ namespace CoPilot
 
             // Do not Cast anything while we are untouchable or Chat is Open
             if (buffs.Exists(x => x.Name == "grace_period") ||
-                GameController.IngameState.IngameUi.ChatBox.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible ||
+                GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible ||
                 !GameController.IsForeGroundCache)
                 return;
 
@@ -490,6 +504,23 @@ namespace CoPilot
                                 if (MonsterCheck(Settings.warCryTriggerRange, Settings.warCryMinAny,
                                         Settings.warCryMinRare, Settings.warCryMinUnique) ||
                                     player.HPPercentage < 0.90f || Settings.warCryKeepRage)
+                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e.ToString());
+                    }
+
+                #endregion
+                
+                #region General's Cry
+
+                if (Settings.generalCryEnabled)
+                    try
+                    {
+                        if (skill.Id == SkillInfo.generalCry.Id)
+                            if (SkillInfo.ManageCooldown(SkillInfo.generalCry, skill))
+                                if (GetCorpseWithin(Settings.generalCryTriggerRange)>= Settings.generalCryMinCorpse)
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                     }
                     catch (Exception e)

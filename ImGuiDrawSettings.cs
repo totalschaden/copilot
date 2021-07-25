@@ -731,6 +731,25 @@ namespace CoPilot
             {
                 CoPilot.instance.LogError(e.ToString());
             }
+            
+            try
+            {
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.generalCryEnabled ? green : red);
+                ImGui.PushID(25);
+                if (ImGui.TreeNodeEx("General's Cry", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.generalCryEnabled.Value =
+                        ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.generalCryEnabled.Value);
+                    CoPilot.instance.Settings.generalCryTriggerRange.Value =
+                        ImGuiExtension.IntSlider("Corpse Trigger Range", CoPilot.instance.Settings.generalCryTriggerRange);
+                    CoPilot.instance.Settings.generalCryMinCorpse.Value =
+                        ImGuiExtension.IntSlider("min Corpse", CoPilot.instance.Settings.generalCryMinCorpse);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
 
 
             try

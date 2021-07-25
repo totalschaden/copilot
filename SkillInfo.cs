@@ -19,6 +19,7 @@ namespace CoPilot
         // Skills
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
+        internal static Skill generalCry = new Skill();
         internal static Skill boneOffering = new Skill();
         internal static Skill spiritOffering = new Skill();
         internal static Skill fleshOffering = new Skill();
@@ -59,6 +60,7 @@ namespace CoPilot
         internal static void ResetSkills()
         {
             enduringCry = new Skill();
+            generalCry = new Skill();
             rallyingCry = new Skill();
             boneOffering = new Skill();
             spiritOffering = new Skill();
@@ -150,6 +152,9 @@ namespace CoPilot
                 {
                     case "enduring_cry":
                         enduringCry.Id = skill.Id;
+                        break;
+                    case "spiritual_cry":
+                        generalCry.Id = skill.Id;
                         break;
                     case "inspiring_cry":
                         rallyingCry.Id = skill.Id;

@@ -89,6 +89,14 @@ namespace CoPilot
         public RangeNode<int> warCryMinUnique = new RangeNode<int>(0, 0, 50);
 
         #endregion
+        
+        #region Generals's Cry
+
+        public ToggleNode generalCryEnabled = new ToggleNode(false);
+        public RangeNode<int> generalCryTriggerRange = new RangeNode<int>(550, 100, 1000);
+        public RangeNode<int> generalCryMinCorpse = new RangeNode<int>(1, 0, 50);
+
+        #endregion
 
         #region Divine Ire / Blade Flurry / Scourge Arrow
 
