@@ -371,687 +371,766 @@ namespace CoPilot
 
         public override void Render()
         {
-            if (!Settings.Enable) return;
-            if (Settings.autoQuitHotkeyEnabled && (WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
-            {
-                LogMessage("Copilot: Panic Quit...");
-                Quit();
-            }
-
-
-            if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
-                /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/
-                GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
-                GameController.IngameState.IngameUi.SellWindow.IsVisible) return;
-
-            localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
-            player = localPlayer.GetComponent<Life>();
-            buffs = localPlayer.GetComponent<Buffs>().BuffsList;
-            isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
-            isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
-            isMoving = localPlayer.GetComponent<Actor>().isMoving;
-            skills = localPlayer.GetComponent<Actor>().ActorSkills;
-            vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
-            playerPosition = GameController.Player.Pos;
-            
-            enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x =>
-                x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() &&
-                x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() &&
-                x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
-                GameController.Window.GetWindowRectangleTimeCache.Contains(
-                    GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
-
-
-            if (Settings.offeringsEnabled || Settings.autoZombieEnabled || Settings.generalCryEnabled)
-                corpses = GameController.Entities.Where(x =>
-                    x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable &&
-                    x.HasComponent<Monster>()).ToList();
-
-
-            if (Settings.autoGolemEnabled) summons.UpdateSummons();
-
-            SkillInfo.GetDeltaTime();
-
-            #region Auto Quit
-
-            if (Settings.autoQuitEnabled)
-                try
-                {
-                    if (Math.Round(player.HPPercentage, 3) * 100 < Settings.hpPctQuit.Value ||
-                        player.MaxES > 0 &&
-                        Math.Round(player.ESPercentage, 3) * 100 < Settings.esPctQuit.Value)
-                        Quit();
-                }
-                catch (Exception e)
-                {
-                    LogError(e.ToString());
-                }
-
-            if (Settings.autoQuitGuardian)
-                try
-                {
-                    if (Math.Round(Summons.GetAnimatedGuardianHpp()) * 100 < Settings.guardianHpPct.Value)
-                        Quit();
-                }
-                catch (Exception e)
-                {
-                    LogError(e.ToString());
-                }
-
-            #endregion
-
-            #region Auto Map Tabber
-
             try
             {
-                if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int) Settings.inputKeyPickIt.Value))
-                    if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi
-                        .Map.SmallMiniMap.IsVisibleLocal)
-                    {
-                        KeyPress(Keys.Tab);
-                        SkillInfo.autoMapTabber.Cooldown = 250;
-                    }
-            }
-            catch (Exception e)
-            {
-                LogError(e.ToString());
-            }
+                if (!Settings.Enable) return;
+                if (Settings.autoQuitHotkeyEnabled && (WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
+                {
+                    LogMessage("Copilot: Panic Quit...");
+                    Quit();
+                }
 
-            #endregion
 
-            // Do not Cast anything while we are untouchable or Chat is Open
-            if (buffs.Exists(x => x.Name == "grace_period") ||
-                GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible ||
-                !GameController.IsForeGroundCache)
-                return;
+                if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
+                    /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/
+                    GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
+                    GameController.IngameState.IngameUi.SellWindow.IsVisible) return;
 
-            // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
-            // Currently thats unanavailable in API.
-            foreach (var skill in skills)
-            {
-                if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 ||
-                    !skill.CanBeUsed)
-                    continue;
+                localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
+                player = localPlayer.GetComponent<Life>();
+                buffs = localPlayer.GetComponent<Buffs>().BuffsList;
+                isAttacking = localPlayer.GetComponent<Actor>().isAttacking;
+                isCasting = localPlayer.GetComponent<Actor>().Action.HasFlag(ActionFlags.UsingAbility);
+                isMoving = localPlayer.GetComponent<Actor>().isMoving;
+                skills = localPlayer.GetComponent<Actor>().ActorSkills;
+                vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
+                playerPosition = GameController.Player.Pos;
 
-                #region Ranged Trigger -> Mirage Archer / Frenzy
+                enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x =>
+                    x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() &&
+                    x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() &&
+                    x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
+                    GameController.Window.GetWindowRectangleTimeCache.Contains(
+                        GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
 
-                if (Settings.rangedTriggerEnabled)
+
+                if (Settings.offeringsEnabled || Settings.autoZombieEnabled || Settings.generalCryEnabled)
+                    corpses = GameController.Entities.Where(x =>
+                        x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable &&
+                        x.HasComponent<Monster>()).ToList();
+
+
+                if (Settings.autoGolemEnabled) summons.UpdateSummons();
+
+                SkillInfo.GetDeltaTime();
+
+                #region Auto Quit
+
+                if (Settings.autoQuitEnabled)
                     try
                     {
-                        skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
-                        localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
-                        localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
-                        
-                        if (Settings.debugMode)
+                        if (Math.Round(player.HPPercentage, 3) * 100 < Settings.hpPctQuit.Value ||
+                            player.MaxES > 0 &&
+                            Math.Round(player.ESPercentage, 3) * 100 < Settings.esPctQuit.Value)
+                            Quit();
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e.ToString());
+                    }
+
+                if (Settings.autoQuitGuardian)
+                    try
+                    {
+                        if (Math.Round(Summons.GetAnimatedGuardianHpp()) * 100 < Settings.guardianHpPct.Value)
+                            Quit();
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e.ToString());
+                    }
+
+                #endregion
+
+                #region Auto Map Tabber
+
+                try
+                {
+                    if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int)Settings.inputKeyPickIt.Value))
+                        if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi
+                            .Map.SmallMiniMap.IsVisibleLocal)
                         {
-                            LogError("MaxPowerCharges: " + maxPowerCharges);
-                            LogError("MaxFrenzyCharges: " + maxFrenzyCharges);
-                            LogError("Cooldown: " + skill.IsOnCooldown);
-                            LogError("Mouse: " + (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1));
-                            LogError("Monster: " + !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0));
-                            LogError("Frenzy: " + (skill.Id == SkillInfo.frenzy.Id));
-                            LogError("Frenzy Buff: " + (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges)));
+                            KeyPress(Keys.Tab);
+                            SkillInfo.autoMapTabber.Cooldown = 250;
                         }
-                        
-                        if (skill.IsOnCooldown) continue;
-                        if (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1 ||
-                            !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0)) continue;
-                        if (mirage >= 1 &&
-                            !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
-                       {
-                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                       }
-                       else if (skill.Id == SkillInfo.frenzy.Id && 
-                                (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) || 
-                                 Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
+                }
+                catch (Exception e)
+                {
+                    LogError(e.ToString());
+                }
 
+                #endregion
+
+                // Do not Cast anything while we are untouchable or Chat is Open
+                if (buffs.Exists(x => x.Name == "grace_period") ||
+                    GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible ||
+                    !GameController.IsForeGroundCache)
+                    return;
+
+                // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
+                // Currently thats unanavailable in API.
+                foreach (var skill in skills)
+                {
+                    if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 ||
+                        !skill.CanBeUsed)
+                        continue;
+
+                    #region Ranged Trigger -> Mirage Archer / Frenzy
+
+                    if (Settings.rangedTriggerEnabled)
+                        try
                         {
-                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
+                            skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
+                            localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
+                            localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
 
-                #endregion
-
-                #region Enduring Cry
-
-                if (Settings.enduringCryEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.enduringCry.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.enduringCry, skill))
-                                if (MonsterCheck(Settings.warCryTriggerRange, Settings.warCryMinAny,
-                                        Settings.warCryMinRare, Settings.warCryMinUnique) ||
-                                    player.HPPercentage < 0.90f || Settings.warCryKeepRage)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-                
-                #region General's Cry
-
-                if (Settings.generalCryEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.generalCry.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.generalCry, skill))
-                                if (GetCorpseWithin(Settings.generalCryTriggerRange)>= Settings.generalCryMinCorpse)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Phase Run / WitherStep
-
-                if (Settings.phaserunEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.witherStep.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.witherStep, skill))
-                                if (!isAttacking && isMoving)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.phaserun.Cooldown = 250;
-                                }
-
-                        if (skill.Id == SkillInfo.phaserun.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.phaserun, skill))
+                            if (Settings.debugMode)
                             {
-                                if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving &&
-                                    !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) &&
-                                    !buffs.Exists(b =>
-                                        b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1))
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-
-                                if (Settings.phaserunUseLifeTap && isMoving &&
-                                    (!buffs.Exists(b => b.Name == "lifetap_buff" && b.Timer > 0.1) &&
-                                     MonsterCheck(1000, 1, 0, 0) ||
-                                     !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) &&
-                                     !buffs.Exists(b =>
-                                         b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1)))
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                            }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Molten Shell / Steelskin / Bone Armour / Arcane Cloak
-
-                if (Settings.moltenShellEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.moltenShell.Id || skill.Id == SkillInfo.steelSkin.Id ||
-                            skill.Id == SkillInfo.boneArmour.Id || skill.Id == SkillInfo.arcaneCloak.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.moltenShell, skill))
-                                if (MonsterCheck(Settings.moltenShellRange, Settings.moltenShellMinAny,
-                                        Settings.moltenShellMinRare, Settings.moltenShellMinUnique) &&
-                                    (Math.Round(player.HPPercentage, 3) * 100 <=
-                                     Settings.moltenShellHpPct.Value ||
-                                     player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
-                                     Settings.moltenShellEsPct.Value))
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Berseker
-
-                if (Settings.berserkEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.berserk.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.berserk, skill))
-                            {
-                                skill.Stats.TryGetValue(GameStat.BerserkMinimumRage, out var minRage);
-                                if (buffs.Exists(x =>
-                                        x.Name == "rage" && x.Charges >= minRage &&
-                                        x.Charges >= Settings.berserkMinRage) &&
-                                    MonsterCheck(Settings.berserkRange, Settings.berserkMinAny,
-                                        Settings.berserkMinRare, Settings.berserkMinUnique))
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.berserk.Cooldown = 100;
-                                }
-                            }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Blood Rage
-
-                if (Settings.bloodRageEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.bloodRage.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.bloodRage, skill))
-                                if (!buffs.Exists(b =>
-                                        b.Name == SkillInfo.bloodRage.BuffName && b.Timer > 1.0) &&
-                                    MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
-                                        Settings.bloodRageMinRare, Settings.bloodRageMinUnique))
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.bloodRage.Cooldown = 100;
-                                }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Auto Summon
-
-                if (Settings.autoSummonEnabled)
-                    try
-                    {
-                        if (SkillInfo.ManageCooldown(SkillInfo.autoSummon) && !isCasting && !isAttacking &&
-                            GetMonsterWithin(Settings.autoGolemAvoidRange) == 0)
-                        {
-                            if (Settings.autoGolemEnabled &&
-                                (summons.chaosElemental < Settings.autoGolemChaosMax ||
-                                 summons.fireElemental < Settings.autoGolemFireMax ||
-                                 summons.iceElemental < Settings.autoGolemIceMax ||
-                                 summons.lightningGolem < Settings.autoGolemLightningMax ||
-                                 summons.rockGolem < Settings.autoGolemRockMax ||
-                                 summons.boneGolem < Settings.autoBoneMax ||
-                                 summons.dropBearUniqueSummoned < Settings.autoGolemDropBearMax))
-                            {
-                                if (skill.Id == SkillInfo.chaosGolem.Id &&
-                                    summons.chaosElemental < Settings.autoGolemChaosMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                                else if (skill.Id == SkillInfo.flameGolem.Id &&
-                                         summons.fireElemental < Settings.autoGolemFireMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                                else if (skill.Id == SkillInfo.iceGolem.Id &&
-                                         summons.iceElemental < Settings.autoGolemIceMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                                else if (skill.Id == SkillInfo.lightningGolem.Id &&
-                                         summons.lightningGolem < Settings.autoGolemLightningMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                                else if (skill.Id == SkillInfo.stoneGolem.Id &&
-                                         summons.rockGolem < Settings.autoGolemRockMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                                else if (skill.Id == SkillInfo.carrionGolem.Id &&
-                                         summons.boneGolem < Settings.autoBoneMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                                else if (skill.Id == SkillInfo.ursaGolem.Id && summons.dropBearUniqueSummoned <
-                                    Settings.autoGolemDropBearMax)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
+                                LogError("MaxPowerCharges: " + maxPowerCharges);
+                                LogError("MaxFrenzyCharges: " + maxFrenzyCharges);
+                                LogError("Cooldown: " + skill.IsOnCooldown);
+                                LogError("Mouse: " +
+                                         (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1));
+                                LogError("Monster: " + !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0));
+                                LogError("Frenzy: " + (skill.Id == SkillInfo.frenzy.Id));
+                                LogError("Frenzy Buff: " + (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
+                                    x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges)));
                             }
 
-                            if (Settings.autoZombieEnabled && skill.Id == SkillInfo.raiseZombie.Id)
+                            if (skill.IsOnCooldown) continue;
+                            if (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1 ||
+                                !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0)) continue;
+                            if (mirage >= 1 &&
+                                !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
                             {
-                                skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out var maxZombies);
-                                if (summons.zombies < maxZombies &&
-                                    CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 1200;
-                                }
-                            }
-
-                            if (Settings.autoHolyRelictEnabled && skill.Id == SkillInfo.holyRelict.Id)
-                            {
-                                skill.Stats.TryGetValue(GameStat.NumberOfRelicsAllowed, out var maxRelicts);
-                                if (summons.holyRelict < maxRelicts)
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.autoSummon.Cooldown = 2000;
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Vortex
-
-                if (Settings.vortexEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.vortex.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.vortex, skill))
-                                if (MonsterCheck(Settings.vortexRange, Settings.vortexMinAny,
-                                        Settings.vortexMinRare, Settings.vortexMinUnique) ||
-                                    Settings.vortexFrostbolt && skills.Any(x =>
-                                        x.Id == SkillInfo.frostbolt.Id && x.SkillUseStage > 2))
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Divine Ire
-
-                if (Settings.divineIreEnabled)
-                    try
-                    {
-                        if ((DateTime.Now - lastStackSkill).TotalMilliseconds > 250 &&
-                            (skill.Id == SkillInfo.divineIre.Id || skill.Id == SkillInfo.scourgeArror.Id ||
-                             skill.Id == SkillInfo.bladeFlurry.Id))
-                            if (buffs.Exists(b =>
-                                b.Name == SkillInfo.divineIre.BuffName &&
-                                b.Charges >= Settings.divineIreStacks.Value ||
-                                b.Name == SkillInfo.bladeFlurry.BuffName &&
-                                b.Charges >= Settings.divineIreStacks ||
-                                b.Name == SkillInfo.scourgeArror.BuffName &&
-                                b.Charges >= Settings.divineIreStacks))
-                            {
-                                if (Settings.divineIreWaitForInfused)
-                                    // Get delay here at some point ?
-                                    if (!buffs.Exists(x =>
-                                        x.Name == "storm_barrier_support_damage" && x.Timer > 1.0))
-                                        return;
-
-                                Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
-                                lastStackSkill = DateTime.Now;
-                                if (Settings.debugMode)
-                                    LogError("Release Key Pressed: " +
-                                             GetSkillInputKey(skill.SkillSlotIndex));
-                            }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Doedre Effigy
-
-                if (Settings.doedreEffigyEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.doedreEffigy.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.doedreEffigy, skill))
-                                if (CountEnemysAroundMouse(350) > 0)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Offerings
-
-                if (Settings.offeringsEnabled)
-                    try
-                    {
-                        if ((!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking ||
-                             Settings.offeringsUseWhileCasting) &&
-                            (skill.Id == SkillInfo.spiritOffering.Id || skill.Id == SkillInfo.boneOffering.Id ||
-                             skill.Id == SkillInfo.fleshOffering.Id))
-                            if (SkillInfo.ManageCooldown(SkillInfo.spiritOffering, skill))
-                                if (!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking ||
-                                    Settings.offeringsUseWhileCasting &&
-                                    MonsterCheck(Settings.offeringsTriggerRange, Settings.offeringsMinAny,
-                                        Settings.offeringsMinRare, Settings.offeringsMinUnique) &&
-                                    !buffs.Exists(x => x.Name == "active_offering") &&
-                                    CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Any Vaal Skill
-
-                if (Settings.anyVaalEnabled)
-                    try
-                    {
-                        if (SkillInfo.ManageCooldown(SkillInfo.vaalSkill, skill))
-                            if (MonsterCheck(Settings.anyVaalTriggerRange, Settings.anyVaalMinAny,
-                                Settings.anyVaalMinRare, Settings.anyVaalMinUnique) && vaalSkills.Exists(x =>
-                                x.VaalSkillInternalName == skill.InternalName &&
-                                x.CurrVaalSouls >= x.VaalSoulsPerUse))
-                                if (Math.Round(player.HPPercentage, 3) * 100 <= Settings.anyVaalHpPct.Value ||
-                                    player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
-                                    Settings.anyVaalEsPct.Value)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Brand Recall
-
-                if (Settings.brandRecallEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.brandRecall.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.brandRecall, skill))
-                                if (GetMonsterWithin(Settings.brandRecallTriggerRange) >=
-                                    Settings.brandRecallMinEnemys)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                        // Once a Brand Skill is linked with Archemage for example, it will show incorrect stats for 1 frame IsUsing turns true, even when in down, SkillUseStage 3 etc.
-
-                        //ActorSkill stormBrand = skills.Find(x => x.InternalName == "storm_brand");
-                        //ActorSkill armageddonBrand = skills.Find(x => x.InternalName == "armageddon_brand");
-                        //int activeBrands = 0;
-                        //if (stormBrand != null )
-                        //{
-                        //    activeBrands = stormBrand.SkillUseStage - 1;
-                        //}
-                        //if (armageddonBrand != null && armageddonBrand.SkillUseStage - 1 > activeBrands)
-                        //{
-                        //    activeBrands = armageddonBrand.SkillUseStage - 1;
-                        //}
-                        //LogError("Brand Active: " + activeBrands.ToString());
-                        //if (activeBrands >= Settings.brandRecallMinBrands)
-                        //{
-
-                        //}                                    
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Tempest Shield
-
-                if (Settings.tempestShieldEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.tempestShield.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.tempestShield, skill))
-                                if (!Settings.tempestShieldUseWhileCasting && !isCasting && !isAttacking ||
-                                    Settings.tempestShieldUseWhileCasting)
-                                    if (!buffs.Exists(x =>
-                                            x.Name == SkillInfo.tempestShield.BuffName && x.Timer > 1.0) &&
-                                        MonsterCheck(Settings.tempestShieldTriggerRange,
-                                            Settings.tempestShieldMinAny, Settings.tempestShieldMinRare,
-                                            Settings.tempestShieldMinUnique))
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region AutoAttack Cyclone / Nova /
-
-                if (Settings.autoAttackEnabled)
-                    try
-                    {
-                        if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 &&
-                            (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id ||
-                             skill.Id == SkillInfo.flickerStrike.Id || skill.Id == SkillInfo.sweep.Id))
-                        {
-                            autoAttackUpdate = DateTime.Now;
-                            if (Keyboard.IsKeyDown((int) Settings.inputKeyPickIt.Value) &&
-                                Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)) ||
-                                Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)) &&
-                                !isAttacking &&
-                                autoAttackRunning > DateTime.MinValue &&
-                                (DateTime.Now - autoAttackRunning).TotalMilliseconds > 50)
-                            {
-                                Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
-                                if (Settings.debugMode.Value)
-                                    LogMessage(
-                                        "Copilot: Detected Key Priority Problem due to User Input, fixing.");
-                                break;
-                            }
-
-                            if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() ||
-                                 !Settings.autoAttackLeftMouseCheck.Value)
-                                && (!Settings.autoAttackCurseCheck &&
-                                    GetMonsterWithin(Settings.autoAttackRange) >= 1 ||
-                                    Settings.autoAttackCurseCheck && enemys.Any(x =>
-                                        x.Buffs.Exists(b =>
-                                            b.Name.Contains("curse") || b.Name == "raider_exposure_aura"))))
-                            {
-                                if (!Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)) &&
-                                    !Keyboard.IsKeyDown((int) Settings.inputKeyPickIt.Value))
-                                {
-                                    Keyboard.KeyDown(GetSkillInputKey(skill.SkillSlotIndex));
-                                    autoAttackRunning = DateTime.Now;
-                                }
-                            }
-                            else if (Keyboard.IsKeyDown((int) GetSkillInputKey(skill.SkillSlotIndex)))
-                            {
-                                Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
-                                autoAttackRunning = DateTime.MinValue;
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Convocation
-
-                if (Settings.convocationEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.convocation.Id)
-                            if (SkillInfo.ManageCooldown(SkillInfo.convocation, skill))
-                            {
-                                if (GetMonsterWithin(Settings.convocationAvoidUniqueRange,
-                                    MonsterRarity.Unique) > 0)
-                                    return;
-                                if (Math.Round(Summons.GetLowestMinionHpp()) * 100 <
-                                    Settings.convocationHp.Value)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                else if (GetMonsterWithin(Settings.convocationMobRange) > 0 &&
-                                         GetMinnionsWithin(Settings.convocationMinnionRange) /
-                                         localPlayer.GetComponent<Actor>().DeployedObjects.Count(x => x?.Entity != null && x.Entity.IsAlive) *
-                                         100 <= Settings.convocationMinnionPct)
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                            }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Auto Curse
-
-                if (Settings.autoCurseEnabled)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.punishment.Id &&
-                            (DateTime.Now - lastCurse).TotalMilliseconds > Settings.autoCurseCooldown)
-                            if (CountNonCursedEnemysAroundMouse(Settings.autoCurseRange) >=
-                                Settings.autoCurseMinEnemys)
-                            {
-                                lastCurse = DateTime.Now;
                                 KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                             }
-                    }
-                    catch (Exception e)
+                            else if (skill.Id == SkillInfo.frenzy.Id &&
+                                     (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
+                                          x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) ||
+                                      Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
+                                          x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
+
+                            {
+                                KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Enduring Cry
+
+                    if (Settings.enduringCryEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.enduringCry.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.enduringCry, skill))
+                                    if (MonsterCheck(Settings.warCryTriggerRange, Settings.warCryMinAny,
+                                            Settings.warCryMinRare, Settings.warCryMinUnique) ||
+                                        player.HPPercentage < 0.90f || Settings.warCryKeepRage)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region General's Cry
+
+                    if (Settings.generalCryEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.generalCry.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.generalCry, skill))
+                                    if (GetCorpseWithin(Settings.generalCryTriggerRange) >=
+                                        Settings.generalCryMinCorpse)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Phase Run / WitherStep
+
+                    if (Settings.phaserunEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.witherStep.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.witherStep, skill))
+                                    if (!isAttacking && isMoving)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.phaserun.Cooldown = 250;
+                                    }
+
+                            if (skill.Id == SkillInfo.phaserun.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.phaserun, skill))
+                                {
+                                    if (!Settings.phaserunUseLifeTap && !isAttacking && isMoving &&
+                                        !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) &&
+                                        !buffs.Exists(b =>
+                                            b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1))
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+
+                                    if (Settings.phaserunUseLifeTap && isMoving &&
+                                        (!buffs.Exists(b => b.Name == "lifetap_buff" && b.Timer > 0.1) &&
+                                         MonsterCheck(1000, 1, 0, 0) ||
+                                         !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) &&
+                                         !buffs.Exists(b =>
+                                             b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1)))
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Molten Shell / Steelskin / Bone Armour / Arcane Cloak
+
+                    if (Settings.moltenShellEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.moltenShell.Id || skill.Id == SkillInfo.steelSkin.Id ||
+                                skill.Id == SkillInfo.boneArmour.Id || skill.Id == SkillInfo.arcaneCloak.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.moltenShell, skill))
+                                    if (MonsterCheck(Settings.moltenShellRange, Settings.moltenShellMinAny,
+                                            Settings.moltenShellMinRare, Settings.moltenShellMinUnique) &&
+                                        (Math.Round(player.HPPercentage, 3) * 100 <=
+                                         Settings.moltenShellHpPct.Value ||
+                                         player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
+                                         Settings.moltenShellEsPct.Value))
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Berseker
+
+                    if (Settings.berserkEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.berserk.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.berserk, skill))
+                                {
+                                    skill.Stats.TryGetValue(GameStat.BerserkMinimumRage, out var minRage);
+                                    if (buffs.Exists(x =>
+                                            x.Name == "rage" && x.Charges >= minRage &&
+                                            x.Charges >= Settings.berserkMinRage) &&
+                                        MonsterCheck(Settings.berserkRange, Settings.berserkMinAny,
+                                            Settings.berserkMinRare, Settings.berserkMinUnique))
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.berserk.Cooldown = 100;
+                                    }
+                                }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Blood Rage
+
+                    if (Settings.bloodRageEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.bloodRage.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.bloodRage, skill))
+                                    if (!buffs.Exists(b =>
+                                            b.Name == SkillInfo.bloodRage.BuffName && b.Timer > 1.0) &&
+                                        MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
+                                            Settings.bloodRageMinRare, Settings.bloodRageMinUnique))
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.bloodRage.Cooldown = 100;
+                                    }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Auto Summon
+
+                    if (Settings.autoSummonEnabled)
+                        try
+                        {
+                            if (SkillInfo.ManageCooldown(SkillInfo.autoSummon) && !isCasting && !isAttacking &&
+                                GetMonsterWithin(Settings.autoGolemAvoidRange) == 0)
+                            {
+                                if (Settings.autoGolemEnabled &&
+                                    (summons.chaosElemental < Settings.autoGolemChaosMax ||
+                                     summons.fireElemental < Settings.autoGolemFireMax ||
+                                     summons.iceElemental < Settings.autoGolemIceMax ||
+                                     summons.lightningGolem < Settings.autoGolemLightningMax ||
+                                     summons.rockGolem < Settings.autoGolemRockMax ||
+                                     summons.boneGolem < Settings.autoBoneMax ||
+                                     summons.dropBearUniqueSummoned < Settings.autoGolemDropBearMax))
+                                {
+                                    if (skill.Id == SkillInfo.chaosGolem.Id &&
+                                        summons.chaosElemental < Settings.autoGolemChaosMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                    else if (skill.Id == SkillInfo.flameGolem.Id &&
+                                             summons.fireElemental < Settings.autoGolemFireMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                    else if (skill.Id == SkillInfo.iceGolem.Id &&
+                                             summons.iceElemental < Settings.autoGolemIceMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                    else if (skill.Id == SkillInfo.lightningGolem.Id &&
+                                             summons.lightningGolem < Settings.autoGolemLightningMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                    else if (skill.Id == SkillInfo.stoneGolem.Id &&
+                                             summons.rockGolem < Settings.autoGolemRockMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                    else if (skill.Id == SkillInfo.carrionGolem.Id &&
+                                             summons.boneGolem < Settings.autoBoneMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                    else if (skill.Id == SkillInfo.ursaGolem.Id && summons.dropBearUniqueSummoned <
+                                        Settings.autoGolemDropBearMax)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                }
+
+                                if (Settings.autoZombieEnabled && skill.Id == SkillInfo.raiseZombie.Id)
+                                {
+                                    skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out var maxZombies);
+                                    if (summons.zombies < maxZombies &&
+                                        CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 1200;
+                                    }
+                                }
+
+                                if (Settings.autoHolyRelictEnabled && skill.Id == SkillInfo.holyRelict.Id)
+                                {
+                                    skill.Stats.TryGetValue(GameStat.NumberOfRelicsAllowed, out var maxRelicts);
+                                    if (summons.holyRelict < maxRelicts)
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.autoSummon.Cooldown = 2000;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Vortex
+
+                    if (Settings.vortexEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.vortex.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.vortex, skill))
+                                    if (MonsterCheck(Settings.vortexRange, Settings.vortexMinAny,
+                                            Settings.vortexMinRare, Settings.vortexMinUnique) ||
+                                        Settings.vortexFrostbolt && skills.Any(x =>
+                                            x.Id == SkillInfo.frostbolt.Id && x.SkillUseStage > 2))
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Divine Ire
+
+                    if (Settings.divineIreEnabled)
+                        try
+                        {
+                            if ((DateTime.Now - lastStackSkill).TotalMilliseconds > 250 &&
+                                (skill.Id == SkillInfo.divineIre.Id || skill.Id == SkillInfo.scourgeArror.Id ||
+                                 skill.Id == SkillInfo.bladeFlurry.Id))
+                                if (buffs.Exists(b =>
+                                    b.Name == SkillInfo.divineIre.BuffName &&
+                                    b.Charges >= Settings.divineIreStacks.Value ||
+                                    b.Name == SkillInfo.bladeFlurry.BuffName &&
+                                    b.Charges >= Settings.divineIreStacks ||
+                                    b.Name == SkillInfo.scourgeArror.BuffName &&
+                                    b.Charges >= Settings.divineIreStacks))
+                                {
+                                    if (Settings.divineIreWaitForInfused)
+                                        // Get delay here at some point ?
+                                        if (!buffs.Exists(x =>
+                                            x.Name == "storm_barrier_support_damage" && x.Timer > 1.0))
+                                            return;
+
+                                    Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
+                                    lastStackSkill = DateTime.Now;
+                                    if (Settings.debugMode)
+                                        LogError("Release Key Pressed: " +
+                                                 GetSkillInputKey(skill.SkillSlotIndex));
+                                }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Doedre Effigy
+
+                    if (Settings.doedreEffigyEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.doedreEffigy.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.doedreEffigy, skill))
+                                    if (CountEnemysAroundMouse(350) > 0)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Offerings
+
+                    if (Settings.offeringsEnabled)
+                        try
+                        {
+                            if ((!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking ||
+                                 Settings.offeringsUseWhileCasting) &&
+                                (skill.Id == SkillInfo.spiritOffering.Id || skill.Id == SkillInfo.boneOffering.Id ||
+                                 skill.Id == SkillInfo.fleshOffering.Id))
+                                if (SkillInfo.ManageCooldown(SkillInfo.spiritOffering, skill))
+                                    if (!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking ||
+                                        Settings.offeringsUseWhileCasting &&
+                                        MonsterCheck(Settings.offeringsTriggerRange, Settings.offeringsMinAny,
+                                            Settings.offeringsMinRare, Settings.offeringsMinUnique) &&
+                                        !buffs.Exists(x => x.Name == "active_offering") &&
+                                        CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Any Vaal Skill
+
+                    if (Settings.anyVaalEnabled)
+                        try
+                        {
+                            if (SkillInfo.ManageCooldown(SkillInfo.vaalSkill, skill))
+                                if (MonsterCheck(Settings.anyVaalTriggerRange, Settings.anyVaalMinAny,
+                                    Settings.anyVaalMinRare, Settings.anyVaalMinUnique) && vaalSkills.Exists(x =>
+                                    x.VaalSkillInternalName == skill.InternalName &&
+                                    x.CurrVaalSouls >= x.VaalSoulsPerUse))
+                                    if (Math.Round(player.HPPercentage, 3) * 100 <= Settings.anyVaalHpPct.Value ||
+                                        player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
+                                        Settings.anyVaalEsPct.Value)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Brand Recall
+
+                    if (Settings.brandRecallEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.brandRecall.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.brandRecall, skill))
+                                    if (GetMonsterWithin(Settings.brandRecallTriggerRange) >=
+                                        Settings.brandRecallMinEnemys)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                            // Once a Brand Skill is linked with Archemage for example, it will show incorrect stats for 1 frame IsUsing turns true, even when in down, SkillUseStage 3 etc.
+
+                            //ActorSkill stormBrand = skills.Find(x => x.InternalName == "storm_brand");
+                            //ActorSkill armageddonBrand = skills.Find(x => x.InternalName == "armageddon_brand");
+                            //int activeBrands = 0;
+                            //if (stormBrand != null )
+                            //{
+                            //    activeBrands = stormBrand.SkillUseStage - 1;
+                            //}
+                            //if (armageddonBrand != null && armageddonBrand.SkillUseStage - 1 > activeBrands)
+                            //{
+                            //    activeBrands = armageddonBrand.SkillUseStage - 1;
+                            //}
+                            //LogError("Brand Active: " + activeBrands.ToString());
+                            //if (activeBrands >= Settings.brandRecallMinBrands)
+                            //{
+
+                            //}                                    
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Tempest Shield
+
+                    if (Settings.tempestShieldEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.tempestShield.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.tempestShield, skill))
+                                    if (!Settings.tempestShieldUseWhileCasting && !isCasting && !isAttacking ||
+                                        Settings.tempestShieldUseWhileCasting)
+                                        if (!buffs.Exists(x =>
+                                                x.Name == SkillInfo.tempestShield.BuffName && x.Timer > 1.0) &&
+                                            MonsterCheck(Settings.tempestShieldTriggerRange,
+                                                Settings.tempestShieldMinAny, Settings.tempestShieldMinRare,
+                                                Settings.tempestShieldMinUnique))
+                                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region AutoAttack Cyclone / Nova /
+
+                    if (Settings.autoAttackEnabled)
+                        try
+                        {
+                            if ((DateTime.Now - autoAttackUpdate).TotalMilliseconds > 50 &&
+                                (skill.Id == SkillInfo.cyclone.Id || skill.Id == SkillInfo.iceNova.Id ||
+                                 skill.Id == SkillInfo.flickerStrike.Id || skill.Id == SkillInfo.sweep.Id))
+                            {
+                                autoAttackUpdate = DateTime.Now;
+                                if (Keyboard.IsKeyDown((int)Settings.inputKeyPickIt.Value) &&
+                                    Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) ||
+                                    Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) &&
+                                    !isAttacking &&
+                                    autoAttackRunning > DateTime.MinValue &&
+                                    (DateTime.Now - autoAttackRunning).TotalMilliseconds > 50)
+                                {
+                                    Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
+                                    if (Settings.debugMode.Value)
+                                        LogMessage(
+                                            "Copilot: Detected Key Priority Problem due to User Input, fixing.");
+                                    break;
+                                }
+
+                                if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() ||
+                                     !Settings.autoAttackLeftMouseCheck.Value)
+                                    && (!Settings.autoAttackCurseCheck &&
+                                        GetMonsterWithin(Settings.autoAttackRange) >= 1 ||
+                                        Settings.autoAttackCurseCheck && enemys.Any(x =>
+                                            x.Buffs.Exists(b =>
+                                                b.Name.Contains("curse") || b.Name == "raider_exposure_aura"))))
+                                {
+                                    if (!Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)) &&
+                                        !Keyboard.IsKeyDown((int)Settings.inputKeyPickIt.Value))
+                                    {
+                                        Keyboard.KeyDown(GetSkillInputKey(skill.SkillSlotIndex));
+                                        autoAttackRunning = DateTime.Now;
+                                    }
+                                }
+                                else if (Keyboard.IsKeyDown((int)GetSkillInputKey(skill.SkillSlotIndex)))
+                                {
+                                    Keyboard.KeyUp(GetSkillInputKey(skill.SkillSlotIndex));
+                                    autoAttackRunning = DateTime.MinValue;
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Convocation
+
+                    if (Settings.convocationEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.convocation.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.convocation, skill))
+                                {
+                                    if (GetMonsterWithin(Settings.convocationAvoidUniqueRange,
+                                        MonsterRarity.Unique) > 0)
+                                        return;
+                                    if (Math.Round(Summons.GetLowestMinionHpp()) * 100 <
+                                        Settings.convocationHp.Value)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    else if (GetMonsterWithin(Settings.convocationMobRange) > 0 &&
+                                             GetMinnionsWithin(Settings.convocationMinnionRange) /
+                                             localPlayer.GetComponent<Actor>().DeployedObjects
+                                                 .Count(x => x?.Entity != null && x.Entity.IsAlive) *
+                                             100 <= Settings.convocationMinnionPct)
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Auto Curse
+
+                    if (Settings.autoCurseEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.punishment.Id &&
+                                (DateTime.Now - lastCurse).TotalMilliseconds > Settings.autoCurseCooldown)
+                                if (CountNonCursedEnemysAroundMouse(Settings.autoCurseRange) >=
+                                    Settings.autoCurseMinEnemys)
+                                {
+                                    lastCurse = DateTime.Now;
+                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Blade Vortex
+
+                    if (Settings.bladeVortex)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.bladeVortex.Id)
+                            {
+                                skill.Stats.TryGetValue(GameStat.VirtualSupportAnticipationChargeGainIntervalMs,
+                                    out var unleashCooldown);
+                                if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill))
+                                    if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x =>
+                                        x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.bladeVortex.Cooldown = unleashCooldown > 0
+                                            ? unleashCooldown * Settings.bladeVortexUnleashCount
+                                            : 0;
+                                    }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Blade Blast
+
+                    if (Settings.bladeBlast)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.bladeBlast.Id)
+                            {
+                                UpdateBladeBlast();
+                                if (!skill.IsOnCooldown && SkillInfo.ManageCooldown(SkillInfo.bladeBlast, skill))
+                                    if (!isCasting && !isAttacking &&
+                                        (Settings.bladeBlastFastMode && bladeBlastReady ||
+                                         !Settings.bladeBlastFastMode &&
+                                         CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0))
+                                    {
+                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        bladeBlastReady = false;
+                                    }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Detonate Mines ( to be done )
+
+                    if (!Settings.minesEnabled) continue;
                     {
-                        LogError(e.ToString());
+                        try
+                        {
+                            var remoteMines = localPlayer.GetComponent<Actor>().DeployedObjects.Where(x =>
+                                    x.Entity != null && x.Entity.Path == "Metadata/MiscellaneousObjects/RemoteMine")
+                                .ToList();
+
+                            // Removed Logic
+                            // What should a proper Detonator do and when ?
+                            // Detonate Mines when they have the chance to hit a target (Range), include min. mines ?
+                            // Internal delay 500-1000ms ?
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
                     }
 
-                #endregion
+                    #endregion
+                }
 
-                #region Blade Vortex
+                #region Delve Flare
 
-                if (Settings.bladeVortex)
+                if (Settings.delveFlareEnabled)
                     try
                     {
-                        if (skill.Id == SkillInfo.bladeVortex.Id)
+                        if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 &&
+                            (player.ESPercentage < Settings.delveFlareEsBelow / 100 ||
+                             player.HPPercentage < Settings.delveFlareHpBelow / 100) && buffs.Exists(x =>
+                                x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
                         {
-                            skill.Stats.TryGetValue(GameStat.VirtualSupportAnticipationChargeGainIntervalMs,
-                                out var unleashCooldown);
-                            if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill))
-                                if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x =>
-                                    x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    SkillInfo.bladeVortex.Cooldown = unleashCooldown > 0
-                                        ? unleashCooldown * Settings.bladeVortexUnleashCount
-                                        : 0;
-                                }
+                            KeyPress(Settings.delveFlareKey.Value);
+                            lastDelveFlare = DateTime.Now;
                         }
                     }
                     catch (Exception e)
@@ -1061,46 +1140,23 @@ namespace CoPilot
 
                 #endregion
 
-                #region Blade Blast
+                #region Custom Skill
 
-                if (Settings.bladeBlast)
-                    try
-                    {
-                        if (skill.Id == SkillInfo.bladeBlast.Id)
-                        {
-                            UpdateBladeBlast();
-                            if (!skill.IsOnCooldown && SkillInfo.ManageCooldown(SkillInfo.bladeBlast, skill)) 
-                                if (!isCasting && !isAttacking &&
-                                    (Settings.bladeBlastFastMode && bladeBlastReady ||
-                                     !Settings.bladeBlastFastMode &&
-                                     CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0))
-                                {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                    bladeBlastReady = false;
-                                }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(e.ToString());
-                    }
-
-                #endregion
-
-                #region Detonate Mines ( to be done )
-
-                if (!Settings.minesEnabled) continue;
+                if (!Settings.customEnabled) return;
                 {
                     try
                     {
-                        var remoteMines = localPlayer.GetComponent<Actor>().DeployedObjects.Where(x =>
-                                x.Entity != null && x.Entity.Path == "Metadata/MiscellaneousObjects/RemoteMine")
-                            .ToList();
-
-                        // Removed Logic
-                        // What should a proper Detonator do and when ?
-                        // Detonate Mines when they have the chance to hit a target (Range), include min. mines ?
-                        // Internal delay 500-1000ms ?
+                        if (Gcd() &&
+                            (DateTime.Now - lastCustom).TotalMilliseconds > Settings.customCooldown.Value &&
+                            MonsterCheck(Settings.customTriggerRange, Settings.customMinAny, Settings.customMinRare,
+                                Settings.customMinUnique))
+                            if (Math.Round(player.HPPercentage, 3) * 100 <= Settings.customHpPct.Value ||
+                                player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
+                                Settings.customEsPct.Value)
+                            {
+                                KeyPress(Settings.customKey);
+                                lastCustom = DateTime.Now;
+                            }
                     }
                     catch (Exception e)
                     {
@@ -1110,53 +1166,8 @@ namespace CoPilot
 
                 #endregion
             }
-
-            #region Delve Flare
-
-            if (Settings.delveFlareEnabled)
-                try
-                {
-                    if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 &&
-                        (player.ESPercentage < Settings.delveFlareEsBelow / 100 ||
-                         player.HPPercentage < Settings.delveFlareHpBelow / 100) && buffs.Exists(x =>
-                            x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
-                    {
-                        KeyPress(Settings.delveFlareKey.Value);
-                        lastDelveFlare = DateTime.Now;
-                    }
-                }
-                catch (Exception e)
-                {
-                    LogError(e.ToString());
-                }
-
-            #endregion
-
-            #region Custom Skill
-
-            if (!Settings.customEnabled) return;
-            {
-                try
-                {
-                    if (Gcd() &&
-                        (DateTime.Now - lastCustom).TotalMilliseconds > Settings.customCooldown.Value &&
-                        MonsterCheck(Settings.customTriggerRange, Settings.customMinAny, Settings.customMinRare,
-                            Settings.customMinUnique))
-                        if (Math.Round(player.HPPercentage, 3) * 100 <= Settings.customHpPct.Value ||
-                            player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
-                            Settings.customEsPct.Value)
-                        {
-                            KeyPress(Settings.customKey);
-                            lastCustom = DateTime.Now;
-                        }
-                }
-                catch (Exception e)
-                {
-                    LogError(e.ToString());
-                }
-            }
-
-            #endregion
+            catch (Exception e)
+            {LogError(e.ToString());}
         }
 
         // Taken from ->
