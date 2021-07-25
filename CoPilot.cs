@@ -380,7 +380,7 @@ namespace CoPilot
 
 
             if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
-                GameController.IngameState.IngameUi.StashElement.IsVisible ||
+                /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/
                 GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
                 GameController.IngameState.IngameUi.SellWindow.IsVisible) return;
 
@@ -478,8 +478,7 @@ namespace CoPilot
                 if (Settings.rangedTriggerEnabled)
                     try
                     {
-                        
-                            skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
+                        skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
                         localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
                         localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
                         
