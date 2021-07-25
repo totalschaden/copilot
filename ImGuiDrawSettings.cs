@@ -613,17 +613,21 @@ namespace CoPilot
 
             try
             {
-                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.mirageEnabled ? green : red);
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.rangedTriggerEnabled ? green : red);
                 ImGui.PushID(19);
-                if (ImGui.TreeNodeEx("Mirage Archer", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Ranged Trigger -> Mirage Archer / Frenzy(Power/Frenzy Charges)", collapsingHeaderFlags))
                 {
                     ImGui.Text(
                         "Currently only check if an enemy is near mouse, recommend < 75 range when only firing 1 arrow.");
                     ImGui.Text("Works alot better with Volley/GMP, Increase Range by try&error");
-                    CoPilot.instance.Settings.mirageEnabled.Value =
-                        ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.mirageEnabled.Value);
-                    CoPilot.instance.Settings.mirageRange.Value = ImGuiExtension.IntSlider("Enemy Range near Mouse",
-                        CoPilot.instance.Settings.mirageRange);
+                    CoPilot.instance.Settings.rangedTriggerEnabled.Value =
+                        ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.rangedTriggerEnabled.Value);
+                    CoPilot.instance.Settings.rangedTriggerPowerCharge.Value =
+                        ImGuiExtension.Checkbox("Frenzy: Power Charges Instead", CoPilot.instance.Settings.rangedTriggerPowerCharge.Value);
+                    CoPilot.instance.Settings.rangedTriggerMouseRange.Value = ImGuiExtension.IntSlider("Enemy Range to Mouse",
+                        CoPilot.instance.Settings.rangedTriggerMouseRange);
+                    CoPilot.instance.Settings.rangedTriggerTargetRange.Value = ImGuiExtension.IntSlider("Enemy Range to Player",
+                        CoPilot.instance.Settings.rangedTriggerTargetRange);
                 }
             }
             catch (Exception e)

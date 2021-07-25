@@ -56,6 +56,7 @@ namespace CoPilot
         internal static Skill berserk = new Skill();
         internal static Skill sweep = new Skill();
         internal static Skill witherStep = new Skill();
+        internal static Skill frenzy = new Skill();
 
         internal static void ResetSkills()
         {
@@ -98,6 +99,7 @@ namespace CoPilot
             berserk = new Skill();
             sweep = new Skill();
             witherStep = new Skill();
+            frenzy = new Skill();
         }
 
         public static void GetDeltaTime()
@@ -284,6 +286,9 @@ namespace CoPilot
                     case "slither":
                         witherStep.Id = skill.Id;
                         witherStep.BuffName = "slither";
+                        break;
+                    case "frenzy":
+                        frenzy.Id = skill.Id;
                         break;
                 }
             }

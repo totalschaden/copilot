@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -41,7 +42,7 @@ namespace CoPilot
         private DateTime lastCurse;
         private DateTime lastCustom;
         private DateTime lastDelveFlare;
-        private DateTime lastMirage;
+        private DateTime lastRangedTrigger;
         private DateTime lastStackSkill;
         private DateTime lastTimeAny;
         internal Entity localPlayer;
@@ -473,18 +474,31 @@ namespace CoPilot
                     !skill.CanBeUsed)
                     continue;
 
-                #region Mirage Archer
+                #region Ranged Trigger -> Mirage Archer / Frenzy
 
-                if (Settings.mirageEnabled)
+                if (Settings.rangedTriggerEnabled)
                     try
                     {
                         skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
-                        if ((DateTime.Now - lastMirage).TotalMilliseconds > 500 && mirage >= 1 &&
-                            CountEnemysAroundMouse(Settings.mirageRange.Value) > 0 &&
+                        localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
+                        localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
+                        
+                        if ((DateTime.Now - lastRangedTrigger).TotalMilliseconds < 500 || skill.IsOnCooldown) continue;
+                        if (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1 ||
+                            !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0)) continue;
+                        if (mirage >= 1 &&
                             !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
+                       {
+                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                            lastRangedTrigger = DateTime.Now;
+                       }
+                       else if (skill.Id == SkillInfo.frenzy.Id && 
+                                (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) || 
+                                 Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
+
                         {
                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                            lastMirage = DateTime.Now;
+                            lastRangedTrigger = DateTime.Now;
                         }
                     }
                     catch (Exception e)

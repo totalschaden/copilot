@@ -42,10 +42,12 @@ namespace CoPilot
 
         #endregion
 
-        #region Mirage Archer
+        #region Ranged Trigger
 
-        public ToggleNode mirageEnabled = new ToggleNode(false);
-        public RangeNode<int> mirageRange = new RangeNode<int>(70, 0, 1000);
+        public ToggleNode rangedTriggerEnabled = new ToggleNode(false);
+        public ToggleNode rangedTriggerPowerCharge= new ToggleNode(false);
+        public RangeNode<int> rangedTriggerMouseRange = new RangeNode<int>(70, 0, 1000);
+        public RangeNode<int> rangedTriggerTargetRange = new RangeNode<int>(400, 0, 1000);
 
         #endregion
 
