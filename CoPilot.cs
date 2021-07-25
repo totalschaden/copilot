@@ -42,7 +42,6 @@ namespace CoPilot
         private DateTime lastCurse;
         private DateTime lastCustom;
         private DateTime lastDelveFlare;
-        private DateTime lastRangedTrigger;
         private DateTime lastStackSkill;
         private DateTime lastTimeAny;
         internal Entity localPlayer;
@@ -483,14 +482,13 @@ namespace CoPilot
                         localPlayer.Stats.TryGetValue(GameStat.MaxPowerCharges, out var maxPowerCharges);
                         localPlayer.Stats.TryGetValue(GameStat.MaxFrenzyCharges, out var maxFrenzyCharges);
                         
-                        if ((DateTime.Now - lastRangedTrigger).TotalMilliseconds < 500 || skill.IsOnCooldown) continue;
+                        if (skill.IsOnCooldown) continue;
                         if (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1 ||
                             !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0)) continue;
                         if (mirage >= 1 &&
                             !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
                        {
                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                            lastRangedTrigger = DateTime.Now;
                        }
                        else if (skill.Id == SkillInfo.frenzy.Id && 
                                 (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x => x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) || 
@@ -498,7 +496,6 @@ namespace CoPilot
 
                         {
                             KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                            lastRangedTrigger = DateTime.Now;
                         }
                     }
                     catch (Exception e)
