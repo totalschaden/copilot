@@ -478,6 +478,11 @@ namespace CoPilot
                             skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
                             localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumPowerCharges, out var maxPowerCharges);
                             localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumFrenzyCharges, out var maxFrenzyCharges);
+                            
+                            // Seems that Unmodded Values return 0 here ?!
+                            // Set to defaul 3 if 0.
+                            maxPowerCharges = maxPowerCharges == 0 ? 3 : maxPowerCharges;
+                            maxFrenzyCharges = maxFrenzyCharges == 0 ? 3 : maxFrenzyCharges;
 
                             if (Settings.debugMode)
                             {
