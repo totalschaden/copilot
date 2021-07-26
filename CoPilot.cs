@@ -165,8 +165,8 @@ namespace CoPilot
                 var monsterPosition = corpse.Pos;
                 var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
 
-                var xDiff = screenPosition.X - GameController.IngameState.CurentUElementPosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.CurentUElementPosY;
+                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
+                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
                 var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
 
                 if (monsterDistanceSquare <= maxDistanceSquare) count++;
@@ -185,8 +185,8 @@ namespace CoPilot
                 var monsterPosition = enemy.Pos;
                 var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
 
-                var xDiff = screenPosition.X - GameController.IngameState.CurentUElementPosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.CurentUElementPosY;
+                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
+                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
                 var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
 
                 if (monsterDistanceSquare <= maxDistanceSquare) count++;
@@ -232,8 +232,8 @@ namespace CoPilot
                 var monsterPosition = entity.Pos;
                 var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
 
-                var xDiff = screenPosition.X - GameController.IngameState.CurentUElementPosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.CurentUElementPosY;
+                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
+                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
                 var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
 
                 if (monsterDistanceSquare <= maxDistanceSquare) count++;
@@ -256,8 +256,8 @@ namespace CoPilot
                 var xDiff = screenPosition.X - cursorPosition.X;
                 var yDiff = screenPosition.Y - cursorPosition.Y;
                 */
-                var xDiff = screenPosition.X - GameController.IngameState.CurentUElementPosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.CurentUElementPosY;
+                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
+                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
 
                 var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
                 if (monsterDistanceSquare <= maxDistanceSquare && !EntityHasCurse(enemy))
@@ -485,7 +485,7 @@ namespace CoPilot
                                 LogError("MaxFrenzyCharges: " + maxFrenzyCharges);
                                 LogError("Cooldown: " + skill.IsOnCooldown);
                                 LogError("Mouse: " +
-                                         (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1));
+                                         CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) );
                                 LogError("Monster: " + !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0));
                                 LogError("Frenzy: " + (skill.Id == SkillInfo.frenzy.Id));
                                 LogError("Frenzy Buff: " + (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
