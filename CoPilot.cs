@@ -484,35 +484,24 @@ namespace CoPilot
                             maxPowerCharges = maxPowerCharges == 0 ? 3 : maxPowerCharges;
                             maxFrenzyCharges = maxFrenzyCharges == 0 ? 3 : maxFrenzyCharges;
 
-                            if (Settings.debugMode)
+                            if (!skill.IsOnCooldown &&
+                                CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) > 1 &&
+                                MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0))
                             {
-                                LogError("MaxPowerCharges: " + maxPowerCharges);
-                                LogError("MaxFrenzyCharges: " + maxFrenzyCharges);
-                                LogError("Cooldown: " + skill.IsOnCooldown);
-                                LogError("Mouse: " +
-                                         CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) );
-                                LogError("Monster: " + !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0));
-                                LogError("Frenzy: " + (skill.Id == SkillInfo.frenzy.Id));
-                                LogError("Frenzy Buff: " + (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
-                                    x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges)));
-                            }
+                                if (mirage >= 1 &&
+                                    !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
+                                {
+                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                }
+                                else if (skill.Id == SkillInfo.frenzy.Id &&
+                                         (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
+                                              x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) ||
+                                          Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
+                                              x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
 
-                            if (skill.IsOnCooldown) continue;
-                            if (CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) < 1 ||
-                                !MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0)) continue;
-                            if (mirage >= 1 &&
-                                !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
-                            {
-                                KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                            }
-                            else if (skill.Id == SkillInfo.frenzy.Id &&
-                                     (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
-                                          x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) ||
-                                      Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
-                                          x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
-
-                            {
-                                KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                {
+                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                }
                             }
                         }
                         catch (Exception e)
@@ -1097,7 +1086,7 @@ namespace CoPilot
 
                     #region Detonate Mines ( to be done )
 
-                    if (!Settings.minesEnabled) continue;
+                    if (Settings.minesEnabled)
                     {
                         try
                         {
@@ -1142,8 +1131,7 @@ namespace CoPilot
 
                 #region Custom Skill
 
-                if (!Settings.customEnabled) return;
-                {
+                if (Settings.customEnabled)
                     try
                     {
                         if (Gcd() &&
@@ -1162,8 +1150,6 @@ namespace CoPilot
                     {
                         LogError(e.ToString());
                     }
-                }
-
                 #endregion
             }
             catch (Exception e)
