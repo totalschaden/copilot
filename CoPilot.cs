@@ -482,7 +482,7 @@ namespace CoPilot
                             maxFrenzyCharges = maxFrenzyCharges == 0 ? 3 : maxFrenzyCharges;
 
                             if (!skill.IsOnCooldown &&
-                                CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) > 1 &&
+                                CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) >= 1 &&
                                 MonsterCheck(Settings.rangedTriggerTargetRange, 1, 0, 0))
                             {
                                 if (mirage >= 1 &&
