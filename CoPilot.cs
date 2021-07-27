@@ -406,7 +406,7 @@ namespace CoPilot
                     if (Settings.rangedTriggerEnabled)
                         try
                         {
-                            skill.Stats.TryGetValue(GameStat.NumberOfMirageArchersAllowed, out var mirage);
+                            skill.Stats.TryGetValue(GameStat.SkillCanOwnMirageArchers, out var mirage);
                             localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumPowerCharges, out var maxPowerCharges);
                             localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumFrenzyCharges, out var maxFrenzyCharges);
                             
