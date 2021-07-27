@@ -396,11 +396,8 @@ namespace CoPilot
                     !GameController.IsForeGroundCache)
                     return;
                 
-                foreach (var skill in skills)
+                foreach (var skill in skills.Where(skill => skill.IsOnSkillBar && skill.SkillSlotIndex >= 1 && skill.SkillSlotIndex != 2 && skill.CanBeUsed))
                 {
-                    if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 ||
-                        !skill.CanBeUsed)
-                        continue;
                     #region Ranged Trigger -> Mirage Archer / Frenzy
 
                     if (Settings.rangedTriggerEnabled)
@@ -1017,7 +1014,7 @@ namespace CoPilot
                     #endregion
 
                     #region Detonate Mines ( to be done )
-
+/*
                     if (Settings.minesEnabled)
                     {
                         try
@@ -1036,7 +1033,7 @@ namespace CoPilot
                             LogError(e.ToString());
                         }
                     }
-
+                    */
                     #endregion
                 }
 
