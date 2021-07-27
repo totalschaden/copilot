@@ -357,16 +357,18 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.enduringCryEnabled.Value = ImGuiExtension.Checkbox("Enabled",
                         CoPilot.instance.Settings.enduringCryEnabled.Value);
-                    CoPilot.instance.Settings.warCryTriggerRange.Value = ImGuiExtension.IntSlider("Enemy within Range",
-                        CoPilot.instance.Settings.warCryTriggerRange);
-                    CoPilot.instance.Settings.warCryKeepRage.Value = ImGuiExtension.Checkbox("Keep Rage Up",
-                        CoPilot.instance.Settings.warCryKeepRage.Value);
-                    CoPilot.instance.Settings.warCryMinAny.Value =
-                        ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.warCryMinAny);
-                    CoPilot.instance.Settings.warCryMinRare.Value =
-                        ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.warCryMinRare);
-                    CoPilot.instance.Settings.warCryMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
-                        CoPilot.instance.Settings.warCryMinUnique);
+                    CoPilot.instance.Settings.enduringCryTriggerRange.Value = ImGuiExtension.IntSlider("Enemy within Range",
+                        CoPilot.instance.Settings.enduringCryTriggerRange);
+                    CoPilot.instance.Settings.enduringCryHealHpp.Value = ImGuiExtension.IntSlider("Heal HP%",
+                        CoPilot.instance.Settings.enduringCryHealHpp);
+                    CoPilot.instance.Settings.enduringCrySpam.Value = ImGuiExtension.Checkbox("Spam Warcry",
+                        CoPilot.instance.Settings.enduringCrySpam.Value);
+                    CoPilot.instance.Settings.enduringCryMinAny.Value =
+                        ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.enduringCryMinAny);
+                    CoPilot.instance.Settings.enduringCryMinRare.Value =
+                        ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.enduringCryMinRare);
+                    CoPilot.instance.Settings.enduringCryMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
+                        CoPilot.instance.Settings.enduringCryMinUnique);
                 }
             }
             catch (Exception e)

@@ -85,11 +85,12 @@ namespace CoPilot
         #region Enduring Cry
 
         public ToggleNode enduringCryEnabled = new ToggleNode(false);
-        public RangeNode<int> warCryTriggerRange = new RangeNode<int>(550, 100, 1000);
-        public ToggleNode warCryKeepRage = new ToggleNode(false);
-        public RangeNode<int> warCryMinAny = new RangeNode<int>(1, 0, 50);
-        public RangeNode<int> warCryMinRare = new RangeNode<int>(0, 0, 50);
-        public RangeNode<int> warCryMinUnique = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> enduringCryTriggerRange = new RangeNode<int>(550, 100, 1000);
+        public ToggleNode enduringCrySpam = new ToggleNode(false);
+        public RangeNode<int> enduringCryHealHpp = new RangeNode<int>(90, 1, 100);
+        public RangeNode<int> enduringCryMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> enduringCryMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> enduringCryMinUnique = new RangeNode<int>(0, 0, 50);
 
         #endregion
         
