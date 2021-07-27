@@ -48,6 +48,7 @@ namespace CoPilot
         public ToggleNode rangedTriggerPowerCharge= new ToggleNode(false);
         public RangeNode<int> rangedTriggerMouseRange = new RangeNode<int>(70, 0, 1000);
         public RangeNode<int> rangedTriggerTargetRange = new RangeNode<int>(400, 0, 1000);
+        public RangeNode<int> rangedTriggerCooldown = new RangeNode<int>(400, 0, 1000);
 
         #endregion
 

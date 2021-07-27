@@ -628,6 +628,8 @@ namespace CoPilot
                         CoPilot.instance.Settings.rangedTriggerMouseRange);
                     CoPilot.instance.Settings.rangedTriggerTargetRange.Value = ImGuiExtension.IntSlider("Enemy Range to Player",
                         CoPilot.instance.Settings.rangedTriggerTargetRange);
+                    CoPilot.instance.Settings.rangedTriggerCooldown.Value = ImGuiExtension.IntSlider("Cooldown between attacks",
+                        CoPilot.instance.Settings.rangedTriggerCooldown);
                 }
             }
             catch (Exception e)

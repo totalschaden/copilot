@@ -490,7 +490,7 @@ namespace CoPilot
                                 {
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
-                                else if (skill.Id == SkillInfo.frenzy.Id &&
+                                else if (skill.Id == SkillInfo.frenzy.Id && SkillInfo.ManageCooldown(SkillInfo.frenzy, skill) &&
                                          (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
                                               x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) ||
                                           Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
@@ -498,6 +498,7 @@ namespace CoPilot
 
                                 {
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    SkillInfo.frenzy.Cooldown = Settings.rangedTriggerCooldown;
                                 }
                             }
                         }
