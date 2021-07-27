@@ -155,44 +155,18 @@ namespace CoPilot
             return false;
         }
 
+        private Vector2 GetMousePosition()
+        {
+            return new Vector2(GameController.IngameState.MousePosX, GameController.IngameState.MousePosY);
+        }
         private int CountCorpsesAroundMouse(float maxDistance)
         {
-            var count = 0;
-            var maxDistanceSquare = maxDistance * maxDistance;
-            foreach (var corpse in corpses)
-            {
-                var monsterPosition = corpse.Pos;
-                var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
-
-                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
-                var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
-
-                if (monsterDistanceSquare <= maxDistanceSquare) count++;
-            }
-
-            //LogMessage("Total Corpses: " + corpses.Count().ToString() + " Valid Corpses Counted: " + count.ToString());
-            return count;
+            return corpses.Count(x => Vector2.Distance(GameController.IngameState.Camera.WorldToScreen(x.Pos), GetMousePosition()) <= maxDistance);
         }
 
         private int CountEnemysAroundMouse(float maxDistance)
         {
-            var count = 0;
-            var maxDistanceSquare = maxDistance * maxDistance;
-            foreach (var enemy in enemys)
-            {
-                var monsterPosition = enemy.Pos;
-                var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
-
-                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
-                var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
-
-                if (monsterDistanceSquare <= maxDistanceSquare) count++;
-            }
-
-            //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
-            return count;
+            return enemys.Count(x => Vector2.Distance(GameController.IngameState.Camera.WorldToScreen(x.Pos), GetMousePosition()) <= maxDistance);
         }
 
         private void UpdateBladeBlast()
@@ -213,8 +187,6 @@ namespace CoPilot
 
         private int CountBladeBlastEnitytiesNearMouse(float maxDistance)
         {
-            var count = 0;
-            var maxDistanceSquare = maxDistance * maxDistance;
             var bladeEntities =
                 GameController.Entities.Where(x => x.IsValid && !x.IsTransitioned && x.Path.Contains("GroundBlade"));
             // Server Effect Entity from Blade Blast ?
@@ -225,50 +197,12 @@ namespace CoPilot
                     y.GetComponent<Positioned>()?.WorldPos == x.GetComponent<Positioned>()?.WorldPos)))
                 return 0;
 
-
-            foreach (var entity in bladeEntities)
-            {
-                var monsterPosition = entity.Pos;
-                var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
-
-                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
-                var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
-
-                if (monsterDistanceSquare <= maxDistanceSquare) count++;
-            }
-
-            return count;
+            return bladeEntities.Count(x => Vector2.Distance(GameController.IngameState.Camera.WorldToScreen(x.Pos), GetMousePosition()) <= maxDistance);
         }
 
         private int CountNonCursedEnemysAroundMouse(float maxDistance)
         {
-            var count = 0;
-            var maxDistanceSquare = maxDistance * maxDistance;
-            foreach (var enemy in enemys)
-            {
-                var monsterPosition = enemy.Pos;
-                var screenPosition = GameController.IngameState.Camera.WorldToScreen(monsterPosition);
-                /*    Old Code will not work when playing on 2nd Monitor
-                var cursorPosition = MouseTools.GetCursorPosition();
-
-                var xDiff = screenPosition.X - cursorPosition.X;
-                var yDiff = screenPosition.Y - cursorPosition.Y;
-                */
-                var xDiff = screenPosition.X - GameController.IngameState.MousePosX;
-                var yDiff = screenPosition.Y - GameController.IngameState.MousePosY;
-
-                var monsterDistanceSquare = xDiff * xDiff + yDiff * yDiff;
-                if (monsterDistanceSquare <= maxDistanceSquare && !EntityHasCurse(enemy))
-                {
-                    if (enemy.Rarity == MonsterRarity.Unique)
-                        return 0;
-                    count++;
-                }
-            }
-
-            //LogMessage("Total Enemys: " + enemy.Count().ToString() + " Valid Enemys Counted: " + count.ToString());
-            return count;
+            return enemys.Count(x => Vector2.Distance(GameController.IngameState.Camera.WorldToScreen(x.Pos), GetMousePosition()) <= maxDistance && !EntityHasCurse(x));
         }
 
         private bool EntityHasCurse(Entity entity)
