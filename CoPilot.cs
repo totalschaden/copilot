@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -360,8 +359,8 @@ namespace CoPilot
         {
             try
             {
-                var value = (int) monster?.GetComponent<Stats>()?.StatDictionary?[stat];
-                return value > 0;
+                var value = monster?.GetComponent<Stats>()?.StatDictionary?[stat];
+                    return value > 0;
             }
             catch (Exception)
             {
@@ -462,9 +461,7 @@ namespace CoPilot
                     /*GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible || */ // 3.15 Bugged 
                     !GameController.IsForeGroundCache)
                     return;
-
-                // Still waiting for proper Skill.cooldown / Skill.isReady to add to the Loop.
-                // Currently thats unanavailable in API.
+                
                 foreach (var skill in skills)
                 {
                     if (!skill.IsOnSkillBar || skill.SkillSlotIndex < 1 || skill.SkillSlotIndex == 2 ||
