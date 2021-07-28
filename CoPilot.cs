@@ -78,70 +78,53 @@ namespace CoPilot
 
         private int GetMinnionsWithin(float maxDistance)
         {
-            var count = 0;
-            foreach (var minnion in localPlayer.GetComponent<Actor>().DeployedObjects
-                .Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
-            {
-                var distance = Vector2.Distance(new Vector2(minnion.Entity.Pos.X, minnion.Entity.Pos.Y),
-                    new Vector2(playerPosition.X, playerPosition.Y));
-
-                if (distance <= maxDistance) count++;
-            }
-
-            return count;
+            return localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x?.Entity != null && x.Entity.IsAlive).Select(minnion => Vector2.Distance(new Vector2(minnion.Entity.Pos.X, minnion.Entity.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
         }
 
         private int GetMonsterWithin(float maxDistance, MonsterRarity rarity = MonsterRarity.White)
         {
-            var count = 0;
-            foreach (var monster in enemys)
-            {
-                if (monster.Rarity < rarity) continue;
-
-                var distance = Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
-                    new Vector2(playerPosition.X, playerPosition.Y));
-
-                if (distance <= maxDistance) count++;
-            }
-
-            return count;
+            return (from monster in enemys where monster.Rarity >= rarity select Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
         }
         
         private int GetCorpseWithin(float maxDistance)
         {
-            var count = 0;
-            foreach (var corpse in corpses)
-            {
-                var distance = Vector2.Distance(new Vector2(corpse.Pos.X, corpse.Pos.Y),
-                    new Vector2(playerPosition.X, playerPosition.Y));
-
-                if (distance <= maxDistance) count++;
-            }
-
-            return count;
+            return corpses.Select(corpse => Vector2.Distance(new Vector2(corpse.Pos.X, corpse.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
         }
 
         private bool MonsterCheck(int range, int minAny, int minRare, int minUnique)
         {
             int any = 0, rare = 0, unique = 0;
             foreach (var monster in enemys)
-                if (monster.Rarity <= MonsterRarity.Magic)
+                switch (monster.Rarity)
                 {
-                    if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
-                        new Vector2(playerPosition.X, playerPosition.Y)) <= range)
-                        any++;
-                }
-                else if (monster.Rarity == MonsterRarity.Rare)
-                {
-                    if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
-                        new Vector2(playerPosition.X, playerPosition.Y)) <= range)
-                        rare++;
-                }
-                else if (monster.Rarity == MonsterRarity.Unique)
-                {
-                    if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
-                        new Vector2(playerPosition.X, playerPosition.Y)) <= range)
-                        unique++;
+                    case MonsterRarity.White:
+                    {
+                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                            new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                            any++;
+                        break;
+                    }
+                    case MonsterRarity.Magic:
+                    {
+                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                            new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                            any++;
+                        break;
+                    }
+                    case MonsterRarity.Rare:
+                    {
+                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                            new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                            rare++;
+                        break;
+                    }
+                    case MonsterRarity.Unique:
+                    {
+                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                            new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                            unique++;
+                        break;
+                    }
                 }
 
             if (minUnique > 0 && unique >= minUnique) return true;
@@ -150,9 +133,7 @@ namespace CoPilot
 
             if (minAny > 0 && any >= minAny) return true;
 
-            if (minAny == 0 && minRare == 0 && minUnique == 0) return true;
-
-            return false;
+            return minAny == 0 && minRare == 0 && minUnique == 0;
         }
 
         private Vector2 GetMousePosition()
