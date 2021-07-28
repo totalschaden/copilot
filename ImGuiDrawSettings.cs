@@ -285,10 +285,7 @@ namespace CoPilot
 
             try
             {
-                if (CoPilot.instance.Settings.delveFlareEnabled)
-                    ImGui.PushStyleColor(ImGuiCol.Header, green);
-                else
-                    ImGui.PushStyleColor(ImGuiCol.Header, red);
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.delveFlareEnabled ? green : red);
                 ImGui.PushID(5);
                 if (ImGui.TreeNodeEx("Delve Flare", collapsingHeaderFlags))
                 {
@@ -480,12 +477,13 @@ namespace CoPilot
 
             try
             {
-                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.anyVaalEnabled ? green : red);
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.anyVaalEnabled || CoPilot.instance.Settings.VaalClarityEnabled ? green : red);
                 ImGui.PushID(14);
-                if (ImGui.TreeNodeEx("Vaal Skill", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Vaal Skills", collapsingHeaderFlags))
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.anyVaalEnabled ? green : red);
                     ImGui.PushID(014);
+                    ImGui.BeginChild(14, new Vector2(0,280));
                     if (ImGui.TreeNodeEx("Any", collapsingHeaderFlags))
                     {
                         CoPilot.instance.Settings.anyVaalEnabled.Value =
@@ -505,6 +503,7 @@ namespace CoPilot
                         CoPilot.instance.Settings.anyVaalMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
                             CoPilot.instance.Settings.anyVaalMinUnique);
                     }
+                    
                     ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.VaalClarityEnabled ? green : red);
                     ImGui.PushID(0014);
                     if (ImGui.TreeNodeEx("Vaal Clarity Test not active !", collapsingHeaderFlags))
@@ -514,6 +513,7 @@ namespace CoPilot
                         CoPilot.instance.Settings.VaalClarityManaPct.Value =
                             ImGuiExtension.IntSlider("MP%", CoPilot.instance.Settings.VaalClarityManaPct);
                     }
+                    ImGui.EndChild();
                 }
             }
             catch (Exception e)
