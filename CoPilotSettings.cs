@@ -226,16 +226,20 @@ namespace CoPilot
 
         #endregion
 
-        #region Any Vaal Skill
+        #region Vaal Skills
 
         public ToggleNode anyVaalEnabled = new ToggleNode(false);
-        public RangeNode<float> anyVaalHpPct = new RangeNode<float>(35f, 0f, 100f);
-        public RangeNode<float> anyVaalEsPct = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<int> anyVaalHpPct = new RangeNode<int>(35, 0, 100);
+        public RangeNode<int> anyVaalEsPct = new RangeNode<int>(0, 0, 100);
+        public RangeNode<int> anyVaalManaPct = new RangeNode<int>(0, 0, 100);
         public RangeNode<int> anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
         public RangeNode<int> anyVaalMinAny = new RangeNode<int>(1, 0, 50);
         public RangeNode<int> anyVaalMinRare = new RangeNode<int>(0, 0, 50);
         public RangeNode<int> anyVaalMinUnique = new RangeNode<int>(0, 0, 50);
-
+        
+        public ToggleNode VaalClarityEnabled = new ToggleNode(false);
+        public RangeNode<int> VaalClarityManaPct = new RangeNode<int>(0, 0, 100);
+        
         #endregion
 
         #region Custom Skill

@@ -482,22 +482,38 @@ namespace CoPilot
             {
                 ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.anyVaalEnabled ? green : red);
                 ImGui.PushID(14);
-                if (ImGui.TreeNodeEx("Any Vaal Skill", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Vaal Skill", collapsingHeaderFlags))
                 {
-                    CoPilot.instance.Settings.anyVaalEnabled.Value =
-                        ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.anyVaalEnabled.Value);
-                    CoPilot.instance.Settings.anyVaalTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range",
-                        CoPilot.instance.Settings.anyVaalTriggerRange);
-                    CoPilot.instance.Settings.anyVaalHpPct.Value =
-                        ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.anyVaalHpPct);
-                    CoPilot.instance.Settings.anyVaalEsPct.Value =
-                        ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.anyVaalEsPct);
-                    CoPilot.instance.Settings.anyVaalMinAny.Value =
-                        ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.anyVaalMinAny);
-                    CoPilot.instance.Settings.anyVaalMinRare.Value =
-                        ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.anyVaalMinRare);
-                    CoPilot.instance.Settings.anyVaalMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
-                        CoPilot.instance.Settings.anyVaalMinUnique);
+                    ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.anyVaalEnabled ? green : red);
+                    ImGui.PushID(014);
+                    if (ImGui.TreeNodeEx("Vaal Skill", collapsingHeaderFlags))
+                    {
+                        CoPilot.instance.Settings.anyVaalEnabled.Value =
+                            ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.anyVaalEnabled.Value);
+                        CoPilot.instance.Settings.anyVaalTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range",
+                            CoPilot.instance.Settings.anyVaalTriggerRange);
+                        CoPilot.instance.Settings.anyVaalHpPct.Value =
+                            ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.anyVaalHpPct);
+                        CoPilot.instance.Settings.anyVaalEsPct.Value =
+                            ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.anyVaalEsPct);
+                        CoPilot.instance.Settings.anyVaalManaPct.Value =
+                            ImGuiExtension.IntSlider("MP%", CoPilot.instance.Settings.anyVaalManaPct);
+                        CoPilot.instance.Settings.anyVaalMinAny.Value =
+                            ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.anyVaalMinAny);
+                        CoPilot.instance.Settings.anyVaalMinRare.Value =
+                            ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.anyVaalMinRare);
+                        CoPilot.instance.Settings.anyVaalMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
+                            CoPilot.instance.Settings.anyVaalMinUnique);
+                    }
+                    ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.VaalClarityEnabled ? green : red);
+                    ImGui.PushID(0014);
+                    if (ImGui.TreeNodeEx("Vaal Clarity Test not active !", collapsingHeaderFlags))
+                    {
+                        CoPilot.instance.Settings.VaalClarityEnabled.Value =
+                            ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.VaalClarityEnabled.Value);
+                        CoPilot.instance.Settings.VaalClarityManaPct.Value =
+                            ImGuiExtension.IntSlider("MP%", CoPilot.instance.Settings.VaalClarityManaPct);
+                    }
                 }
             }
             catch (Exception e)
