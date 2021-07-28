@@ -404,13 +404,12 @@ namespace CoPilot
                         try
                         {
                             skill.Stats.TryGetValue(GameStat.SkillCanOwnMirageArchers, out var mirage);
-                            localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumPowerCharges, out var maxPowerCharges);
-                            localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumFrenzyCharges, out var maxFrenzyCharges);
-                            
-                            // Seems that Unmodded Values return 0 here ?!
-                            // Set to defaul 3 if 0.
-                            maxPowerCharges = maxPowerCharges == 0 ? 3 : maxPowerCharges;
-                            maxFrenzyCharges = maxFrenzyCharges == 0 ? 3 : maxFrenzyCharges;
+                            if (!localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumPowerCharges,
+                                out var maxPowerCharges))
+                                maxPowerCharges = 3;
+                            if (!localPlayer.Stats.TryGetValue(GameStat.VirtualMaximumFrenzyCharges,
+                                out var maxFrenzyCharges))
+                                maxFrenzyCharges = 3;
 
                             if (!skill.IsOnCooldown &&
                                 CountEnemysAroundMouse(Settings.rangedTriggerMouseRange.Value) >= 1 &&
@@ -651,7 +650,8 @@ namespace CoPilot
 
                                 if (Settings.autoZombieEnabled && skill.Id == SkillInfo.raiseZombie.Id)
                                 {
-                                    skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out var maxZombies);
+                                    if (!skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out var maxZombies))
+                                        maxZombies = 3;
                                     if (summons.zombies < maxZombies &&
                                         CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
                                     {
@@ -662,7 +662,10 @@ namespace CoPilot
 
                                 if (Settings.autoHolyRelictEnabled && skill.Id == SkillInfo.holyRelict.Id)
                                 {
-                                    skill.Stats.TryGetValue(GameStat.NumberOfRelicsAllowed, out var maxRelicts);
+                                    // Seems maxRelicts is no longer available when its default value
+                                    if (!skill.Stats.TryGetValue(GameStat.NumberOfRelicsAllowed, out var maxRelicts))
+                                        maxRelicts = 1;
+                                    
                                     if (summons.holyRelict < maxRelicts)
                                     {
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
