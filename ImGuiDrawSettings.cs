@@ -237,14 +237,14 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.autoQuitEnabled.Value =
                         ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoQuitEnabled.Value);
-                    CoPilot.instance.Settings.hpPctQuit.Value =
-                        ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.hpPctQuit);
-                    CoPilot.instance.Settings.esPctQuit.Value =
-                        ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.esPctQuit);
+                    CoPilot.instance.Settings.hppQuit.Value =
+                        ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.hppQuit);
+                    CoPilot.instance.Settings.espQuit.Value =
+                        ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.espQuit);
                     CoPilot.instance.Settings.autoQuitGuardian.Value = ImGuiExtension.Checkbox("Guardian Auto Quit",
                         CoPilot.instance.Settings.autoQuitGuardian.Value);
-                    CoPilot.instance.Settings.guardianHpPct.Value =
-                        ImGuiExtension.FloatSlider("Guardian HP%", CoPilot.instance.Settings.guardianHpPct);
+                    CoPilot.instance.Settings.guardianHpp.Value =
+                        ImGuiExtension.IntSlider("Guardian HP%", CoPilot.instance.Settings.guardianHpp);
                     CoPilot.instance.Settings.autoQuitHotkeyEnabled.Value = ImGuiExtension.Checkbox("Hotkey Enabled",
                         CoPilot.instance.Settings.autoQuitHotkeyEnabled.Value);
                     CoPilot.instance.Settings.forcedAutoQuit.Value = ImGuiExtension.HotkeySelector(
@@ -300,10 +300,10 @@ namespace CoPilot
                     CoPilot.instance.Settings.delveFlareDebuffStacks.Value =
                         ImGuiExtension.IntSlider("min. Debuff Stacks",
                             CoPilot.instance.Settings.delveFlareDebuffStacks);
-                    CoPilot.instance.Settings.delveFlareHpBelow.Value =
-                        ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.delveFlareHpBelow);
-                    CoPilot.instance.Settings.delveFlareEsBelow.Value =
-                        ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.delveFlareEsBelow);
+                    CoPilot.instance.Settings.delveFlareHppBelow.Value =
+                        ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.delveFlareHppBelow);
+                    CoPilot.instance.Settings.delveFlareEspBelow.Value =
+                        ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.delveFlareEspBelow);
                 }
             }
             catch (Exception e)
@@ -386,10 +386,10 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.moltenShellEnabled.Value = ImGuiExtension.Checkbox("Enabled",
                         CoPilot.instance.Settings.moltenShellEnabled.Value);
-                    CoPilot.instance.Settings.moltenShellHpPct.Value =
-                        ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.moltenShellHpPct);
-                    CoPilot.instance.Settings.moltenShellEsPct.Value =
-                        ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.moltenShellEsPct);
+                    CoPilot.instance.Settings.moltenShellHpp.Value =
+                        ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.moltenShellHpp);
+                    CoPilot.instance.Settings.moltenShellEsp.Value =
+                        ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.moltenShellEsp);
                     CoPilot.instance.Settings.moltenShellRange.Value =
                         ImGuiExtension.IntSlider("Range", CoPilot.instance.Settings.moltenShellRange);
                     CoPilot.instance.Settings.moltenShellMinAny.Value =
@@ -486,18 +486,18 @@ namespace CoPilot
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.anyVaalEnabled ? green : red);
                     ImGui.PushID(014);
-                    if (ImGui.TreeNodeEx("Vaal Skill", collapsingHeaderFlags))
+                    if (ImGui.TreeNodeEx("Any", collapsingHeaderFlags))
                     {
                         CoPilot.instance.Settings.anyVaalEnabled.Value =
                             ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.anyVaalEnabled.Value);
                         CoPilot.instance.Settings.anyVaalTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range",
                             CoPilot.instance.Settings.anyVaalTriggerRange);
-                        CoPilot.instance.Settings.anyVaalHpPct.Value =
-                            ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.anyVaalHpPct);
-                        CoPilot.instance.Settings.anyVaalEsPct.Value =
-                            ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.anyVaalEsPct);
-                        CoPilot.instance.Settings.anyVaalManaPct.Value =
-                            ImGuiExtension.IntSlider("MP%", CoPilot.instance.Settings.anyVaalManaPct);
+                        CoPilot.instance.Settings.anyVaalHpp.Value =
+                            ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.anyVaalHpp);
+                        CoPilot.instance.Settings.anyVaalEsp.Value =
+                            ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.anyVaalEsp);
+                        CoPilot.instance.Settings.anyVaalMpp.Value =
+                            ImGuiExtension.IntSlider("MP%", CoPilot.instance.Settings.anyVaalMpp);
                         CoPilot.instance.Settings.anyVaalMinAny.Value =
                             ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.anyVaalMinAny);
                         CoPilot.instance.Settings.anyVaalMinRare.Value =
@@ -535,10 +535,10 @@ namespace CoPilot
                         ImGuiExtension.IntSlider("Cooldown", CoPilot.instance.Settings.customCooldown);
                     CoPilot.instance.Settings.customTriggerRange.Value = ImGuiExtension.IntSlider("Trigger Range",
                         CoPilot.instance.Settings.customTriggerRange);
-                    CoPilot.instance.Settings.customHpPct.Value =
-                        ImGuiExtension.FloatSlider("HP%", CoPilot.instance.Settings.customHpPct);
-                    CoPilot.instance.Settings.customEsPct.Value =
-                        ImGuiExtension.FloatSlider("ES%", CoPilot.instance.Settings.customEsPct);
+                    CoPilot.instance.Settings.customHpp.Value =
+                        ImGuiExtension.IntSlider("HP%", CoPilot.instance.Settings.customHpp);
+                    CoPilot.instance.Settings.customEsp.Value =
+                        ImGuiExtension.IntSlider("ES%", CoPilot.instance.Settings.customEsp);
                     CoPilot.instance.Settings.customMinAny.Value =
                         ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.customMinAny);
                     CoPilot.instance.Settings.customMinRare.Value =
@@ -610,8 +610,8 @@ namespace CoPilot
                         CoPilot.instance.Settings.convocationEnabled.Value);
                     CoPilot.instance.Settings.convocationAvoidUniqueRange.Value = ImGuiExtension.IntSlider(
                         "Do not use when Unique Enemy within", CoPilot.instance.Settings.convocationAvoidUniqueRange);
-                    CoPilot.instance.Settings.guardianHpPct.Value =
-                        ImGuiExtension.FloatSlider("Summon HP% below", CoPilot.instance.Settings.guardianHpPct);
+                    CoPilot.instance.Settings.guardianHpp.Value =
+                        ImGuiExtension.IntSlider("Summon HP% below", CoPilot.instance.Settings.guardianHpp);
                     CoPilot.instance.Settings.convocationMobRange.Value = ImGuiExtension.IntSlider("Mob Trigger Range",
                         CoPilot.instance.Settings.convocationMobRange);
                     CoPilot.instance.Settings.convocationMinnionRange.Value = ImGuiExtension.IntSlider("Minnion Range",

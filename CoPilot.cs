@@ -329,9 +329,9 @@ namespace CoPilot
                 if (Settings.autoQuitEnabled)
                     try
                     {
-                        if (Math.Round(player.HPPercentage, 3) * 100 < Settings.hpPctQuit.Value ||
+                        if (player.HPPercentage < (float)Settings.hppQuit / 100||
                             player.MaxES > 0 &&
-                            Math.Round(player.ESPercentage, 3) * 100 < Settings.esPctQuit.Value)
+                            player.ESPercentage < (float)Settings.espQuit / 100)
                             Quit();
                     }
                     catch (Exception e)
@@ -342,7 +342,7 @@ namespace CoPilot
                 if (Settings.autoQuitGuardian)
                     try
                     {
-                        if (Math.Round(Summons.GetAnimatedGuardianHpp()) * 100 < Settings.guardianHpPct.Value)
+                        if (Summons.GetAnimatedGuardianHpp() < (float)Settings.guardianHpp / 100)
                             Quit();
                     }
                     catch (Exception e)
@@ -505,10 +505,10 @@ namespace CoPilot
                                 if (SkillInfo.ManageCooldown(SkillInfo.moltenShell, skill))
                                     if (MonsterCheck(Settings.moltenShellRange, Settings.moltenShellMinAny,
                                             Settings.moltenShellMinRare, Settings.moltenShellMinUnique) &&
-                                        (Math.Round(player.HPPercentage, 3) * 100 <=
-                                         Settings.moltenShellHpPct.Value ||
-                                         player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
-                                         Settings.moltenShellEsPct.Value))
+                                        (player.HPPercentage <=
+                                         (float)Settings.moltenShellHpp / 100 ||
+                                         player.MaxES > 0 && player.ESPercentage <
+                                         (float)Settings.moltenShellEsp / 100))
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
@@ -770,9 +770,9 @@ namespace CoPilot
                                     Settings.anyVaalMinRare, Settings.anyVaalMinUnique) && vaalSkills.Exists(x =>
                                     x.VaalSkillInternalName == skill.InternalName &&
                                     x.CurrVaalSouls >= x.VaalSoulsPerUse))
-                                    if (player.HPPercentage<= (float)Settings.anyVaalHpPct ||
+                                    if (player.HPPercentage<= (float)Settings.anyVaalHpp ||
                                         player.MaxES > 0 && player.ESPercentage<
-                                        (float)Settings.anyVaalEsPct || player.MPPercentage < (float)Settings.anyVaalManaPct )
+                                        (float)Settings.anyVaalEsp || player.MPPercentage < (float)Settings.anyVaalMpp )
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
@@ -905,8 +905,8 @@ namespace CoPilot
                                     if (GetMonsterWithin(Settings.convocationAvoidUniqueRange,
                                         MonsterRarity.Unique) > 0)
                                         return;
-                                    if (Math.Round(Summons.GetLowestMinionHpp()) * 100 <
-                                        Settings.convocationHp.Value)
+                                    if (Summons.GetLowestMinionHpp() <
+                                        (float)Settings.convocationHpp / 100)
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     else if (GetMonsterWithin(Settings.convocationMobRange) > 0 &&
                                              GetMinnionsWithin(Settings.convocationMinnionRange) /
@@ -1027,8 +1027,8 @@ namespace CoPilot
                     try
                     {
                         if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 &&
-                            (player.ESPercentage < Settings.delveFlareEsBelow / 100 ||
-                             player.HPPercentage < Settings.delveFlareHpBelow / 100) && buffs.Exists(x =>
+                            (player.ESPercentage < (float)Settings.delveFlareEspBelow / 100 ||
+                             player.HPPercentage < (float)Settings.delveFlareHppBelow / 100) && buffs.Exists(x =>
                                 x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
                         {
                             KeyPress(Settings.delveFlareKey.Value);
@@ -1051,9 +1051,9 @@ namespace CoPilot
                             (DateTime.Now - lastCustom).TotalMilliseconds > Settings.customCooldown.Value &&
                             MonsterCheck(Settings.customTriggerRange, Settings.customMinAny, Settings.customMinRare,
                                 Settings.customMinUnique))
-                            if (Math.Round(player.HPPercentage, 3) * 100 <= Settings.customHpPct.Value ||
-                                player.MaxES > 0 && Math.Round(player.ESPercentage, 3) * 100 <
-                                Settings.customEsPct.Value)
+                            if (player.HPPercentage <= (float)Settings.customHpp / 100 ||
+                                player.MaxES > 0 && player.ESPercentage <
+                                (float)Settings.customEsp / 100)
                             {
                                 KeyPress(Settings.customKey);
                                 lastCustom = DateTime.Now;

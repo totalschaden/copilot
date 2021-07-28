@@ -35,10 +35,10 @@ namespace CoPilot
         public ToggleNode autoQuitEnabled = new ToggleNode(false);
         public ToggleNode autoQuitHotkeyEnabled = new ToggleNode(true);
         public HotkeyNode forcedAutoQuit = new HotkeyNode(Keys.F4);
-        public RangeNode<float> hpPctQuit = new RangeNode<float>(35f, 0f, 100f);
-        public RangeNode<float> esPctQuit = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<int> hppQuit = new RangeNode<int>(35, 0, 100);
+        public RangeNode<int> espQuit = new RangeNode<int>(0, 0, 100);
         public ToggleNode autoQuitGuardian = new ToggleNode(false);
-        public RangeNode<float> guardianHpPct = new RangeNode<float>(35f, 0f, 100f);
+        public RangeNode<int> guardianHpp = new RangeNode<int>(35, 0, 100);
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace CoPilot
         #region Convocation
 
         public ToggleNode convocationEnabled = new ToggleNode(false);
-        public RangeNode<float> convocationHp = new RangeNode<float>(35f, 0f, 100f);
+        public RangeNode<int> convocationHpp = new RangeNode<int>(35, 0, 100);
         public RangeNode<int> convocationMobRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionRange = new RangeNode<int>(300, 0, 4000);
         public RangeNode<int> convocationMinnionPct = new RangeNode<int>(50, 0, 100);
@@ -74,8 +74,8 @@ namespace CoPilot
 
         public ToggleNode moltenShellEnabled = new ToggleNode(false);
         public RangeNode<int> moltenShellRange = new RangeNode<int>(550, 100, 1000);
-        public RangeNode<float> moltenShellHpPct = new RangeNode<float>(100, 0f, 100f);
-        public RangeNode<float> moltenShellEsPct = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<int> moltenShellHpp = new RangeNode<int>(100, 0, 100);
+        public RangeNode<int> moltenShellEsp = new RangeNode<int>(0, 0, 100);
         public RangeNode<int> moltenShellMinAny = new RangeNode<int>(1, 0, 50);
         public RangeNode<int> moltenShellMinRare = new RangeNode<int>(0, 0, 50);
         public RangeNode<int> moltenShellMinUnique = new RangeNode<int>(0, 0, 50);
@@ -115,8 +115,8 @@ namespace CoPilot
         public ToggleNode delveFlareEnabled = new ToggleNode(false);
         public HotkeyNode delveFlareKey = new HotkeyNode(Keys.D6);
         public RangeNode<int> delveFlareDebuffStacks = new RangeNode<int>(12, 1, 1000);
-        public RangeNode<float> delveFlareHpBelow = new RangeNode<float>(75, 0, 100);
-        public RangeNode<float> delveFlareEsBelow = new RangeNode<float>(0, 0, 100);
+        public RangeNode<int> delveFlareHppBelow = new RangeNode<int>(75, 0, 100);
+        public RangeNode<int> delveFlareEspBelow = new RangeNode<int>(0, 0, 100);
 
         #endregion
 
@@ -229,9 +229,9 @@ namespace CoPilot
         #region Vaal Skills
 
         public ToggleNode anyVaalEnabled = new ToggleNode(false);
-        public RangeNode<int> anyVaalHpPct = new RangeNode<int>(35, 0, 100);
-        public RangeNode<int> anyVaalEsPct = new RangeNode<int>(0, 0, 100);
-        public RangeNode<int> anyVaalManaPct = new RangeNode<int>(0, 0, 100);
+        public RangeNode<int> anyVaalHpp = new RangeNode<int>(35, 0, 100);
+        public RangeNode<int> anyVaalEsp = new RangeNode<int>(0, 0, 100);
+        public RangeNode<int> anyVaalMpp = new RangeNode<int>(0, 0, 100);
         public RangeNode<int> anyVaalTriggerRange = new RangeNode<int>(500, 100, 2000);
         public RangeNode<int> anyVaalMinAny = new RangeNode<int>(1, 0, 50);
         public RangeNode<int> anyVaalMinRare = new RangeNode<int>(0, 0, 50);
@@ -249,8 +249,8 @@ namespace CoPilot
         public RangeNode<int> customMinAny = new RangeNode<int>(1, 0, 50);
         public RangeNode<int> customMinRare = new RangeNode<int>(0, 0, 50);
         public RangeNode<int> customMinUnique = new RangeNode<int>(0, 0, 50);
-        public RangeNode<float> customHpPct = new RangeNode<float>(100, 0f, 100f);
-        public RangeNode<float> customEsPct = new RangeNode<float>(0f, 0f, 100f);
+        public RangeNode<int> customHpp = new RangeNode<int>(100, 0, 100);
+        public RangeNode<int> customEsp = new RangeNode<int>(0, 0, 100);
         public RangeNode<int> customCooldown = new RangeNode<int>(4000, 1000, 10000);
         public HotkeyNode customKey = new HotkeyNode(Keys.T);
 
