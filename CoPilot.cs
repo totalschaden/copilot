@@ -772,7 +772,7 @@ namespace CoPilot
                                     x.CurrVaalSouls >= x.VaalSoulsPerUse))
                                     if (player.HPPercentage<= (float)Settings.anyVaalHpp ||
                                         player.MaxES > 0 && player.ESPercentage<
-                                        (float)Settings.anyVaalEsp || player.MPPercentage < (float)Settings.anyVaalMpp )
+                                        (float)Settings.anyVaalEsp || player.MPPercentage < (float)Settings.anyVaalMpp / 100)
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
