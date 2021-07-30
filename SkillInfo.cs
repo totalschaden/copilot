@@ -122,7 +122,8 @@ namespace CoPilot
             if (!CoPilot.instance.Gcd())
                 return false;
 
-            actorSkill.Stats.TryGetValue(GameStat.ManaCost, out var manaCost);
+            if (!actorSkill.Stats.TryGetValue(GameStat.ManaCost, out var manaCost))
+                manaCost = 0;
             return CoPilot.instance.player.CurMana >= manaCost;
         }
 
