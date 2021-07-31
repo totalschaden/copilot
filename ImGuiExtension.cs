@@ -164,7 +164,8 @@ namespace CoPilot
         }
 
         // Hotkey Selector
-        private static IEnumerable<Keys> KeyCodes()
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Keys> KeyCodes()
         {
             return Enum.GetValues(typeof(Keys)).Cast<Keys>();
         }
