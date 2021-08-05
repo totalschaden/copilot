@@ -997,6 +997,7 @@ namespace CoPilot
                     #endregion
 
                     #region Plague Bearer
+                    
                     if (Settings.plagueBearer)
                     {
                         try
