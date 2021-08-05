@@ -1,22 +1,25 @@
-﻿using ExileCore;
+﻿using System;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoPilot
 {
     internal static class SkillInfo
     {
-        private static DateTime lastUpdate = DateTime.MinValue;
-        private static long lastTime;
-        private static float deltaTime;
+        private static DateTime _lastUpdate = DateTime.MinValue;
+        private static long _lastTime;
+        private static float _deltaTime;
+
+        // Pseudo Skills
+        internal static Skill autoMapTabber = new Skill();
+        internal static Skill autoSummon = new Skill();
+
+        internal static Skill vaalSkill = new Skill();
+
+        // Skills
         internal static Skill enduringCry = new Skill();
         internal static Skill rallyingCry = new Skill();
+        internal static Skill generalCry = new Skill();
         internal static Skill boneOffering = new Skill();
         internal static Skill spiritOffering = new Skill();
         internal static Skill fleshOffering = new Skill();
@@ -50,10 +53,16 @@ namespace CoPilot
         internal static Skill bladeVortex = new Skill();
         internal static Skill plagueBearer = new Skill();
         internal static Skill bladeBlast = new Skill();
+        internal static Skill holyRelict = new Skill();
+        internal static Skill berserk = new Skill();
+        internal static Skill sweep = new Skill();
+        internal static Skill witherStep = new Skill();
+        internal static Skill frenzy = new Skill();
 
         internal static void ResetSkills()
         {
             enduringCry = new Skill();
+            generalCry = new Skill();
             rallyingCry = new Skill();
             boneOffering = new Skill();
             spiritOffering = new Skill();
@@ -88,213 +97,211 @@ namespace CoPilot
             bladeVortex = new Skill();
             plagueBearer = new Skill();
             bladeBlast = new Skill();
+            holyRelict = new Skill();
+            berserk = new Skill();
+            sweep = new Skill();
+            witherStep = new Skill();
+            frenzy = new Skill();
         }
+
         public static void GetDeltaTime()
         {
-            long now = DateTime.Now.Ticks;
-            float dT = (now - lastTime) / 10000;
-            lastTime = now;
-            deltaTime = dT;
+            var now = DateTime.Now.Ticks;
+            float dT = (now - _lastTime) / 10000;
+            _lastTime = now;
+            _deltaTime = dT;
         }
-        internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill, float customCooldown = 0)
+
+        internal static bool ManageCooldown(Skill skill, ActorSkill actorSkill)
         {
             if (skill.Cooldown > 0)
             {
-                skill.Cooldown = MoveTowards(skill.Cooldown, 0, (float)deltaTime);
+                skill.Cooldown = MoveTowards(skill.Cooldown, 0, _deltaTime);
                 return false;
             }
-            
-            if (skill.Cooldown == 0 && actorSkill.TotalUses != skill.LastUsed)
-            {
-                skill.Cooldown = customCooldown == 0 ? actorSkill.Cooldown*100 : customCooldown;
-                skill.LastUsed = actorSkill.TotalUses;
+
+            if (actorSkill.RemainingUses <= 0 && actorSkill.IsOnCooldown) return false;
+            if (!CoPilot.instance.Gcd())
                 return false;
-            }
-            if (!CoPilot.instance.GCD())
-                return false;
-            actorSkill.Stats.TryGetValue(GameStat.ManaCost, out int manaCost);
-            if (CoPilot.instance.player.CurMana < manaCost)
-            {
-                return false;
-            }
-            if (skill.Cooldown == 0)
-                return true;
-            return false;
+
+            if (!actorSkill.Stats.TryGetValue(GameStat.ManaCost, out var manaCost))
+                manaCost = 0;
+            return CoPilot.instance.player.CurMana >= manaCost;
         }
+
+        internal static bool ManageCooldown(Skill skill)
+        {
+            if (skill.Cooldown > 0)
+            {
+                skill.Cooldown = MoveTowards(skill.Cooldown, 0, _deltaTime);
+                return false;
+            }
+
+            return true;
+        }
+
         internal static void SetCooldown(Skill skill)
         {
-                          
         }
 
         internal static void UpdateSkillInfo(bool force = false)
         {
-            if (!force && (DateTime.Now - lastUpdate).TotalMilliseconds < 10000)
+            if (!force && (DateTime.Now - _lastUpdate).TotalMilliseconds < 10000)
                 return;
-            lastUpdate = DateTime.Now;
+            _lastUpdate = DateTime.Now;
             foreach (var skill in CoPilot.instance.skills)
             {
                 if (!skill.IsOnSkillBar)
                     continue;
-                if (skill.InternalName == "enduring_cry")
+                switch (skill.InternalName)
                 {
-                    enduringCry.Id = skill.Id;
-                }
-                else if (skill.InternalName == "inspiring_cry")
-                {
-                    rallyingCry.Id = skill.Id;
-                    rallyingCry.BuffName = "inspiring_cry";
-                }
-                else if (skill.InternalName == "bone_offering")
-                {
-                    boneOffering.Id = skill.Id;
-                    boneOffering.BuffName = "active_offering";
-                }
-                else if (skill.InternalName == "spirit_offering")
-                {
-                    spiritOffering.Id = skill.Id;
-                    spiritOffering.BuffName = "active_offering";
-                }
-                else if (skill.InternalName == "flesh_offering")
-                {
-                    fleshOffering.Id = skill.Id;
-                    fleshOffering.BuffName = "active_offering";
-                }
-                else if (skill.InternalName == "new_phase_run")
-                {
-                    phaserun.Id = skill.Id;
-                    phaserun.BuffName = "new_phase_run";
-                }
-                else if (skill.InternalName == "molten_shell_barrier")
-                {
-                    moltenShell.Id = skill.Id;
-                    moltenShell.BuffName = "fire_shield";
-                }
-                else if (skill.InternalName == "steelskin")
-                {
-                    steelSkin.Id = skill.Id;
-                    steelSkin.BuffName = "quick_guard";
-                }
-                else if (skill.InternalName == "bone_armour")
-                {
-                    boneArmour.Id = skill.Id;
-                    boneArmour.BuffName = "bone_armour";
-                }
-                else if (skill.InternalName == "arcane_cloak")
-                {
-                    arcaneCloak.Id = skill.Id;
-                    arcaneCloak.BuffName = "arcane_cloak";
-                }
-                else if (skill.InternalName == "blood_rage")
-                {
-                    bloodRage.Id = skill.Id;
-                    bloodRage.BuffName = "blood_rage";
-                }
-                else if (skill.InternalName == "summon_chaos_elemental")
-                {
-                    chaosGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "summon_fire_elemental")
-                {
-                    flameGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "summon_ice_elemental")
-                {
-                    iceGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "summon_lightning_golem")
-                {
-                    lightningGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "summon_rock_golem")
-                {
-                    stoneGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "summon_bone_golem")
-                {
-                    carrionGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "summon_beastial_ursa")
-                {
-                    ursaGolem.Id = skill.Id;
-                }
-                else if (skill.InternalName == "frost_bolt_nova")
-                {
-                    vortex.Id = skill.Id;
-                }
-                else if (skill.InternalName == "divine_tempest")
-                {
-                    divineIre.Id = skill.Id;
-                    divineIre.BuffName = "divine_tempest_stage";
-                }
-                else if (skill.InternalName == "virulent_arrow")
-                {
-                    scourgeArror.Id = skill.Id;
-                    scourgeArror.BuffName = "virulent_arrow_counter";
-                }
-                else if (skill.InternalName == "charged_attack_channel")
-                {
-                    bladeFlurry.Id = skill.Id;
-                    bladeFlurry.BuffName = "charged_attack";
-                }
-                else if (skill.InternalName == "curse_pillar")
-                {
-                    doedreEffigy.Id = skill.Id;
-                }
-                else if (skill.InternalName == "tempest_shield")
-                {
-                    tempestShield.Id = skill.Id;
-                    tempestShield.BuffName = "lightning_shield";
-                }
-                else if (skill.InternalName == "sigil_recall")
-                {
-                    brandRecall.Id = skill.Id;
-                }
-                else if (skill.InternalName == "cyclone_channelled")
-                {
-                    cyclone.Id = skill.Id;
-                }
-                else if (skill.InternalName == "ice_nova")
-                {
-                    iceNova.Id = skill.Id;
-                }
-                else if (skill.InternalName == "raise_zombie")
-                {
-                    raiseZombie.Id = skill.Id;
-                }
-                else if (skill.InternalName == "flicker_strike")
-                {
-                    flickerStrike.Id = skill.Id;
-                }
-                else if (skill.InternalName == "frost_bolt")
-                {
-                    frostbolt.Id = skill.Id;
-                }
-                else if (skill.InternalName == "convocation")
-                {
-                    convocation.Id = skill.Id;
-                }
-                else if (skill.InternalName == "new_punishment")
-                {
-                    punishment.Id = skill.Id;
-                    punishment.BuffName = "curse_newpunishment";
-                }
-                else if (skill.InternalName == "new_new_blade_vortex")
-                {
-                    bladeVortex.Id = skill.Id;
-                    bladeVortex.BuffName = "new_new_blade_vortex";
-                }
-                else if (skill.InternalName == "corrosive_shroud")
-                {
-                    plagueBearer.Id = skill.Id;
-                    plagueBearer.BuffName = "corrosive_shroud";
-                }
-                else if (skill.InternalName == "blade_burst")
-                {
-                    bladeBlast.Id = skill.Id;
+                    case "enduring_cry":
+                        enduringCry.Id = skill.Id;
+                        break;
+                    case "spiritual_cry":
+                        generalCry.Id = skill.Id;
+                        break;
+                    case "inspiring_cry":
+                        rallyingCry.Id = skill.Id;
+                        rallyingCry.BuffName = "inspiring_cry";
+                        break;
+                    case "bone_offering":
+                        boneOffering.Id = skill.Id;
+                        boneOffering.BuffName = "active_offering";
+                        break;
+                    case "spirit_offering":
+                        spiritOffering.Id = skill.Id;
+                        spiritOffering.BuffName = "active_offering";
+                        break;
+                    case "flesh_offering":
+                        fleshOffering.Id = skill.Id;
+                        fleshOffering.BuffName = "active_offering";
+                        break;
+                    case "new_phase_run":
+                        phaserun.Id = skill.Id;
+                        phaserun.BuffName = "new_phase_run";
+                        break;
+                    case "molten_shell_barrier":
+                        moltenShell.Id = skill.Id;
+                        moltenShell.BuffName = "fire_shield";
+                        break;
+                    case "steelskin":
+                        steelSkin.Id = skill.Id;
+                        steelSkin.BuffName = "quick_guard";
+                        break;
+                    case "bone_armour":
+                        boneArmour.Id = skill.Id;
+                        boneArmour.BuffName = "bone_armour";
+                        break;
+                    case "arcane_cloak":
+                        arcaneCloak.Id = skill.Id;
+                        arcaneCloak.BuffName = "arcane_cloak";
+                        break;
+                    case "blood_rage":
+                        bloodRage.Id = skill.Id;
+                        bloodRage.BuffName = "blood_rage";
+                        break;
+                    case "summon_chaos_elemental":
+                        chaosGolem.Id = skill.Id;
+                        break;
+                    case "summon_fire_elemental":
+                        flameGolem.Id = skill.Id;
+                        break;
+                    case "summon_ice_elemental":
+                        iceGolem.Id = skill.Id;
+                        break;
+                    case "summon_lightning_golem":
+                        lightningGolem.Id = skill.Id;
+                        break;
+                    case "summon_rock_golem":
+                        stoneGolem.Id = skill.Id;
+                        break;
+                    case "summon_bone_golem":
+                        carrionGolem.Id = skill.Id;
+                        break;
+                    case "summon_beastial_ursa":
+                        ursaGolem.Id = skill.Id;
+                        break;
+                    case "frost_bolt_nova":
+                        vortex.Id = skill.Id;
+                        break;
+                    case "divine_tempest":
+                        divineIre.Id = skill.Id;
+                        divineIre.BuffName = "divine_tempest_stage";
+                        break;
+                    case "virulent_arrow":
+                        scourgeArror.Id = skill.Id;
+                        scourgeArror.BuffName = "virulent_arrow_counter";
+                        break;
+                    case "charged_attack_channel":
+                        bladeFlurry.Id = skill.Id;
+                        bladeFlurry.BuffName = "charged_attack";
+                        break;
+                    case "curse_pillar":
+                        doedreEffigy.Id = skill.Id;
+                        break;
+                    case "tempest_shield":
+                        tempestShield.Id = skill.Id;
+                        tempestShield.BuffName = "lightning_shield";
+                        break;
+                    case "sigil_recall":
+                        brandRecall.Id = skill.Id;
+                        break;
+                    case "cyclone_channelled":
+                        cyclone.Id = skill.Id;
+                        break;
+                    case "ice_nova":
+                        iceNova.Id = skill.Id;
+                        break;
+                    case "raise_zombie":
+                        raiseZombie.Id = skill.Id;
+                        break;
+                    case "flicker_strike":
+                        flickerStrike.Id = skill.Id;
+                        break;
+                    case "frost_bolt":
+                        frostbolt.Id = skill.Id;
+                        break;
+                    case "convocation":
+                        convocation.Id = skill.Id;
+                        break;
+                    case "new_punishment":
+                        punishment.Id = skill.Id;
+                        punishment.BuffName = "curse_newpunishment";
+                        break;
+                    case "new_new_blade_vortex":
+                        bladeVortex.Id = skill.Id;
+                        bladeVortex.BuffName = "new_new_blade_vortex";
+                        break;
+                    case "blade_burst":
+                        bladeBlast.Id = skill.Id;
+                        break;
+                    case "summon_relic":
+                        holyRelict.Id = skill.Id;
+                        break;
+                    case "berserk":
+                        berserk.Id = skill.Id;
+                        berserk.BuffName = "berserk";
+                        break;
+                    case "sweep":
+                        sweep.Id = skill.Id;
+                        break;
+                    case "slither":
+                        witherStep.Id = skill.Id;
+                        witherStep.BuffName = "slither";
+                        break;
+                    case "frenzy":
+                        frenzy.Id = skill.Id;
+                        break;
+                    case "corrosive_shroud":
+                        plagueBearer.Id = skill.Id;
+                        plagueBearer.BuffName = "corrosive_shroud";
+                        break;
                 }
             }
         }
-        static public float MoveTowards(float cur, float tar, float max)
+
+        private static float MoveTowards(float cur, float tar, float max)
         {
             if (Math.Abs(tar - cur) <= max)
                 return tar;

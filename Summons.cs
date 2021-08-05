@@ -1,28 +1,23 @@
-﻿using ExileCore.PoEMemory.Components;
-using ExileCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ExileCore.PoEMemory.MemoryObjects;
+using ExileCore.PoEMemory.Components;
 
 namespace CoPilot
 {
-    class Summons
+    internal class Summons
     {
+        internal int boneGolem;
         internal int chaosElemental;
+        internal int dropBearUniqueSummoned;
         internal int fireElemental;
+        internal int holyRelict;
         internal int iceElemental;
+
+        private DateTime lastUpdate = DateTime.Now;
         internal int lightningGolem;
         internal int rockGolem;
-        internal int boneGolem;
-        internal int dropBearUniqueSummoned;
         internal int zombies;
-        internal List<Entity> minnions = new List<Entity>();
 
-        internal DateTime lastUpdate = DateTime.Now;
-        
         internal void UpdateSummons()
         {
             if ((DateTime.Now - lastUpdate).TotalMilliseconds < 250)
@@ -37,72 +32,46 @@ namespace CoPilot
             boneGolem = 0;
             dropBearUniqueSummoned = 0;
             zombies = 0;
-            minnions.Clear();
-            foreach(var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
-            {
+            holyRelict = 0;
+
+            foreach (var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects
+                .Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
                 if (obj.Entity.Path.Contains("ChaosElemental"))
-                {
                     chaosElemental++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("FireElemental"))
-                {
                     fireElemental++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("IceElemental"))
-                {
                     iceElemental++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("LightningGolem"))
-                {
                     lightningGolem++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("RockGolem"))
-                {
                     rockGolem++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("BoneGolem"))
-                {
                     boneGolem++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("DropBearUniqueSummoned"))
-                {
                     dropBearUniqueSummoned++;
-                    minnions.Add(obj.Entity);
-                }                    
                 else if (obj.Entity.Path.Contains("RaisedZombie"))
-                {
                     zombies++;
-                    minnions.Add(obj.Entity);
-                }                    
-            }
+                else if (obj.Entity.Metadata.EndsWith("HolyLivingRelic")) holyRelict++;
         }
 
-        public float GetLowestMinionHpp()
+        public static float GetLowestMinionHpp()
         {
             float hpp = 100;
-            foreach(var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.Where(x => x != null && x.Entity != null && x.Entity.GetComponent<Life>() != null))
-            {
+            foreach (var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects
+                .Where(x => x != null && x.Entity != null && x.Entity.GetComponent<Life>() != null))
                 if (obj.Entity.GetComponent<Life>().HPPercentage < hpp)
                     hpp = obj.Entity.GetComponent<Life>().HPPercentage;
-            }
             return hpp;
         }
 
-        public float GetAnimatedGuardianHpp()
+        public static float GetAnimatedGuardianHpp()
         {
-            float hpp = 100;
-            ExileCore.PoEMemory.Components.DeployedObject animatedGuardian = null;
-            animatedGuardian = CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.FirstOrDefault(x => x.Entity != null && x.Entity.GetComponent<Life>() != null && x.Entity.Path.Contains("AnimatedArmour"));
-            if (animatedGuardian != null)
-                return animatedGuardian.Entity.GetComponent<Life>().HPPercentage;
-            else
-                return hpp;
+            const float hpp = 100;
+            DeployedObject animatedGuardian = null;
+            animatedGuardian = CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.FirstOrDefault(x =>
+                x.Entity?.GetComponent<Life>() != null && x.Entity.Path.Contains("AnimatedArmour"));
+            return animatedGuardian?.Entity.GetComponent<Life>().HPPercentage ?? hpp;
         }
     }
 }
