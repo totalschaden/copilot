@@ -775,6 +775,21 @@ namespace CoPilot
                 CoPilot.instance.LogError(e.ToString());
             }
 
+            try
+            {
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.plagueBearer ? green : red);
+                ImGui.PushID(26);
+                if (ImGui.TreeNodeEx("Plague Bearer", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.plagueBearer.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.plagueBearer.Value);
+                    CoPilot.instance.Settings.plagueBearerRange.Value = ImGuiExtension.IntSlider("Enemy Range", CoPilot.instance.Settings.plagueBearerRange);
+                    CoPilot.instance.Settings.plagueBearerMinEnemys.Value = ImGuiExtension.IntSlider("Min Enemy Any", CoPilot.instance.Settings.plagueBearerMinEnemys);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
 
             try
             {
@@ -788,26 +803,6 @@ namespace CoPilot
             {
                 CoPilot.instance.LogError(e.ToString());
             }
-
-            try
-            {
-                if (CoPilot.instance.Settings.plagueBearer)
-                    ImGui.PushStyleColor(ImGuiCol.Header, green);
-                else
-                    ImGui.PushStyleColor(ImGuiCol.Header, red);
-                ImGui.PushID(23);
-                if (ImGui.TreeNodeEx("Plague Bearer", collapsingHeaderFlags))
-                {
-                    CoPilot.instance.Settings.plagueBearer.Value = ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.plagueBearer.Value);
-                    CoPilot.instance.Settings.plagueBearerRange.Value = ImGuiExtension.IntSlider("Enemy Range", CoPilot.instance.Settings.plagueBearerRange);
-                    CoPilot.instance.Settings.plagueBearerMinEnemys.Value = ImGuiExtension.IntSlider("Minimum enemy Count", CoPilot.instance.Settings.plagueBearerMinEnemys);
-                }
-            }
-            catch (Exception e)
-            {
-                CoPilot.instance.LogError(e.ToString());
-            }
-
 
             ImGui.End();
         }

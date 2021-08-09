@@ -999,12 +999,11 @@ namespace CoPilot
                     #region Plague Bearer
                     
                     if (Settings.plagueBearer)
-                    {
                         try
                         {
                             if (skill.Id == SkillInfo.plagueBearer.Id)
                             {
-                                if (GetMonsterWithin(Settings.plagueBearerRange) > Settings.plagueBearerMinEnemys && buffs.Exists(x => x.Name == "corrosive_shroud_at_max_damage"))
+                                if (SkillInfo.ManageCooldown(SkillInfo.plagueBearer, skill) && GetMonsterWithin(Settings.plagueBearerRange) > Settings.plagueBearerMinEnemys && buffs.Exists(x => x.Name == "corrosive_shroud_at_max_damage"))
                                 {
                                     KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
@@ -1014,7 +1013,6 @@ namespace CoPilot
                         {
                             LogError(e.ToString());
                         }
-                    }
 
                     #endregion
 
