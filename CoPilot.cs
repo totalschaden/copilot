@@ -994,6 +994,27 @@ namespace CoPilot
                         {
                             LogError(e.ToString());
                         }
+                    #endregion
+
+                    #region Plague Bearer
+                    
+                    if (Settings.plagueBearer)
+                    {
+                        try
+                        {
+                            if (skill.Id == SkillInfo.plagueBearer.Id)
+                            {
+                                if (GetMonsterWithin(Settings.plagueBearerRange) > Settings.plagueBearerMinEnemys && buffs.Exists(x => x.Name == "corrosive_shroud_at_max_damage"))
+                                {
+                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+                    }
 
                     #endregion
 

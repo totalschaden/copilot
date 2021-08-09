@@ -207,6 +207,12 @@ namespace CoPilot
 
         #endregion
 
+        #region Plague Bearer
+        public ToggleNode plagueBearer = new ToggleNode(false);
+        public RangeNode<int> plagueBearerRange = new RangeNode<int>(300, 100, 1000);
+        public RangeNode<int> plagueBearerMinEnemys = new RangeNode<int>(5, 1, 20);
+        #endregion
+
         #region Blade Blast
 
         public ToggleNode bladeBlast = new ToggleNode(false);
