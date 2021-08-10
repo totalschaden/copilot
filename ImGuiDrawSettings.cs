@@ -358,6 +358,10 @@ namespace CoPilot
                         CoPilot.instance.Settings.enduringCryTriggerRange);
                     CoPilot.instance.Settings.enduringCryHealHpp.Value = ImGuiExtension.IntSlider("Heal HP%",
                         CoPilot.instance.Settings.enduringCryHealHpp);
+                    CoPilot.instance.Settings.enduringCryHealEsp.Value = ImGuiExtension.IntSlider("Heal ES%",
+                        CoPilot.instance.Settings.enduringCryHealEsp);
+                    CoPilot.instance.Settings.enduringCryRemoveGrace.Value = ImGuiExtension.Checkbox("Remove Grace Periode",
+                        CoPilot.instance.Settings.enduringCryRemoveGrace.Value);
                     CoPilot.instance.Settings.enduringCrySpam.Value = ImGuiExtension.Checkbox("Spam Warcry",
                         CoPilot.instance.Settings.enduringCrySpam.Value);
                     CoPilot.instance.Settings.enduringCryMinAny.Value =
