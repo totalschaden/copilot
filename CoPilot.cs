@@ -372,7 +372,7 @@ namespace CoPilot
                 #endregion
 
                 // Do not Cast anything while we are untouchable or Chat is Open
-                if (buffs.Exists(x => x.Name == "grace_period") ||
+                if (buffs.Exists(x => x.Name == "grace_period") && !Settings.enduringCryRemoveGrace ||
                     /*GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible || */ // 3.15 Bugged 
                     !GameController.IsForeGroundCache)
                     return;
@@ -429,7 +429,9 @@ namespace CoPilot
                                 if (SkillInfo.ManageCooldown(SkillInfo.enduringCry, skill))
                                     if (MonsterCheck(Settings.enduringCryTriggerRange, Settings.enduringCryMinAny,
                                             Settings.enduringCryMinRare, Settings.enduringCryMinUnique) ||
-                                        player.HPPercentage < (float)Settings.enduringCryHealHpp / 100|| Settings.enduringCrySpam)
+                                        player.HPPercentage < (float) Settings.enduringCryHealHpp / 100 ||
+                                        player.ESPercentage < (float) Settings.enduringCryHealEsp / 100
+                                        || Settings.enduringCrySpam || Settings.enduringCryRemoveGrace && buffs.Exists(x => x.Name == "grace_period"))
                                         KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
