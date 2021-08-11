@@ -124,18 +124,18 @@ namespace CoPilot
         private IEnumerator AutoPilotLogic()
         {
 	        while (true)
-            {
-	            //Dont run logic if we're dead!
-				if (!CoPilot.instance.GameController.Player.IsAlive || !CoPilot.instance.Settings.autoPilotEnabled || !CoPilot.instance.GameController.IsForeGroundCache)
-					yield return new WaitTime(100);
-				if (CoPilot.instance.Settings.autoPilotToggleKey.PressedOnce())
-				{
-					CoPilot.instance.Settings.autoPilotEnabled.SetValueNoEvent(!CoPilot.instance.Settings.autoPilotEnabled.Value);
-					tasks = new List<TaskNode>();				
-				}
+	        {
+		        if (CoPilot.instance.Settings.autoPilotToggleKey.PressedOnce())
+		        {
+			        CoPilot.instance.Settings.autoPilotEnabled.SetValueNoEvent(!CoPilot.instance.Settings.autoPilotEnabled.Value);
+			        tasks = new List<TaskNode>();				
+		        }
+				
+	            if (!CoPilot.instance.GameController.Player.IsAlive || !CoPilot.instance.Settings.autoPilotEnabled.Value || !CoPilot.instance.GameController.IsForeGroundCache)
+					continue;
+	            
 
-
-				//Cache the current follow target (if present)
+	            //Cache the current follow target (if present)
 				followTarget = GetFollowingTarget();
 				if (followTarget != null)
 				{
