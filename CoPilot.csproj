@@ -15,7 +15,7 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <LangVersion>7</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -39,6 +39,9 @@
   <ItemGroup>
     <Reference Include="ExileCore">
       <HintPath>..\..\..\ExileCore.dll</HintPath>
+    </Reference>
+    <Reference Include="GameOffsets, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\Qu\GameOffsets.dll</HintPath>
     </Reference>
     <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
@@ -71,7 +74,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoPilot.cs" />
     <Compile Include="CoPilot.cs" />
+    <Compile Include="Keyboard.cs" />
+    <Compile Include="Mouse.cs" />
     <Compile Include="Summons.cs" />
     <Compile Include="ImGuiDrawSettings.cs" />
     <Compile Include="ImGuiExtension.cs" />
@@ -84,6 +90,7 @@
     </Compile>
     <Compile Include="Skill.cs" />
     <Compile Include="SkillInfo.cs" />
+    <Compile Include="TaskNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

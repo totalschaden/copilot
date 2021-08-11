@@ -165,6 +165,45 @@ namespace CoPilot
 
             try
             {
+                // Auto Pilot
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.autoPilotEnabled ? green : red);
+                ImGui.PushID(0);
+                if (ImGui.TreeNodeEx("Auto Pilot", collapsingHeaderFlags))
+                {
+                    CoPilot.instance.Settings.autoPilotEnabled.Value =
+                        ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoPilotEnabled.Value);
+                    CoPilot.instance.Settings.autoPilotLeader = ImGuiExtension.InputText("Leader Name: ", CoPilot.instance.Settings.autoPilotLeader, 60, ImGuiInputTextFlags.None);
+                    CoPilot.instance.Settings.autoPilotDashEnabled.Value = ImGuiExtension.Checkbox(
+                        "Dash Enabled", CoPilot.instance.Settings.autoPilotDashEnabled.Value);
+                    CoPilot.instance.Settings.autoPilotCloseFollow.Value = ImGuiExtension.Checkbox(
+                        "Close Follow", CoPilot.instance.Settings.autoPilotCloseFollow.Value);
+                    CoPilot.instance.Settings.autoPilotDashKey.Value = ImGuiExtension.HotkeySelector(
+                        "Dash Key: " + CoPilot.instance.Settings.autoPilotDashKey.Value, CoPilot.instance.Settings.autoPilotDashKey);
+                    CoPilot.instance.Settings.autoPilotMoveKey.Value = ImGuiExtension.HotkeySelector(
+                        "Move Key: " + CoPilot.instance.Settings.autoPilotMoveKey.Value, CoPilot.instance.Settings.autoPilotMoveKey);
+                    CoPilot.instance.Settings.autoPilotToggleKey.Value = ImGuiExtension.HotkeySelector(
+                        "Toggle Key: " + CoPilot.instance.Settings.autoPilotToggleKey.Value, CoPilot.instance.Settings.autoPilotToggleKey);
+                    CoPilot.instance.Settings.autoPilottakeWaypoints.Value = ImGuiExtension.Checkbox(
+                        "Take Waypoints", CoPilot.instance.Settings.autoPilottakeWaypoints.Value);
+                    /*
+                    CoPilot.instance.Settings.autoPilotRandomClickOffset.Value =
+                        ImGuiExtension.IntSlider("Random Click Offset", CoPilot.instance.Settings.autoPilotRandomClickOffset);
+                    */
+                    CoPilot.instance.Settings.autoPilotInputFrequency.Value =
+                        ImGuiExtension.IntSlider("Input Freq.", CoPilot.instance.Settings.autoPilotInputFrequency);
+                    CoPilot.instance.Settings.autoPilotPathfindingNodeDistance.Value =
+                        ImGuiExtension.IntSlider("Keep within Distance", CoPilot.instance.Settings.autoPilotPathfindingNodeDistance);
+                    CoPilot.instance.Settings.autoPilotClearPathDistance.Value =
+                        ImGuiExtension.IntSlider("Transition Distance", CoPilot.instance.Settings.autoPilotClearPathDistance);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.instance.LogError(e.ToString());
+            }
+            
+            try
+            {
                 // Auto Attack
                 ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.instance.Settings.autoAttackEnabled ? green : red);
                 ImGui.PushID(1);

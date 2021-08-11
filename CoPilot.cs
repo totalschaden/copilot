@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using ExileCore;
 using ExileCore.PoEMemory.Components;
@@ -12,18 +11,18 @@ using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared;
 using ExileCore.Shared.Enums;
 using SharpDX;
-using static CoPilot.WinApiMouse;
 
 namespace CoPilot
 {
     public class CoPilot : BaseSettingsPlugin<CoPilotSettings>
     {
-        private const string CoroutineKeyPress = "KeyPress";
+        
 
         private const int Delay = 70;
 
         private const int MouseAutoSnapRange = 250;
         internal static CoPilot instance;
+        internal AutoPilot autoPilot = new AutoPilot();
         private readonly Summons summons = new Summons();
 
         private DateTime autoAttackRunning;
@@ -32,7 +31,7 @@ namespace CoPilot
         private bool bladeBlastReady;
         private List<Buff> buffs;
 
-        private Coroutine coroutineWorker;
+        
         private List<Entity> corpses = new List<Entity>();
         private List<Entity> enemys = new List<Entity>();
         private bool isAttacking;
@@ -42,7 +41,7 @@ namespace CoPilot
         private DateTime lastCustom;
         private DateTime lastDelveFlare;
         private DateTime lastStackSkill;
-        private DateTime lastTimeAny;
+        internal DateTime lastTimeAny;
         internal Entity localPlayer;
         internal Life player;
         private Vector3 playerPosition;
@@ -51,20 +50,7 @@ namespace CoPilot
         private bool updateBladeBlast;
         private List<ActorVaalSkill> vaalSkills = new List<ActorVaalSkill>();
 
-        private void KeyPress(Keys key, bool anyDelay = true)
-        {
-            if (anyDelay)
-                lastTimeAny = DateTime.Now;
-            coroutineWorker = new Coroutine(KeyPressRoutine(key), this, CoroutineKeyPress);
-            Core.ParallelRunner.Run(coroutineWorker);
-        }
-
-        private static IEnumerator KeyPressRoutine(Keys key)
-        {
-            Keyboard.KeyDown(key);
-            yield return new WaitTime(20);
-            Keyboard.KeyUp(key);
-        }
+        
 
         public override bool Initialise()
         {
@@ -73,6 +59,9 @@ namespace CoPilot
             GameController.LeftPanel.WantUse(() => Settings.Enable);
             skillCoroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
             Core.ParallelRunner.Run(skillCoroutine);
+            Input.RegisterKey(Settings.autoPilotToggleKey.Value);
+            Settings.autoPilotToggleKey.OnValueChanged += () => { Input.RegisterKey(Settings.autoPilotToggleKey.Value); };
+            autoPilot.StartCoroutine();
             return true;
         }
 
@@ -136,7 +125,7 @@ namespace CoPilot
             return minAny == 0 && minRare == 0 && minUnique == 0;
         }
 
-        private Vector2 GetMousePosition()
+        internal Vector2 GetMousePosition()
         {
             return new Vector2(GameController.IngameState.MousePosX, GameController.IngameState.MousePosY);
         }
@@ -259,8 +248,47 @@ namespace CoPilot
 
             var coroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
             Core.ParallelRunner.Run(coroutine);
+            
+            autoPilot.AreaChange();
+        }
+        public override void EntityAdded(Entity entity)
+        {
+            if (!string.IsNullOrEmpty(entity.RenderName))
+                switch (entity.Type)
+                {
+                    //TODO: Handle doors and similar obstructions to movement/pathfinding
+
+                    //TODO: Handle waypoint (initial claim as well as using to teleport somewhere)
+
+                    //Handle clickable teleporters
+                    case EntityType.AreaTransition:
+                    case EntityType.Portal:
+                    case EntityType.TownPortal:
+                        if (!autoPilot.areaTransitions.ContainsKey(entity.Id))
+                            autoPilot.areaTransitions.Add(entity.Id, entity);
+                        break;
+                }
+            base.EntityAdded(entity);
         }
 
+        public override void EntityRemoved(Entity entity)
+        {
+            switch (entity.Type)
+            {
+                //TODO: Handle doors and similar obstructions to movement/pathfinding
+
+                //TODO: Handle waypoint (initial claim as well as using to teleport somewhere)
+
+                //Handle clickable teleporters
+                case ExileCore.Shared.Enums.EntityType.AreaTransition:
+                case ExileCore.Shared.Enums.EntityType.Portal:
+                case ExileCore.Shared.Enums.EntityType.TownPortal:
+                    if (autoPilot.areaTransitions.ContainsKey(entity.Id))
+                        autoPilot.areaTransitions.Remove(entity.Id);
+                    break;
+            }
+            base.EntityRemoved(entity);
+        }
         public override void DrawSettings()
         {
             //base.DrawSettings();
@@ -288,6 +316,7 @@ namespace CoPilot
             try
             {
                 if (!Settings.Enable) return;
+                autoPilot.Render();
                 if (Settings.autoQuitHotkeyEnabled && (WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
                 {
                     LogMessage("Copilot: Panic Quit...");
@@ -360,7 +389,7 @@ namespace CoPilot
                         if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi
                             .Map.SmallMiniMap.IsVisibleLocal)
                         {
-                            KeyPress(Keys.Tab);
+                            Keyboard.KeyPress(Keys.Tab);
                             SkillInfo.autoMapTabber.Cooldown = 250;
                         }
                 }
@@ -399,7 +428,7 @@ namespace CoPilot
                                 if (mirage >= 1 &&
                                     !buffs.Exists(x => x.Name == "mirage_archer_visual_buff" && x.Timer > 0.5))
                                 {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
                                 else if (skill.Id == SkillInfo.frenzy.Id && SkillInfo.ManageCooldown(SkillInfo.frenzy, skill) &&
                                          (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
@@ -408,7 +437,7 @@ namespace CoPilot
                                               x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
 
                                 {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     SkillInfo.frenzy.Cooldown = Settings.rangedTriggerCooldown;
                                 }
                             }
@@ -432,7 +461,7 @@ namespace CoPilot
                                         player.HPPercentage < (float) Settings.enduringCryHealHpp / 100 ||
                                         player.ESPercentage < (float) Settings.enduringCryHealEsp / 100
                                         || Settings.enduringCrySpam || Settings.enduringCryRemoveGrace && buffs.Exists(x => x.Name == "grace_period"))
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -450,7 +479,7 @@ namespace CoPilot
                                 if (SkillInfo.ManageCooldown(SkillInfo.generalCry, skill))
                                     if (GetCorpseWithin(Settings.generalCryTriggerRange) >=
                                         Settings.generalCryMinCorpse)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -468,7 +497,7 @@ namespace CoPilot
                                 if (SkillInfo.ManageCooldown(SkillInfo.witherStep, skill))
                                     if (!isAttacking && isMoving)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.phaserun.Cooldown = 250;
                                     }
 
@@ -479,7 +508,7 @@ namespace CoPilot
                                         !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) &&
                                         !buffs.Exists(b =>
                                             b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1))
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
 
                                     if (Settings.phaserunUseLifeTap && isMoving &&
                                         (!buffs.Exists(b => b.Name == "lifetap_buff" && b.Timer > 0.1) &&
@@ -487,7 +516,7 @@ namespace CoPilot
                                          !buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName) &&
                                          !buffs.Exists(b =>
                                              b.Name == SkillInfo.phaserun.BuffName && b.Timer > 0.1)))
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
                         }
                         catch (Exception e)
@@ -511,7 +540,7 @@ namespace CoPilot
                                          (float)Settings.moltenShellHpp / 100 ||
                                          player.MaxES > 0 && player.ESPercentage <
                                          (float)Settings.moltenShellEsp / 100))
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -535,7 +564,7 @@ namespace CoPilot
                                         MonsterCheck(Settings.berserkRange, Settings.berserkMinAny,
                                             Settings.berserkMinRare, Settings.berserkMinUnique))
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.berserk.Cooldown = 100;
                                     }
                                 }
@@ -559,7 +588,7 @@ namespace CoPilot
                                         MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
                                             Settings.bloodRageMinRare, Settings.bloodRageMinUnique))
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.bloodRage.Cooldown = 100;
                                     }
                         }
@@ -590,43 +619,43 @@ namespace CoPilot
                                     if (skill.Id == SkillInfo.chaosGolem.Id &&
                                         summons.chaosElemental < Settings.autoGolemChaosMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                     else if (skill.Id == SkillInfo.flameGolem.Id &&
                                              summons.fireElemental < Settings.autoGolemFireMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                     else if (skill.Id == SkillInfo.iceGolem.Id &&
                                              summons.iceElemental < Settings.autoGolemIceMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                     else if (skill.Id == SkillInfo.lightningGolem.Id &&
                                              summons.lightningGolem < Settings.autoGolemLightningMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                     else if (skill.Id == SkillInfo.stoneGolem.Id &&
                                              summons.rockGolem < Settings.autoGolemRockMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                     else if (skill.Id == SkillInfo.carrionGolem.Id &&
                                              summons.boneGolem < Settings.autoBoneMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                     else if (skill.Id == SkillInfo.ursaGolem.Id && summons.dropBearUniqueSummoned <
                                         Settings.autoGolemDropBearMax)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                 }
@@ -638,7 +667,7 @@ namespace CoPilot
                                     if (summons.zombies < maxZombies &&
                                         CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 1200;
                                     }
                                 }
@@ -651,7 +680,7 @@ namespace CoPilot
                                     
                                     if (summons.holyRelict < maxRelicts)
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
                                 }
@@ -675,7 +704,7 @@ namespace CoPilot
                                             Settings.vortexMinRare, Settings.vortexMinUnique) ||
                                         Settings.vortexFrostbolt && skills.Any(x =>
                                             x.Id == SkillInfo.frostbolt.Id && x.SkillUseStage > 2))
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -728,7 +757,7 @@ namespace CoPilot
                             if (skill.Id == SkillInfo.doedreEffigy.Id)
                                 if (SkillInfo.ManageCooldown(SkillInfo.doedreEffigy, skill))
                                     if (CountEnemysAroundMouse(350) > 0)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -753,7 +782,7 @@ namespace CoPilot
                                             Settings.offeringsMinRare, Settings.offeringsMinUnique) &&
                                         !buffs.Exists(x => x.Name == "active_offering") &&
                                         CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -775,7 +804,7 @@ namespace CoPilot
                                     if (player.HPPercentage<= (float)Settings.anyVaalHpp ||
                                         player.MaxES > 0 && player.ESPercentage<
                                         (float)Settings.anyVaalEsp || player.MPPercentage < (float)Settings.anyVaalMpp / 100)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -793,7 +822,7 @@ namespace CoPilot
                                 if (SkillInfo.ManageCooldown(SkillInfo.brandRecall, skill))
                                     if (GetMonsterWithin(Settings.brandRecallTriggerRange) >=
                                         Settings.brandRecallMinEnemys)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                             // Once a Brand Skill is linked with Archemage for example, it will show incorrect stats for 1 frame IsUsing turns true, even when in down, SkillUseStage 3 etc.
 
                             //ActorSkill stormBrand = skills.Find(x => x.InternalName == "storm_brand");
@@ -834,7 +863,7 @@ namespace CoPilot
                                             MonsterCheck(Settings.tempestShieldTriggerRange,
                                                 Settings.tempestShieldMinAny, Settings.tempestShieldMinRare,
                                                 Settings.tempestShieldMinUnique))
-                                            KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                            Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
@@ -867,7 +896,7 @@ namespace CoPilot
                                     break;
                                 }
 
-                                if ((Settings.autoAttackLeftMouseCheck.Value && !MouseTools.IsMouseLeftPressed() ||
+                                if ((Settings.autoAttackLeftMouseCheck.Value && !Mouse.IsMouseLeftPressed() ||
                                      !Settings.autoAttackLeftMouseCheck.Value)
                                     && (!Settings.autoAttackCurseCheck &&
                                         GetMonsterWithin(Settings.autoAttackRange) >= 1 ||
@@ -909,13 +938,13 @@ namespace CoPilot
                                         return;
                                     if (Summons.GetLowestMinionHpp() <
                                         (float)Settings.convocationHpp / 100)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                     else if (GetMonsterWithin(Settings.convocationMobRange) > 0 &&
                                              GetMinnionsWithin(Settings.convocationMinnionRange) /
                                              localPlayer.GetComponent<Actor>().DeployedObjects
                                                  .Count(x => x?.Entity != null && x.Entity.IsAlive) *
                                              100 <= Settings.convocationMinnionPct)
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
                         }
                         catch (Exception e)
@@ -936,7 +965,7 @@ namespace CoPilot
                                     Settings.autoCurseMinEnemys)
                                 {
                                     lastCurse = DateTime.Now;
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
                         }
                         catch (Exception e)
@@ -959,7 +988,7 @@ namespace CoPilot
                                     if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x =>
                                         x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.bladeVortex.Cooldown = unleashCooldown > 0
                                             ? unleashCooldown * Settings.bladeVortexUnleashCount
                                             : 0;
@@ -987,7 +1016,7 @@ namespace CoPilot
                                          !Settings.bladeBlastFastMode &&
                                          CountBladeBlastEnitytiesNearMouse(Settings.bladeBlastEntityRange) > 0))
                                     {
-                                        KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         bladeBlastReady = false;
                                     }
                             }
@@ -1007,7 +1036,7 @@ namespace CoPilot
                             {
                                 if (SkillInfo.ManageCooldown(SkillInfo.plagueBearer, skill) && GetMonsterWithin(Settings.plagueBearerRange) > Settings.plagueBearerMinEnemys && buffs.Exists(x => x.Name == "corrosive_shroud_at_max_damage"))
                                 {
-                                    KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }
                             }
                         }
@@ -1052,7 +1081,7 @@ namespace CoPilot
                              player.HPPercentage < (float)Settings.delveFlareHppBelow / 100) && buffs.Exists(x =>
                                 x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
                         {
-                            KeyPress(Settings.delveFlareKey.Value);
+                            Keyboard.KeyPress(Settings.delveFlareKey.Value);
                             lastDelveFlare = DateTime.Now;
                         }
                     }
@@ -1076,7 +1105,7 @@ namespace CoPilot
                                 player.MaxES > 0 && player.ESPercentage <
                                 (float)Settings.customEsp / 100)
                             {
-                                KeyPress(Settings.customKey);
+                                Keyboard.KeyPress(Settings.customKey);
                                 lastCustom = DateTime.Now;
                             }
                     }
@@ -1175,118 +1204,5 @@ namespace CoPilot
                 TcpTableOwnerModuleAll
             }
         }
-    }
-
-    internal static class MouseTools
-    {
-        public static bool IsMouseLeftPressed()
-        {
-            return Control.MouseButtons == MouseButtons.Left;
-        }
-
-        public static void MouseLeftClickEvent()
-        {
-            MouseEvent(MouseEventFlags.LeftUp);
-            Thread.Sleep(10);
-            MouseEvent(MouseEventFlags.LeftDown);
-        }
-
-        public static void MouseRightClickEvent()
-        {
-            MouseEvent(MouseEventFlags.RightUp);
-            Thread.Sleep(10);
-            MouseEvent(MouseEventFlags.RightDown);
-        }
-
-        private static WinApiMouse.Point GetCursorPosition()
-        {
-            return GetCursorPos(out var currentMousePoint)
-                ? new WinApiMouse.Point(currentMousePoint.X, currentMousePoint.Y)
-                : new WinApiMouse.Point(0, 0);
-        }
-
-        private static void MouseEvent(MouseEventFlags value)
-        {
-            var position = GetCursorPosition();
-
-            mouse_event
-                ((int) value,
-                    position.X,
-                    position.Y,
-                    0,
-                    0)
-                ;
-        }
-    }
-
-    public static class Keyboard
-    {
-        private const int KeyeventfExtendedkey = 0x0001;
-        private const int KeyeventfKeyup = 0x0002;
-
-        [DllImport("user32.dll")]
-        private static extern uint keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
-
-        [DllImport("user32.dll")]
-        public static extern bool BlockInput(bool fBlockIt);
-
-        public static void KeyDown(Keys key)
-        {
-            keybd_event((byte) key, 0, KeyeventfExtendedkey | 0, 0);
-        }
-
-        public static void KeyUp(Keys key)
-        {
-            keybd_event((byte) key, 0, KeyeventfExtendedkey | KeyeventfKeyup, 0); //0x7F
-        }
-
-        [DllImport("USER32.dll")]
-        private static extern short GetKeyState(int nVirtKey);
-
-        public static bool IsKeyDown(int nVirtKey)
-        {
-            return GetKeyState(nVirtKey) < 0;
-        }
-    }
-
-    public static class WinApiMouse
-    {
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetCursorPos(out Point lpMousePoint);
-
-        [DllImport("user32.dll")]
-        public static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
-
-        #region Structs/Enums
-
-        [Flags]
-        public enum MouseEventFlags
-        {
-            LeftDown = 0x00000002,
-            LeftUp = 0x00000004,
-            MiddleDown = 0x00000020,
-            MiddleUp = 0x00000040,
-            Move = 0x00000001,
-            Absolute = 0x00008000,
-            RightDown = 0x00000008,
-            RightUp = 0x00000010
-        }
-
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Point
-        {
-            public int X;
-            public int Y;
-
-            public Point(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
-        }
-
-        #endregion
     }
 }
