@@ -807,8 +807,10 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.generalCryEnabled.Value =
                         ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.generalCryEnabled.Value);
+                    CoPilot.instance.Settings.generalCryCorpseTriggerRange.Value =
+                        ImGuiExtension.IntSlider("Corpse Trigger Range", CoPilot.instance.Settings.generalCryCorpseTriggerRange);
                     CoPilot.instance.Settings.generalCryTriggerRange.Value =
-                        ImGuiExtension.IntSlider("Corpse Trigger Range", CoPilot.instance.Settings.generalCryTriggerRange);
+                        ImGuiExtension.IntSlider("min 1 Enemy Range", CoPilot.instance.Settings.generalCryTriggerRange);
                     CoPilot.instance.Settings.generalCryMinCorpse.Value =
                         ImGuiExtension.IntSlider("min Corpse", CoPilot.instance.Settings.generalCryMinCorpse);
                 }

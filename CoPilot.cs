@@ -477,8 +477,8 @@ namespace CoPilot
                         {
                             if (skill.Id == SkillInfo.generalCry.Id)
                                 if (SkillInfo.ManageCooldown(SkillInfo.generalCry, skill))
-                                    if (GetCorpseWithin(Settings.generalCryTriggerRange) >=
-                                        Settings.generalCryMinCorpse)
+                                    if (GetCorpseWithin(Settings.generalCryCorpseTriggerRange) >=
+                                        Settings.generalCryMinCorpse && MonsterCheck(Settings.generalCryTriggerRange, 1,0,0))
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
