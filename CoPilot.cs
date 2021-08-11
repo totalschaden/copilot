@@ -253,7 +253,36 @@ namespace CoPilot
         }
         public override void EntityAdded(Entity entity)
         {
-            if (!string.IsNullOrEmpty(entity.RenderName))
+            try
+            {
+                if (!string.IsNullOrEmpty(entity.RenderName))
+                    switch (entity.Type)
+                    {
+                        //TODO: Handle doors and similar obstructions to movement/pathfinding
+
+                        //TODO: Handle waypoint (initial claim as well as using to teleport somewhere)
+
+                        //Handle clickable teleporters
+                        case EntityType.AreaTransition:
+                        case EntityType.Portal:
+                        case EntityType.TownPortal:
+                            if (!autoPilot.areaTransitions.ContainsKey(entity.Id))
+                                autoPilot.areaTransitions.Add(entity.Id, entity);
+                            break;
+                    }
+            }
+            catch (Exception e)
+            {
+                LogError(e.ToString());
+            }
+            
+            base.EntityAdded(entity);
+        }
+
+        public override void EntityRemoved(Entity entity)
+        {
+            try
+            {
                 switch (entity.Type)
                 {
                     //TODO: Handle doors and similar obstructions to movement/pathfinding
@@ -264,28 +293,14 @@ namespace CoPilot
                     case EntityType.AreaTransition:
                     case EntityType.Portal:
                     case EntityType.TownPortal:
-                        if (!autoPilot.areaTransitions.ContainsKey(entity.Id))
-                            autoPilot.areaTransitions.Add(entity.Id, entity);
+                        if (autoPilot.areaTransitions.ContainsKey(entity.Id))
+                            autoPilot.areaTransitions.Remove(entity.Id);
                         break;
                 }
-            base.EntityAdded(entity);
-        }
-
-        public override void EntityRemoved(Entity entity)
-        {
-            switch (entity.Type)
+            }
+            catch (Exception e)
             {
-                //TODO: Handle doors and similar obstructions to movement/pathfinding
-
-                //TODO: Handle waypoint (initial claim as well as using to teleport somewhere)
-
-                //Handle clickable teleporters
-                case ExileCore.Shared.Enums.EntityType.AreaTransition:
-                case ExileCore.Shared.Enums.EntityType.Portal:
-                case ExileCore.Shared.Enums.EntityType.TownPortal:
-                    if (autoPilot.areaTransitions.ContainsKey(entity.Id))
-                        autoPilot.areaTransitions.Remove(entity.Id);
-                    break;
+                LogError(e.ToString());
             }
             base.EntityRemoved(entity);
         }
@@ -320,15 +335,12 @@ namespace CoPilot
                 try
                 {
                     autoPilot.Render();
-                    // AutoPilot Coroutine seems to Break on Error (Stats Overflow from Hud)
-                    // Force Upkeep.
-                    if(!autoPilot.autoPilotCoroutine.Running)
-                        autoPilot.StartCoroutine();
                 }
                 catch (Exception e)
                 {
                     LogError(e.ToString());
                 }
+                
                 if (Settings.autoQuitHotkeyEnabled && (WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
                 {
                     LogMessage("Copilot: Panic Quit...");
@@ -338,7 +350,7 @@ namespace CoPilot
                 if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
                     /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
                     GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
-                    GameController.IngameState.IngameUi.SellWindow.IsVisible) return;
+                    GameController.IngameState.IngameUi.SellWindow.IsVisible || MenuWindow.IsOpened) return;
 
                 localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
                 player = localPlayer.GetComponent<Life>();

@@ -125,17 +125,23 @@ namespace CoPilot
         {
 	        while (true)
 	        {
+		        
 		        if (CoPilot.instance.Settings.autoPilotToggleKey.PressedOnce())
 		        {
 			        CoPilot.instance.Settings.autoPilotEnabled.SetValueNoEvent(!CoPilot.instance.Settings.autoPilotEnabled.Value);
 			        tasks = new List<TaskNode>();				
 		        }
-				
-	            if (!CoPilot.instance.GameController.Player.IsAlive || !CoPilot.instance.Settings.autoPilotEnabled.Value || !CoPilot.instance.GameController.IsForeGroundCache)
-					continue;
-	            
 
-	            //Cache the current follow target (if present)
+		        if (!CoPilot.instance.GameController.Player.IsAlive || !CoPilot.instance.Settings.Enable ||
+		            !CoPilot.instance.Settings.autoPilotEnabled.Value ||
+		            !CoPilot.instance.GameController.IsForeGroundCache || MenuWindow.IsOpened)
+		        {
+			        yield return null;
+			        continue;
+		        }
+
+
+		        //Cache the current follow target (if present)
 				followTarget = GetFollowingTarget();
 				if (followTarget != null)
 				{
@@ -200,7 +206,8 @@ namespace CoPilot
 						}
 
 					}
-					lastTargetPosition = followTarget.Pos;
+					if (followTarget?.Pos != null)
+						lastTargetPosition = followTarget.Pos;
 				}
 				//Leader is null but we have tracked them this map.
 				//Try using transition to follow them to their map
