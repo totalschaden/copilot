@@ -15,7 +15,7 @@ namespace CoPilot
     public class AutoPilot
     {
 	    // Most Logic taken from Alpha Plugin
-        private Coroutine autoPilotCoroutine;
+        internal Coroutine autoPilotCoroutine;
 
         private Random random = new Random();
         private static Camera Camera => CoPilot.instance.GameController.Game.IngameState.Camera;		
@@ -104,8 +104,8 @@ namespace CoPilot
 
         public void StartCoroutine()
         {
-            autoPilotCoroutine = new Coroutine(AutoPilotLogic(), CoPilot.instance, "AutoPilot");
-            Core.ParallelRunner.Run(autoPilotCoroutine);
+	        autoPilotCoroutine ??= new Coroutine(AutoPilotLogic(), CoPilot.instance, "AutoPilot");
+	        Core.ParallelRunner.Run(autoPilotCoroutine);
         }
         private IEnumerator MouseoverItem(Entity item)
         {

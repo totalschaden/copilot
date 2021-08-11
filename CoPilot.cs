@@ -316,7 +316,19 @@ namespace CoPilot
             try
             {
                 if (!Settings.Enable) return;
-                autoPilot.Render();
+                
+                try
+                {
+                    autoPilot.Render();
+                    // AutoPilot Coroutine seems to Break on Error (Stats Overflow from Hud)
+                    // Force Upkeep.
+                    if(!autoPilot.autoPilotCoroutine.Running)
+                        autoPilot.StartCoroutine();
+                }
+                catch (Exception e)
+                {
+                    LogError(e.ToString());
+                }
                 if (Settings.autoQuitHotkeyEnabled && (WinApi.GetAsyncKeyState(Settings.forcedAutoQuit) & 0x8000) != 0)
                 {
                     LogMessage("Copilot: Panic Quit...");
