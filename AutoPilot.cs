@@ -104,7 +104,7 @@ namespace CoPilot
 
         public void StartCoroutine()
         {
-	        autoPilotCoroutine ??= new Coroutine(AutoPilotLogic(), CoPilot.instance, "AutoPilot");
+	        autoPilotCoroutine = new Coroutine(AutoPilotLogic(), CoPilot.instance, "AutoPilot");
 	        Core.ParallelRunner.Run(autoPilotCoroutine);
         }
         private IEnumerator MouseoverItem(Entity item)
