@@ -443,7 +443,7 @@ namespace CoPilot
 				return;
 
 			var x = 0;
-			if (tasks != null && CoPilot.instance?.localPlayer?.Pos != null)
+			if (tasks is { Count: > 0 } && CoPilot.instance?.localPlayer?.Pos != null)
 			{
 				foreach (var task in tasks.TakeWhile(task => task?.WorldPosition != null))
 				{
