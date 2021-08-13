@@ -421,7 +421,7 @@ namespace CoPilot
 			try
 			{
 				return CoPilot.instance.GameController.EntityListWrapper.Entities
-					.Where(e => e.Type == EntityType.WorldItem)
+					.Where(e => e?.Type == EntityType.WorldItem)
 					.Where(e => e.IsTargetable)
 					.Where(e => e.GetComponent<WorldItem>() != null)
 					.FirstOrDefault(e =>
@@ -441,17 +441,37 @@ namespace CoPilot
 		{
 			if (!CoPilot.instance.Settings.autoPilotEnabled)
 				return;
-			if (tasks != null && tasks.Count > 1)
-				for (var i = 1; i < tasks.Count; i++)
+
+			var x = 0;
+			if (tasks != null)
+			{
+				foreach (var task in tasks)
 				{
-					var start = WorldToValidScreenPosition(tasks[i - 1].WorldPosition);
-					var end = WorldToValidScreenPosition(tasks[i].WorldPosition);
-					CoPilot.instance.Graphics.DrawLine(start, end, 2, Color.Pink);
+					if (x == 0)
+					{
+						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(CoPilot.instance.localPlayer.Pos),
+							WorldToValidScreenPosition(task.WorldPosition), 2f, Color.Pink);
+					}
+					else
+					{
+						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(task.WorldPosition),
+							WorldToValidScreenPosition(tasks[x - 1].WorldPosition), 2f, Color.Pink);
+					}
+					x++;
 				}
-			var dist = tasks?.Count > 0 ? Vector3.Distance(CoPilot.instance.GameController.Player.Pos, tasks.First().WorldPosition): 0;
-			var targetDist = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, lastTargetPosition).ToString(CultureInfo.InvariantCulture);
-			CoPilot.instance.Graphics.DrawText($"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
-			CoPilot.instance.Graphics.DrawText($"Task Count: {tasks?.Count} Next WP Distance: {dist} Target Distance: {targetDist}", new Vector2(500, 140));
+
+				var dist = tasks?.Count > 0
+					? Vector3.Distance(CoPilot.instance.GameController.Player.Pos, tasks.First().WorldPosition)
+					: 0;
+				var targetDist = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, lastTargetPosition)
+					.ToString(CultureInfo.InvariantCulture);
+				CoPilot.instance.Graphics.DrawText(
+					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
+				CoPilot.instance.Graphics.DrawText(
+					$"Task Count: {tasks?.Count} Next WP Distance: {dist} Target Distance: {targetDist}",
+					new Vector2(500, 140));
+			}
+
 			var counter = 0;
 			foreach (var transition in areaTransitions)
 			{
