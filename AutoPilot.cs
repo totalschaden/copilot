@@ -443,16 +443,16 @@ namespace CoPilot
 				return;
 
 			var x = 0;
-			if (tasks != null)
+			if (tasks != null && CoPilot.instance?.localPlayer?.Pos != null)
 			{
-				foreach (var task in tasks)
+				foreach (var task in tasks.TakeWhile(task => task?.WorldPosition != null))
 				{
 					if (x == 0)
 					{
 						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(CoPilot.instance.localPlayer.Pos),
 							WorldToValidScreenPosition(task.WorldPosition), 2f, Color.Pink);
 					}
-					else
+					else 
 					{
 						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(task.WorldPosition),
 							WorldToValidScreenPosition(tasks[x - 1].WorldPosition), 2f, Color.Pink);
