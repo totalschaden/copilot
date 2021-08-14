@@ -472,7 +472,7 @@ namespace CoPilot
 					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
 				CoPilot.instance.Graphics.DrawText(
 					$"Task Count: {x:F} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
-					new Vector2(500, 140));
+					new Vector2(550, 140));
 			}
 
 			var counter = 0;
@@ -484,6 +484,7 @@ namespace CoPilot
 			}
 
 			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
+			CoPilot.instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
 		}
 
 
