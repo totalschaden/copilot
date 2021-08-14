@@ -439,7 +439,7 @@ namespace CoPilot
 		
 		public void Render()
 		{
-			if (!CoPilot.instance.Settings.autoPilotEnabled)
+			if (!CoPilot.instance.Settings.autoPilotEnabled || CoPilot.instance.GameController.IsLoading || !CoPilot.instance.GameController.InGame)
 				return;
 
 			var x = 0;
