@@ -20,7 +20,8 @@ namespace CoPilot
 
         internal void UpdateSummons()
         {
-            if ((DateTime.Now - lastUpdate).TotalMilliseconds < 250)
+            if ((DateTime.Now - lastUpdate).TotalMilliseconds < 250 ||
+                CoPilot.instance.localPlayer?.GetComponent<Actor>() == null)
                 return;
             lastUpdate = DateTime.Now;
 
@@ -35,22 +36,22 @@ namespace CoPilot
             holyRelict = 0;
 
             foreach (var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects
-                .Where(x => x != null && x.Entity != null && x.Entity.IsAlive))
-                if (obj.Entity.Path.Contains("ChaosElemental"))
+                .Where(x => x?.Entity != null && x.Entity.IsAlive))
+                if (obj.Entity.Metadata.Contains("ChaosElemental"))
                     chaosElemental++;
-                else if (obj.Entity.Path.Contains("FireElemental"))
+                else if (obj.Entity.Metadata.Contains("FireElemental"))
                     fireElemental++;
-                else if (obj.Entity.Path.Contains("IceElemental"))
+                else if (obj.Entity.Metadata.Contains("IceElemental"))
                     iceElemental++;
-                else if (obj.Entity.Path.Contains("LightningGolem"))
+                else if (obj.Entity.Metadata.Contains("LightningGolem"))
                     lightningGolem++;
-                else if (obj.Entity.Path.Contains("RockGolem"))
+                else if (obj.Entity.Metadata.Contains("RockGolem"))
                     rockGolem++;
-                else if (obj.Entity.Path.Contains("BoneGolem"))
+                else if (obj.Entity.Metadata.Contains("BoneGolem"))
                     boneGolem++;
-                else if (obj.Entity.Path.Contains("DropBearUniqueSummoned"))
+                else if (obj.Entity.Metadata.Contains("DropBearUniqueSummoned"))
                     dropBearUniqueSummoned++;
-                else if (obj.Entity.Path.Contains("RaisedZombie"))
+                else if (obj.Entity.Metadata.Contains("RaisedZombie"))
                     zombies++;
                 else if (obj.Entity.Metadata.EndsWith("HolyLivingRelic")) holyRelict++;
         }
@@ -59,7 +60,7 @@ namespace CoPilot
         {
             float hpp = 100;
             foreach (var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects
-                .Where(x => x != null && x.Entity != null && x.Entity.GetComponent<Life>() != null))
+                .Where(x => x?.Entity?.GetComponent<Life>() != null))
                 if (obj.Entity.GetComponent<Life>().HPPercentage < hpp)
                     hpp = obj.Entity.GetComponent<Life>().HPPercentage;
             return hpp;
