@@ -464,11 +464,11 @@ namespace CoPilot
 					x++;
 				}
 
-				var targetDist = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, lastTargetPosition);
+				var targetDist = Vector3.Distance(CoPilot.instance.localPlayer.Pos, lastTargetPosition);
 				CoPilot.instance.Graphics.DrawText(
 					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
 				CoPilot.instance.Graphics.DrawText(
-					$"Task Count: {x} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
+					$"Task Count: {x:F} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
 					new Vector2(500, 140));
 			}
 
