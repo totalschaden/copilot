@@ -463,7 +463,10 @@ namespace CoPilot
 					}
 					x++;
 				}
+			}
 
+			if (CoPilot.instance.localPlayer != null)
+			{
 				var targetDist = Vector3.Distance(CoPilot.instance.localPlayer.Pos, lastTargetPosition);
 				CoPilot.instance.Graphics.DrawText(
 					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
