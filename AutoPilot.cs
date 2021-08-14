@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using ExileCore;
 using ExileCore.PoEMemory.Components;
@@ -153,7 +152,7 @@ namespace CoPilot
 						var distanceMoved = Vector3.Distance(lastTargetPosition, followTarget.Pos);
 						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 						{
-							var transition = areaTransitions.Values.OrderBy(I => Vector3.Distance(lastTargetPosition, I.Pos)).FirstOrDefault();
+							var transition = areaTransitions.Values.Where(x => x.IsTargetable).ToList().OrderBy(I => Vector3.Distance(lastTargetPosition, I.Pos)).FirstOrDefault();
 							if (transition != null && Vector3.Distance(lastTargetPosition, transition.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 								tasks.Add(new TaskNode(transition.Pos, 200, TaskNodeType.Transition));
 						}
@@ -442,7 +441,7 @@ namespace CoPilot
 			if (!CoPilot.instance.Settings.autoPilotEnabled || CoPilot.instance.GameController.IsLoading || !CoPilot.instance.GameController.InGame)
 				return;
 
-			var x = 0;
+			var taskcount = 0;
 			var dist = 0f;
 			// Cache Task to prevent access while Collection is changing.
 			var cachedTasks = tasks;
@@ -450,7 +449,7 @@ namespace CoPilot
 			{
 				foreach (var task in cachedTasks.TakeWhile(task => task?.WorldPosition != null))
 				{
-					if (x == 0)
+					if (taskcount == 0)
 					{
 						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(CoPilot.instance.localPlayer.Pos),
 							WorldToValidScreenPosition(task.WorldPosition), 2f, Color.Pink);
@@ -459,9 +458,9 @@ namespace CoPilot
 					else 
 					{
 						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(task.WorldPosition),
-							WorldToValidScreenPosition(cachedTasks[x - 1].WorldPosition), 2f, Color.Pink);
+							WorldToValidScreenPosition(cachedTasks[taskcount - 1].WorldPosition), 2f, Color.Pink);
 					}
-					x++;
+					taskcount++;
 				}
 			}
 
@@ -471,13 +470,13 @@ namespace CoPilot
 				CoPilot.instance.Graphics.DrawText(
 					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
 				CoPilot.instance.Graphics.DrawText(
-					$"Task Count: {x:D} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
+					$"Task Count: {taskcount:D} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
 					new Vector2(500, 140));
 			}
 
 			var counter = 0;
 			var cachedAreaTransitions = areaTransitions;
-			foreach (var transition in cachedAreaTransitions)
+			foreach (var transition in cachedAreaTransitions.Where(x => x.Value.IsTargetable))
 			{
 				counter++;
 				CoPilot.instance.Graphics.DrawText($"{transition.Key} at { transition.Value.Pos.X:F} { transition.Value.Pos.Y:F}", new Vector2(100, 120 + counter * 20));
