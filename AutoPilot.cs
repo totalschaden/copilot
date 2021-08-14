@@ -443,9 +443,11 @@ namespace CoPilot
 				return;
 
 			var x = 0;
-			if (tasks?.Count > 0 && CoPilot.instance?.localPlayer?.Pos != null)
+			// Cache Task to prevent access while Collection is changing.
+			var cachedTasks = tasks;
+			if (cachedTasks?.Count > 0 && CoPilot.instance?.localPlayer?.Pos != null)
 			{
-				foreach (var task in tasks.TakeWhile(task => task?.WorldPosition != null))
+				foreach (var task in cachedTasks.TakeWhile(task => task?.WorldPosition != null))
 				{
 					if (x == 0)
 					{
@@ -455,20 +457,20 @@ namespace CoPilot
 					else 
 					{
 						CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(task.WorldPosition),
-							WorldToValidScreenPosition(tasks[x - 1].WorldPosition), 2f, Color.Pink);
+							WorldToValidScreenPosition(cachedTasks[x - 1].WorldPosition), 2f, Color.Pink);
 					}
 					x++;
 				}
 
-				var dist = tasks?.Count > 0
-					? Vector3.Distance(CoPilot.instance.GameController.Player.Pos, tasks.First().WorldPosition)
+				var dist = cachedTasks?.Count > 0
+					? Vector3.Distance(CoPilot.instance.GameController.Player.Pos, cachedTasks.First().WorldPosition)
 					: 0;
 				var targetDist = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, lastTargetPosition)
 					.ToString(CultureInfo.InvariantCulture);
 				CoPilot.instance.Graphics.DrawText(
 					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
 				CoPilot.instance.Graphics.DrawText(
-					$"Task Count: {tasks?.Count} Next WP Distance: {dist} Target Distance: {targetDist}",
+					$"Task Count: {cachedTasks?.Count} Next WP Distance: {dist} Target Distance: {targetDist}",
 					new Vector2(500, 140));
 			}
 
