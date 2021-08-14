@@ -132,7 +132,7 @@ namespace CoPilot
 			        tasks = new List<TaskNode>();				
 		        }
 
-		        if (!CoPilot.instance.GameController.Player.IsAlive || !CoPilot.instance.Settings.Enable ||
+		        if (CoPilot.instance.localPlayer == null || !CoPilot.instance.localPlayer.IsAlive || !CoPilot.instance.Settings.Enable ||
 		            !CoPilot.instance.Settings.autoPilotEnabled.Value ||
 		            !CoPilot.instance.GameController.IsForeGroundCache || MenuWindow.IsOpened)
 		        {
@@ -145,7 +145,7 @@ namespace CoPilot
 				followTarget = GetFollowingTarget();
 				if (followTarget != null)
 				{
-					var distanceFromFollower = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, followTarget.Pos);
+					var distanceFromFollower = Vector3.Distance(CoPilot.instance.localPlayer.Pos, followTarget.Pos);
 					//We are NOT within clear path distance range of leader. Logic can continue
 					if (distanceFromFollower >= CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 					{
@@ -187,7 +187,7 @@ namespace CoPilot
 						//Check if we should add quest loot logic. We're close to leader already
 						var questLoot = GetLootableQuestItem();
 						if (questLoot != null &&
-						    Vector3.Distance(CoPilot.instance.GameController.Player.Pos, questLoot.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance.Value &&
+						    Vector3.Distance(CoPilot.instance.localPlayer.Pos, questLoot.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance.Value &&
 						    tasks.FirstOrDefault(I => I.Type == TaskNodeType.Loot) == null)
 							tasks.Add(new TaskNode(questLoot.Pos, CoPilot.instance.Settings.autoPilotClearPathDistance, TaskNodeType.Loot));
 
@@ -195,7 +195,7 @@ namespace CoPilot
 						{
 							//Check if there's a waypoint nearby
 							var waypoint = CoPilot.instance.GameController.EntityListWrapper.Entities.SingleOrDefault(I => I.Type ==EntityType.Waypoint &&
-								Vector3.Distance(CoPilot.instance.GameController.Player.Pos, I.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance);
+								Vector3.Distance(CoPilot.instance.localPlayer.Pos, I.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance);
 
 							if (waypoint != null)
 							{
@@ -226,8 +226,8 @@ namespace CoPilot
 				if (DateTime.Now > nextBotAction && tasks.Count > 0)
 				{
 					var currentTask = tasks.First();
-					var taskDistance = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, currentTask.WorldPosition);
-					var playerDistanceMoved = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, lastPlayerPosition);
+					var taskDistance = Vector3.Distance(CoPilot.instance.localPlayer.Pos, currentTask.WorldPosition);
+					var playerDistanceMoved = Vector3.Distance(CoPilot.instance.localPlayer.Pos, lastPlayerPosition);
 
 					//We are using a same map transition and have moved significnatly since last tick. Mark the transition task as done.
 					if (currentTask.Type == TaskNodeType.Transition && 
@@ -238,7 +238,7 @@ namespace CoPilot
 							currentTask = tasks.First();
 						else
 						{
-							lastPlayerPosition = CoPilot.instance.GameController.Player.Pos;
+							lastPlayerPosition = CoPilot.instance.localPlayer.Pos;
 							yield return null;
 						}
 					}
@@ -266,7 +266,7 @@ namespace CoPilot
 							var questLoot = GetLootableQuestItem();
 							if (questLoot == null
 							    || currentTask.AttemptCount > 2
-							    || Vector3.Distance(CoPilot.instance.GameController.Player.Pos, questLoot.Pos) >= CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
+							    || Vector3.Distance(CoPilot.instance.localPlayer.Pos, questLoot.Pos) >= CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 								tasks.RemoveAt(0);
 
 							Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
@@ -317,7 +317,7 @@ namespace CoPilot
 
 						case TaskNodeType.ClaimWaypoint:
 						{
-							if (Vector3.Distance(CoPilot.instance.GameController.Player.Pos, currentTask.WorldPosition) > 150)
+							if (Vector3.Distance(CoPilot.instance.localPlayer.Pos, currentTask.WorldPosition) > 150)
 							{
 								var screenPos = WorldToValidScreenPosition(currentTask.WorldPosition);
 								Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
@@ -332,7 +332,7 @@ namespace CoPilot
 						}
 					}
 				}
-				lastPlayerPosition = CoPilot.instance.GameController.Player.Pos;
+				lastPlayerPosition = CoPilot.instance.localPlayer.Pos;
 				yield return null;
             }
         }
@@ -485,7 +485,7 @@ namespace CoPilot
 
 			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
 			CoPilot.instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
-			CoPilot.instance.Graphics.DrawLine(new Vector2(495, 120), new Vector2(495,160), 1, Color.White);
+			CoPilot.instance.Graphics.DrawLine(new Vector2(490, 120), new Vector2(490,160), 1, Color.White);
 		}
 
 
