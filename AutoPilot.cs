@@ -134,7 +134,7 @@ namespace CoPilot
 
 		        if (CoPilot.instance.localPlayer == null || !CoPilot.instance.localPlayer.IsAlive || !CoPilot.instance.Settings.Enable ||
 		            !CoPilot.instance.Settings.autoPilotEnabled.Value ||
-		            !CoPilot.instance.GameController.IsForeGroundCache || MenuWindow.IsOpened)
+		            !CoPilot.instance.GameController.IsForeGroundCache || MenuWindow.IsOpened || CoPilot.instance.GameController.IsLoading || !CoPilot.instance.GameController.InGame)
 		        {
 			        yield return null;
 			        continue;
