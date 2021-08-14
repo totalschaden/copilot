@@ -347,11 +347,6 @@ namespace CoPilot
                     Quit();
                 }
 
-                if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
-                    /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
-                    GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
-                    GameController.IngameState.IngameUi.SellWindow.IsVisible || MenuWindow.IsOpened) return;
-
                 localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
                 player = localPlayer.GetComponent<Life>();
                 buffs = localPlayer.GetComponent<Buffs>().BuffsList;
@@ -360,7 +355,11 @@ namespace CoPilot
                 isMoving = localPlayer.GetComponent<Actor>().isMoving;
                 skills = localPlayer.GetComponent<Actor>().ActorSkills;
                 vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
-                playerPosition = GameController.Player.Pos;
+
+                if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
+                    /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
+                    GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
+                    GameController.IngameState.IngameUi.SellWindow.IsVisible || MenuWindow.IsOpened) return;
                 
                 enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x =>
                     x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() &&
