@@ -465,20 +465,23 @@ namespace CoPilot
 				}
 				
 				var targetDist = Vector3.Distance(CoPilot.instance.GameController.Player.Pos, lastTargetPosition)
-					.ToString(CultureInfo.InvariantCulture);
+					.ToString("F");
 				CoPilot.instance.Graphics.DrawText(
 					$"Follow Enabled: {CoPilot.instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
 				CoPilot.instance.Graphics.DrawText(
-					$"Task Count: {x} Next WP Distance: {dist} Target Distance: {targetDist}",
+					$"Task Count: {x} Next WP Distance: {dist:F} Target Distance: {targetDist}",
 					new Vector2(500, 140));
 			}
 
 			var counter = 0;
-			foreach (var transition in areaTransitions)
+			var cachedAreaTransitions = areaTransitions;
+			foreach (var transition in cachedAreaTransitions)
 			{
 				counter++;
-				CoPilot.instance.Graphics.DrawText($"{transition.Key} at { transition.Value.Pos.X} { transition.Value.Pos.Y}", new Vector2(100, 120 + counter * 20));
+				CoPilot.instance.Graphics.DrawText($"{transition.Key} at { transition.Value.Pos.X:F} { transition.Value.Pos.Y:F}", new Vector2(100, 120 + counter * 20));
 			}
+
+			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
 		}
 
 
