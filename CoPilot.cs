@@ -44,7 +44,7 @@ namespace CoPilot
         internal DateTime lastTimeAny;
         internal Entity localPlayer;
         internal Life player;
-        private Vector3 playerPosition;
+        internal Vector3 playerPosition;
         private Coroutine skillCoroutine;
         internal List<ActorSkill> skills = new List<ActorSkill>();
         private bool updateBladeBlast;
@@ -355,6 +355,7 @@ namespace CoPilot
                 isMoving = localPlayer.GetComponent<Actor>().isMoving;
                 skills = localPlayer.GetComponent<Actor>().ActorSkills;
                 vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
+                playerPosition = localPlayer.Pos;
 
                 if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
                     /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
@@ -368,6 +369,10 @@ namespace CoPilot
                     x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
                     GameController.Window.GetWindowRectangleTimeCache.Contains(
                         GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
+                if (Settings.debugMode)
+                {
+                    Graphics.DrawText("Enemys: " + enemys.Count, new Vector2(100, 120), Color.White);
+                }
                 
                 if (Settings.offeringsEnabled || Settings.autoZombieEnabled || Settings.generalCryEnabled)
                     corpses = GameController.Entities.Where(x =>
