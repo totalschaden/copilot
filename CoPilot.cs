@@ -251,59 +251,7 @@ namespace CoPilot
             
             autoPilot.AreaChange();
         }
-        public override void EntityAdded(Entity entity)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(entity.RenderName))
-                    switch (entity.Type)
-                    {
-                        //TODO: Handle doors and similar obstructions to movement/pathfinding
-
-                        //TODO: Handle waypoint (initial claim as well as using to teleport somewhere)
-
-                        //Handle clickable teleporters
-                        case EntityType.AreaTransition:
-                        case EntityType.Portal:
-                        case EntityType.TownPortal:
-                            if (!autoPilot.areaTransitions.ContainsKey(entity.Id))
-                                autoPilot.areaTransitions.Add(entity.Id, entity);
-                            break;
-                    }
-            }
-            catch (Exception e)
-            {
-                LogError(e.ToString());
-            }
-            
-            base.EntityAdded(entity);
-        }
-
-        public override void EntityRemoved(Entity entity)
-        {
-            try
-            {
-                switch (entity.Type)
-                {
-                    //TODO: Handle doors and similar obstructions to movement/pathfinding
-
-                    //TODO: Handle waypoint (initial claim as well as using to teleport somewhere)
-
-                    //Handle clickable teleporters
-                    case EntityType.AreaTransition:
-                    case EntityType.Portal:
-                    case EntityType.TownPortal:
-                        if (autoPilot.areaTransitions.ContainsKey(entity.Id))
-                            autoPilot.areaTransitions.Remove(entity.Id);
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                LogError(e.ToString());
-            }
-            base.EntityRemoved(entity);
-        }
+        
         public override void DrawSettings()
         {
             //base.DrawSettings();

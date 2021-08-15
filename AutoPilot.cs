@@ -17,9 +17,8 @@ namespace CoPilot
         internal Coroutine autoPilotCoroutine;
 
         private Random random = new Random();
-        private static Camera Camera => CoPilot.instance.GameController.Game.IngameState.Camera;		
-        public Dictionary<uint, Entity> areaTransitions = new Dictionary<uint, Entity>();
-		
+        private static Camera Camera => CoPilot.instance.GameController.Game.IngameState.Camera;
+
         private Vector3 lastTargetPosition;
         private Vector3 lastPlayerPosition;
         private Entity followTarget;
@@ -41,23 +40,22 @@ namespace CoPilot
             followTarget = null;
             lastTargetPosition = Vector3.Zero;
             lastPlayerPosition = Vector3.Zero;
-            areaTransitions = new Dictionary<uint, Entity>();
             hasUsedWp = false;
+        }
+
+        private Entity GetBestPortal()
+        {
+	        return CoPilot.instance.GameController.EntityListWrapper.Entities.Where(x => x?.Type == EntityType.AreaTransition ||
+		        x?.Type == EntityType.Portal ||
+		        x?.Type == EntityType.TownPortal ||
+		        x?.Type == EntityType.IngameIcon)
+		        .Where(x => x.IsTargetable && (x.Type != EntityType.IngameIcon || x.Type == EntityType.IngameIcon && x.Metadata.ToLower().Contains("portal"))).ToList()
+		        .OrderBy(x => Vector3.Distance(lastTargetPosition, x.Pos)).FirstOrDefault();
         }
         public void AreaChange()
         {
             ResetPathing();
-
-            //Load initial transitions!
-
-            foreach (var transition in CoPilot.instance.GameController.EntityListWrapper.Entities.Where(I => I.Type == EntityType.AreaTransition ||
-                I.Type == EntityType.Portal ||
-                I.Type == EntityType.TownPortal).ToList().Where(transition => !areaTransitions.ContainsKey(transition.Id)))
-            {
-                areaTransitions.Add(transition.Id, transition);
-            }
-
-
+            
             var terrain = CoPilot.instance.GameController.IngameState.Data.Terrain;
             var terrainBytes = CoPilot.instance.GameController.Memory.ReadBytes(terrain.LayerMelee.First, terrain.LayerMelee.Size);
             numCols = (int)(terrain.NumCols - 1) * 23;
@@ -152,7 +150,7 @@ namespace CoPilot
 						var distanceMoved = Vector3.Distance(lastTargetPosition, followTarget.Pos);
 						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 						{
-							var transition = areaTransitions.Values.Where(x => x.IsTargetable).ToList().OrderBy(I => Vector3.Distance(lastTargetPosition, I.Pos)).FirstOrDefault();
+							var transition = GetBestPortal();
 							if (transition != null && Vector3.Distance(lastTargetPosition, transition.Pos) <
 								CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 								tasks.Add(new TaskNode(transition?.GetComponent<Render>()?.InteractCenter ?? transition.Pos, 200, TaskNodeType.Transition));
@@ -214,12 +212,19 @@ namespace CoPilot
 				else if (tasks.Count == 0 &&
 				         lastTargetPosition != Vector3.Zero)
 				{
-
-					var transOptions = areaTransitions.Values.
-						Where(I => Vector3.Distance(lastTargetPosition, I.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance).
+					// Logic from Alpha, keep here just incase
+					// Not sure i like using random, seems unwise.
+					// Old Cached list seemed to return old data regarding isTargetable resulting in trying to take already used Portals in Hideout.
+					/*
+					var transOptions = areaTransitions.
+						Where(x => x.IsTargetable && Vector3.Distance(lastTargetPosition, x.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance).
 						OrderBy(I => Vector3.Distance(lastTargetPosition, I.Pos)).ToArray();
 					if (transOptions.Length > 0)
 						tasks.Add(new TaskNode(transOptions[random.Next(transOptions.Length)].Pos, CoPilot.instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
+						*/
+					var transition = GetBestPortal();
+					if (transition != null)
+						tasks.Add(new TaskNode(transition?.GetComponent<Render>()?.InteractCenter ?? transition.Pos, CoPilot.instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
 				}
 
 				//We have our tasks, now we need to perform in game logic with them.
@@ -474,14 +479,18 @@ namespace CoPilot
 					$"Task Count: {taskcount:D} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
 					new Vector2(500, 140));
 			}
-
-			var counter = 0;
+			
+			// Draw list of Portals, used to be cached collection
+			// Currently we dont use cached Portal List, im not sure i want this.
+			/*
+			var counter = 0;			
 			var cachedAreaTransitions = areaTransitions;
-			foreach (var transition in cachedAreaTransitions.Where(x => x.Value.IsTargetable))
+			foreach (var transition in cachedAreaTransitions.Where(x => x.IsTargetable))
 			{
 				counter++;
-				CoPilot.instance.Graphics.DrawText($"{transition.Key} at { transition.Value.Pos.X:F} { transition.Value.Pos.Y:F}", new Vector2(100, 120 + counter * 20));
+				CoPilot.instance.Graphics.DrawText($"{transition.RenderName} at { transition.Pos.X:F} { transition.Pos.Y:F}", new Vector2(100, 120 + counter * 20));
 			}
+			*/
 
 			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
 			CoPilot.instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
