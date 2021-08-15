@@ -153,8 +153,9 @@ namespace CoPilot
 						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 						{
 							var transition = areaTransitions.Values.Where(x => x.IsTargetable).ToList().OrderBy(I => Vector3.Distance(lastTargetPosition, I.Pos)).FirstOrDefault();
-							if (transition != null && Vector3.Distance(lastTargetPosition, transition.Pos) < CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
-								tasks.Add(new TaskNode(transition.Pos, 200, TaskNodeType.Transition));
+							if (transition != null && Vector3.Distance(lastTargetPosition, transition.Pos) <
+								CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
+								tasks.Add(new TaskNode(transition?.GetComponent<Render>()?.InteractCenter ?? transition.Pos, 200, TaskNodeType.Transition));
 						}
 						//We have no path, set us to go to leader pos.
 						else if (tasks.Count == 0)
