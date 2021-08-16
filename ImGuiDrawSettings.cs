@@ -183,8 +183,8 @@ namespace CoPilot
                         "Move Key: " + CoPilot.instance.Settings.autoPilotMoveKey.Value, CoPilot.instance.Settings.autoPilotMoveKey);
                     CoPilot.instance.Settings.autoPilotToggleKey.Value = ImGuiExtension.HotkeySelector(
                         "Toggle Key: " + CoPilot.instance.Settings.autoPilotToggleKey.Value, CoPilot.instance.Settings.autoPilotToggleKey);
-                    CoPilot.instance.Settings.autoPilottakeWaypoints.Value = ImGuiExtension.Checkbox(
-                        "Take Waypoints", CoPilot.instance.Settings.autoPilottakeWaypoints.Value);
+                    CoPilot.instance.Settings.autoPilotTakeWaypoints.Value = ImGuiExtension.Checkbox(
+                        "Take Waypoints", CoPilot.instance.Settings.autoPilotTakeWaypoints.Value);
                     /*
                     CoPilot.instance.Settings.autoPilotRandomClickOffset.Value =
                         ImGuiExtension.IntSlider("Random Click Offset", CoPilot.instance.Settings.autoPilotRandomClickOffset);

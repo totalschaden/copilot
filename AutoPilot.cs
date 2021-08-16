@@ -189,7 +189,7 @@ namespace CoPilot
 						    tasks.FirstOrDefault(I => I.Type == TaskNodeType.Loot) == null)
 							tasks.Add(new TaskNode(questLoot.Pos, CoPilot.instance.Settings.autoPilotClearPathDistance, TaskNodeType.Loot));
 
-						else if (!hasUsedWp && CoPilot.instance.Settings.autoPilottakeWaypoints)
+						else if (!hasUsedWp && CoPilot.instance.Settings.autoPilotTakeWaypoints)
 						{
 							//Check if there's a waypoint nearby
 							var waypoint = CoPilot.instance.GameController.EntityListWrapper.Entities.SingleOrDefault(I => I.Type ==EntityType.Waypoint &&
