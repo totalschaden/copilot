@@ -631,11 +631,11 @@ namespace CoPilot
                     CoPilot.instance.Settings.tempestShieldTriggerRange.Value =
                         ImGuiExtension.IntSlider("Trigger Range", CoPilot.instance.Settings.tempestShieldTriggerRange);
                     CoPilot.instance.Settings.tempestShieldMinAny.Value =
-                        ImGuiExtension.IntSlider("min Enemy AnyX", CoPilot.instance.Settings.tempestShieldMinAny);
+                        ImGuiExtension.IntSlider("min Enemy Any", CoPilot.instance.Settings.tempestShieldMinAny);
                     CoPilot.instance.Settings.tempestShieldMinRare.Value =
-                        ImGuiExtension.IntSlider("min Enemy RareX", CoPilot.instance.Settings.tempestShieldMinRare);
+                        ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.instance.Settings.tempestShieldMinRare);
                     CoPilot.instance.Settings.tempestShieldMinUnique.Value =
-                        ImGuiExtension.IntSlider("min Enemy UniqueX", CoPilot.instance.Settings.tempestShieldMinUnique);
+                        ImGuiExtension.IntSlider("min Enemy Unique", CoPilot.instance.Settings.tempestShieldMinUnique);
                 }
             }
             catch (Exception e)
