@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 using ExileCore;
+using ExileCore.PoEMemory;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.MemoryObjects;
@@ -18,7 +21,8 @@ namespace CoPilot
 	    private Coroutine autoPilotCoroutine;
 	    private readonly Random random = new Random();
         private static Camera Camera => CoPilot.instance.GameController.Game.IngameState.Camera;
-        private const string PORTAL_ID = @"Metadata/MiscellaneousObjects/MultiplexPortal";
+        private const string PORTAL_ID = "Metadata/MiscellaneousObjects/MultiplexPortal";
+        private const string AreaTransition_ID = "Metadata/MiscellaneousObjects/AreaTransition";
 
         private Vector3 lastTargetPosition;
         private Vector3 lastPlayerPosition;
@@ -41,33 +45,26 @@ namespace CoPilot
             hasUsedWp = false;
         }
         
-        /*
-        /// <summary>
-        ///     Returns closest label to player
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private LabelOnGround? GetLabel(string id)
+        private LabelOnGround GetBestPortalLabel()
         {
-	        var labels = CoPilot.instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels;
+	        try
+	        {
+		        var portalLabels =
+			        CoPilot.instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels.Where(x =>
+				        x != null && x.IsVisible && x.Label != null && x.Label.IsValid && x.Label.IsVisible && x.ItemOnGround != null && 
+				        (x.ItemOnGround.Metadata.ToLower().Contains("areatransition") || x.ItemOnGround.Metadata.ToLower().Contains("portal") ))
+				        .OrderBy(x => Vector3.Distance(lastTargetPosition, x.ItemOnGround.Pos)).ToList();
 
-	        var labelQuery =
-		        from labelOnGround in labels
-		        let label = labelOnGround?.Label
-		        where label?.IsValid == true &&
-		              label?.Address > 0 &&
-		              label?.IsVisible == true
-		        let itemOnGround = labelOnGround?.ItemOnGround
-		        where itemOnGround != null &&
-		              itemOnGround?.Metadata?.Contains(id) == true
-		        let dist = CoPilot.instance.GameController?.Player?.DistanceSquared(itemOnGround)
-		        orderby dist
-		        select labelOnGround;
 
-	        return labelQuery.FirstOrDefault();
+		        return CoPilot.instance?.GameController?.Area?.CurrentArea?.IsHideout != null && (bool)CoPilot.instance.GameController?.Area?.CurrentArea?.IsHideout
+			        ? portalLabels?[random.Next(portalLabels.Count)]
+			        : portalLabels?.FirstOrDefault();
+	        }
+	        catch
+	        {
+		        return null;
+	        }
         }
-        
-        */
         private Entity GetBestPortal()
         {
 	        try
@@ -79,7 +76,7 @@ namespace CoPilot
 				        x?.Type == EntityType.IngameIcon)
 			        .Where(x => x.IsTargetable && (x.Type != EntityType.IngameIcon ||
 			                                       x.Type == EntityType.IngameIcon &&
-			                                       x.Metadata.ToLower().Contains("portal"))).ToList()
+			                                       x.Metadata.ToLower().Contains("portal")))
 			        .OrderBy(x => Vector3.Distance(lastTargetPosition, x.Pos)).ToList();
 
 		        return CoPilot.instance.GameController.Area.CurrentArea.IsHideout
@@ -181,12 +178,10 @@ namespace CoPilot
 						var distanceMoved = Vector3.Distance(lastTargetPosition, followTarget.Pos);
 						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 						{
-							var transition = GetBestPortal();
+							var transition = GetBestPortalLabel();
 							// Check for Portal within Screen Distance.
-								if (transition != null && Vector3.Distance(lastTargetPosition, transition.Pos) < 800)
-									tasks.Add(new TaskNode(
-										transition.Pos, 200,
-										TaskNodeType.Transition));
+								if (transition != null && transition.ItemOnGround.DistancePlayer < 80)
+									tasks.Add(new TaskNode(transition,200, TaskNodeType.Transition));
 						}
 						//We have no path, set us to go to leader pos.
 						else if (tasks.Count == 0 && distanceMoved < 2000 && distanceToLeader > 200 && distanceToLeader < 2000)
@@ -246,11 +241,11 @@ namespace CoPilot
 				}
 				//Leader is null but we have tracked them this map.
 				//Try using transition to follow them to their map
-				else if (tasks.Count == 0 ) /* &&
+				else if (tasks.Count == 0) /* &&
 				         lastTargetPosition != Vector3.Zero)*/
 				{
-					var portal = GetBestPortal();
-					if (portal == null || portal != null && Vector2.Distance((Vector2)portal.Pos, (Vector2)lastTargetPosition) > CoPilot.instance.Settings.autoPilotClearPathDistance)
+					var portal = GetBestPortalLabel();
+					if (portal == null || portal != null && portal.ItemOnGround?.DistancePlayer > 80 && CoPilot.instance.GameController?.Area?.CurrentArea?.RealLevel < 68)
 					{
 						foreach (var partyElementWindow in PartyElements.GetPlayerInfoElementList())
 						{
@@ -280,7 +275,7 @@ namespace CoPilot
 					}
 					else if (portal != null)
 					{
-						tasks.Add(new TaskNode(portal.Pos, CoPilot.instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
+						tasks.Add(new TaskNode(portal, CoPilot.instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
 					}
 				}
 
@@ -353,23 +348,13 @@ namespace CoPilot
 						}
 						case TaskNodeType.Transition:
 						{
-							var screenPos = WorldToValidScreenPosition(currentTask.WorldPosition);							
-							if (taskDistance <= CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
-							{
-								//Click the transition
-								Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
-								yield return Mouse.SetCursorPosAndLeftClickHuman(screenPos, 100);
-								yield return new WaitTime(300);
-							}
-							else
-							{
-								//Walk towards the transition
-								yield return Mouse.SetCursorPosHuman(screenPos);
-								yield return new WaitTime(random.Next(25) + 30);
-								Input.KeyDown(CoPilot.instance.Settings.autoPilotMoveKey);
-								yield return new WaitTime(random.Next(25) + 30);
-								Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
-							}
+							
+							//Click the transition
+							Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
+							yield return new WaitTime(60);
+							yield return Mouse.SetCursorPosAndLeftClickHuman(new Vector2(currentTask.LabelOnGround.Label.GetClientRect().Center.X, currentTask.LabelOnGround.Label.GetClientRect().Center.Y), 100);
+							yield return new WaitTime(300);
+
 							currentTask.AttemptCount++;
 							if (currentTask.AttemptCount > 6)
 								tasks.RemoveAt(0);
@@ -503,15 +488,33 @@ namespace CoPilot
 		
 		public void Render()
 		{
-			if (!CoPilot.instance.Settings.autoPilotEnabled || CoPilot.instance.GameController.IsLoading || !CoPilot.instance.GameController.InGame)
-				return;
-
 			if (CoPilot.instance.Settings.autoPilotToggleKey.PressedOnce())
 			{
 				CoPilot.instance.Settings.autoPilotEnabled.SetValueNoEvent(!CoPilot.instance.Settings.autoPilotEnabled.Value);
 				tasks = new List<TaskNode>();				
 			}
 			
+			if (!CoPilot.instance.Settings.autoPilotEnabled || CoPilot.instance.GameController.IsLoading || !CoPilot.instance.GameController.InGame)
+				return;
+
+			try
+			{
+				var portalLabels =
+					CoPilot.instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels.Where(x =>
+						x != null && x.IsVisible && x.Label != null && x.Label.IsValid && x.Label.IsVisible &&
+						x.ItemOnGround != null &&
+						(x.ItemOnGround.Metadata.ToLower().Contains("areatransition") ||
+						 x.ItemOnGround.Metadata.ToLower().Contains("portal"))).ToList();
+
+				foreach (var portal in portalLabels)
+				{
+					CoPilot.instance.Graphics.DrawLine(portal.Label.GetClientRectCache.TopLeft, portal.Label.GetClientRectCache.TopRight, 2f,Color.Firebrick);
+				}
+			}
+			catch (Exception)
+			{
+				//ignore
+			}
 			/*			 
 			// Debug for UI Element
 			try

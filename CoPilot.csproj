@@ -15,7 +15,7 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <LangVersion>8</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
