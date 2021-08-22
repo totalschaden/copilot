@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Numerics;
 using System.Threading;
 using System.Windows.Forms;
 using ImGuiNET;
+using SharpDX;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace CoPilot
 {
     internal class ImGuiDrawSettings
     {
+        private static Vector4 _donationColorTarget = new Vector4(0.454f, 0.031f, 0.768f, 1f);
+        private static Vector4 _donationColorCurrent = new Vector4(0.454f, 0.031f, 0.768f, 1f);
         private static void SetText(string pText)
         {
             var staThread = new Thread(
@@ -27,6 +31,7 @@ namespace CoPilot
         {
             var green = new Vector4(0.102f, 0.388f, 0.106f, 1.000f);
             var red = new Vector4(0.388f, 0.102f, 0.102f, 1.000f);
+            
 
             var collapsingHeaderFlags = ImGuiTreeNodeFlags.CollapsingHeader;
             ImGui.Text("Plugin by Totalschaden. https://github.com/totalschaden/copilot");
@@ -145,9 +150,26 @@ namespace CoPilot
             try
             {
                 // Donation
-                ImGui.PushStyleColor(ImGuiCol.Header, new Vector4(0.454f, 0.031f, 0.768f, 1.000f));
+                // ReSharper disable CompareOfFloatsByEqualityOperator
+                if (_donationColorCurrent.X == _donationColorTarget.X &&
+                    _donationColorCurrent.Y == _donationColorTarget.Y &&
+                    _donationColorCurrent.Z == _donationColorTarget.Z)
+                    // ReSharper restore CompareOfFloatsByEqualityOperator
+                {
+                    _donationColorTarget = new Vector4(Helper.random.NextFloat(0, 1), Helper.random.NextFloat(0, 1),
+                        Helper.random.NextFloat(0, 1), 1f);
+                }
+                else
+                {
+                    var deltaTime = SkillInfo._deltaTime / 1000;
+                    
+                    _donationColorCurrent.X = Helper.MoveTowards(_donationColorCurrent.X, _donationColorTarget.X, deltaTime);
+                    _donationColorCurrent.Y = Helper.MoveTowards(_donationColorCurrent.Y, _donationColorTarget.Y, deltaTime);
+                    _donationColorCurrent.Z = Helper.MoveTowards(_donationColorCurrent.Z, _donationColorTarget.Z, deltaTime);
+                }
+                ImGui.PushStyleColor(ImGuiCol.Header, _donationColorCurrent);
                 ImGui.PushID(99999);
-                if (ImGui.TreeNodeEx("Donation", collapsingHeaderFlags))
+                if (ImGui.TreeNodeEx("Donation - Send some Snacks nom nom", collapsingHeaderFlags))
                 {
                     ImGui.Text("Thanks to anyone who is considering this.");
                     if (ImGui.Button("Open Amazon.de Wishlist"))
@@ -172,6 +194,8 @@ namespace CoPilot
                 {
                     CoPilot.instance.Settings.autoPilotEnabled.Value =
                         ImGuiExtension.Checkbox("Enabled", CoPilot.instance.Settings.autoPilotEnabled.Value);
+                    CoPilot.instance.Settings.autoPilotGrace.Value =
+                        ImGuiExtension.Checkbox("Remove Grace Period", CoPilot.instance.Settings.autoPilotGrace.Value);
                     CoPilot.instance.Settings.autoPilotLeader = ImGuiExtension.InputText("Leader Name: ", CoPilot.instance.Settings.autoPilotLeader, 60, ImGuiInputTextFlags.None);
                     CoPilot.instance.Settings.autoPilotDashEnabled.Value = ImGuiExtension.Checkbox(
                         "Dash Enabled", CoPilot.instance.Settings.autoPilotDashEnabled.Value);
@@ -399,8 +423,6 @@ namespace CoPilot
                         CoPilot.instance.Settings.enduringCryHealHpp);
                     CoPilot.instance.Settings.enduringCryHealEsp.Value = ImGuiExtension.IntSlider("Heal ES%",
                         CoPilot.instance.Settings.enduringCryHealEsp);
-                    CoPilot.instance.Settings.enduringCryRemoveGrace.Value = ImGuiExtension.Checkbox("Remove Grace Periode",
-                        CoPilot.instance.Settings.enduringCryRemoveGrace.Value);
                     CoPilot.instance.Settings.enduringCrySpam.Value = ImGuiExtension.Checkbox("Spam Warcry",
                         CoPilot.instance.Settings.enduringCrySpam.Value);
                     CoPilot.instance.Settings.enduringCryMinAny.Value =

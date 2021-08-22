@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using ExileCore.Shared;
 using SharpDX;
@@ -58,6 +56,7 @@ namespace CoPilot
             LeftMouseDown();
             yield return new WaitTime(40);
             LeftMouseUp();
+            yield return new WaitTime(100);
         }
         
         public static IEnumerator RightClick()
@@ -65,18 +64,24 @@ namespace CoPilot
             RightMouseDown();
             yield return new WaitTime(40);
             RightMouseUp();
+            yield return new WaitTime(100);
         }
-        public static IEnumerator SetCursorPosHuman2(Vector2 targetPos)
+
+        public static IEnumerator SetCursorPosHuman(Vector2 targetPos, bool limited = true)
         {
             // Keep Curser Away from Screen Edges to prevent UI Interaction.
             var windowRect = CoPilot.instance.GameController.Window.GetWindowRectangle();
             var edgeBoundsX = windowRect.Size.Width / 4;
             var edgeBoundsY = windowRect.Size.Height / 4;
 
-            if (targetPos.X <= windowRect.Left + edgeBoundsX ) targetPos.X = windowRect.Left + edgeBoundsX;
-            if (targetPos.Y <= windowRect.Top + edgeBoundsY) targetPos.Y = windowRect.Left + edgeBoundsY;
-            if (targetPos.X >= windowRect.Right - edgeBoundsX) targetPos.X = windowRect.Right -edgeBoundsX;
-            if (targetPos.Y >= windowRect.Bottom - edgeBoundsY) targetPos.Y = windowRect.Bottom - edgeBoundsY;
+            if (limited)
+            {
+                if (targetPos.X <= windowRect.Left + edgeBoundsX ) targetPos.X = windowRect.Left + edgeBoundsX;
+                if (targetPos.Y <= windowRect.Top + edgeBoundsY) targetPos.Y = windowRect.Left + edgeBoundsY;
+                if (targetPos.X >= windowRect.Right - edgeBoundsX) targetPos.X = windowRect.Right -edgeBoundsX;
+                if (targetPos.Y >= windowRect.Bottom - edgeBoundsY) targetPos.Y = windowRect.Bottom - edgeBoundsY;
+            }
+            
             
             var step = (float)Math.Sqrt(Vector2.Distance(CoPilot.instance.GetMousePosition(), targetPos)) * speedMouse / 20;
 
@@ -97,6 +102,7 @@ namespace CoPilot
             LeftMouseDown();
             yield return new WaitTime(CoPilot.instance.Settings.autoPilotInputFrequency + extraDelay);
             LeftMouseUp();
+            yield return new WaitTime(100);
         }
     }
 }

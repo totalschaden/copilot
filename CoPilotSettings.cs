@@ -33,6 +33,7 @@ namespace CoPilot
         #region AutoPilot
         
         public ToggleNode autoPilotEnabled = new ToggleNode(false);
+        public ToggleNode autoPilotGrace = new ToggleNode(true);
         public TextNode autoPilotLeader = new TextNode();
         public ToggleNode autoPilotDashEnabled = new ToggleNode(false);
         public ToggleNode autoPilotCloseFollow = new ToggleNode(true);
@@ -104,7 +105,6 @@ namespace CoPilot
         public ToggleNode enduringCryEnabled = new ToggleNode(false);
         public RangeNode<int> enduringCryTriggerRange = new RangeNode<int>(550, 100, 1000);
         public ToggleNode enduringCrySpam = new ToggleNode(false);
-        public ToggleNode enduringCryRemoveGrace = new ToggleNode(false);
         public RangeNode<int> enduringCryHealEsp = new RangeNode<int>(0, 1, 100);
         public RangeNode<int> enduringCryHealHpp = new RangeNode<int>(90, 1, 100);
         public RangeNode<int> enduringCryMinAny = new RangeNode<int>(1, 0, 50);

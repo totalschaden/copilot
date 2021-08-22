@@ -18,7 +18,7 @@ namespace CoPilot
     {
         
 
-        private const int Delay = 70;
+        private const int Delay = 45;
 
         private const int MouseAutoSnapRange = 250;
         internal static CoPilot instance;
@@ -64,6 +64,7 @@ namespace CoPilot
             autoPilot.StartCoroutine();
             return true;
         }
+        
 
         private int GetMinnionsWithin(float maxDistance)
         {
@@ -279,9 +280,14 @@ namespace CoPilot
             try
             {
                 if (!Settings.Enable) return;
+                SkillInfo.GetDeltaTime();
                 
                 try
                 {
+                    if (Settings.autoPilotEnabled && Settings.autoPilotGrace && buffs != null && buffs.Exists(x => x.Name == "grace_period") && Gcd())
+                    {
+                        Keyboard.KeyPress(Settings.autoPilotMoveKey);
+                    }
                     autoPilot.Render();
                 }
                 catch (Exception e)
@@ -329,7 +335,7 @@ namespace CoPilot
                 
                 if (Settings.autoGolemEnabled) summons.UpdateSummons();
                 
-                SkillInfo.GetDeltaTime();
+                
                 #region Auto Quit
 
                 if (Settings.autoQuitEnabled)
@@ -378,7 +384,7 @@ namespace CoPilot
                 #endregion
 
                 // Do not Cast anything while we are untouchable or Chat is Open
-                if (buffs.Exists(x => x.Name == "grace_period") && !Settings.enduringCryRemoveGrace ||
+                if (buffs.Exists(x => x.Name == "grace_period") ||
                     /*GameController.IngameState.IngameUi.ChatBoxRoot.Parent.Parent.Parent.GetChildAtIndex(3).IsVisible || */ // 3.15 Bugged 
                     !GameController.IsForeGroundCache)
                     return;
@@ -437,7 +443,7 @@ namespace CoPilot
                                             Settings.enduringCryMinRare, Settings.enduringCryMinUnique) ||
                                         player.HPPercentage < (float) Settings.enduringCryHealHpp / 100 ||
                                         player.ESPercentage < (float) Settings.enduringCryHealEsp / 100
-                                        || Settings.enduringCrySpam || Settings.enduringCryRemoveGrace && buffs.Exists(x => x.Name == "grace_period"))
+                                        || Settings.enduringCrySpam)
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)

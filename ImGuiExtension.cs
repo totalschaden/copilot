@@ -92,14 +92,14 @@ namespace CoPilot
         public static float FloatSlider(string labelString, float value, float minValue, float maxValue)
         {
             var refValue = value;
-            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, "%.00f", 1f);
+            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, "%.00f");
             return refValue;
         }
 
         public static float FloatSlider(string labelString, float value, float minValue, float maxValue, float power)
         {
             var refValue = value;
-            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, "%.00f", power);
+            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, "%.00f");
             return refValue;
         }
 
@@ -107,7 +107,7 @@ namespace CoPilot
             float maxValue)
         {
             var refValue = value;
-            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, $"{sliderString}: {value}", 1f);
+            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, $"{sliderString}: {value}");
             return refValue;
         }
 
@@ -115,37 +115,35 @@ namespace CoPilot
             float maxValue, float power)
         {
             var refValue = value;
-            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, $"{sliderString}: {value}", power);
+            ImGui.SliderFloat(labelString, ref refValue, minValue, maxValue, $"{sliderString}: {value}");
             return refValue;
         }
 
         public static float FloatSlider(string labelString, RangeNode<float> setting)
         {
             var refValue = setting.Value;
-            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, "%.00f", 1f);
+            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, "%.00f");
             return refValue;
         }
 
         public static float FloatSlider(string labelString, RangeNode<float> setting, float power)
         {
             var refValue = setting.Value;
-            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, "%.00f", power);
+            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, "%.00f");
             return refValue;
         }
 
         public static float FloatSlider(string labelString, string sliderString, RangeNode<float> setting)
         {
             var refValue = setting.Value;
-            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, $"{sliderString}: {setting.Value}",
-                1f);
+            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, $"{sliderString}: {setting.Value}");
             return refValue;
         }
 
         public static float FloatSlider(string labelString, string sliderString, RangeNode<float> setting, float power)
         {
             var refValue = setting.Value;
-            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, $"{sliderString}: {setting.Value}",
-                power);
+            ImGui.SliderFloat(labelString, ref refValue, setting.Min, setting.Max, $"{sliderString}: {setting.Value}");
             return refValue;
         }
 
@@ -176,7 +174,6 @@ namespace CoPilot
             if (ImGui.Button(buttonName))
             {
                 ImGui.OpenPopup(buttonName);
-                open = true;
             }
 
             if (ImGui.BeginPopupModal(buttonName, ref open, (ImGuiWindowFlags) 35))
@@ -246,16 +243,16 @@ namespace CoPilot
         // Combo Box
 
         public static int ComboBox(string sideLabel, int currentSelectedItem, List<string> objectList,
-            ImGuiComboFlags ImGuiComboFlags = ImGuiComboFlags.HeightRegular)
+            ImGuiComboFlags imGuiComboFlags = ImGuiComboFlags.HeightRegular)
         {
             ImGui.Combo(sideLabel, ref currentSelectedItem, objectList.ToArray(), objectList.Count);
             return currentSelectedItem;
         }
 
         public static string ComboBox(string sideLabel, string currentSelectedItem, List<string> objectList,
-            ImGuiComboFlags ImGuiComboFlags = ImGuiComboFlags.HeightRegular)
+            ImGuiComboFlags imGuiComboFlags = ImGuiComboFlags.HeightRegular)
         {
-            if (ImGui.BeginCombo(sideLabel, currentSelectedItem, ImGuiComboFlags))
+            if (ImGui.BeginCombo(sideLabel, currentSelectedItem, imGuiComboFlags))
             {
                 var refObject = currentSelectedItem;
                 for (var n = 0; n < objectList.Count; n++)
@@ -277,9 +274,9 @@ namespace CoPilot
         }
 
         public static string ComboBox(string sideLabel, string currentSelectedItem, List<string> objectList,
-            out bool didChange, ImGuiComboFlags ImGuiComboFlags = ImGuiComboFlags.HeightRegular)
+            out bool didChange, ImGuiComboFlags imGuiComboFlags = ImGuiComboFlags.HeightRegular)
         {
-            if (ImGui.BeginCombo(sideLabel, currentSelectedItem, ImGuiComboFlags))
+            if (ImGui.BeginCombo(sideLabel, currentSelectedItem, imGuiComboFlags))
             {
                 var refObject = currentSelectedItem;
                 for (var n = 0; n < objectList.Count; n++)
@@ -333,8 +330,7 @@ namespace CoPilot
         public static void ImGuiExtension_ColorTabs(string idString, int height, IReadOnlyList<string> settingList,
             ref int selectedItem, ref int uniqueIdPop)
         {
-            var newcontentRegionArea = new ImGuiVector2();
-            newcontentRegionArea = ImGuiNative.igGetContentRegionAvail();
+            var newcontentRegionArea = ImGuiNative.igGetContentRegionAvail();
             var boxRegion = new ImGuiVector2(newcontentRegionArea.X, height);
             if (ImGui.BeginChild(idString, boxRegion, true, ImGuiWindowFlags.HorizontalScrollbar))
                 for (var i = 0; i < settingList.Count; i++)
@@ -360,8 +356,7 @@ namespace CoPilot
         //Begin Child Frames - Full Width
         public static bool BeginChild(string id, bool border, ImGuiWindowFlags flags)
         {
-            var newcontentRegionArea = new ImGuiVector2();
-            newcontentRegionArea = ImGuiNative.igGetContentRegionAvail();
+            var newcontentRegionArea = ImGuiNative.igGetContentRegionAvail();
             return ImGui.BeginChild(id, new ImGuiVector2(newcontentRegionArea.X, newcontentRegionArea.Y), border,
                 flags);
         }

@@ -8,7 +8,7 @@ namespace CoPilot
     {
         private static DateTime _lastUpdate = DateTime.MinValue;
         private static long _lastTime;
-        private static float _deltaTime;
+        internal static float _deltaTime;
 
         // Pseudo Skills
         internal static Skill autoMapTabber = new Skill();
@@ -116,7 +116,7 @@ namespace CoPilot
         {
             if (skill.Cooldown > 0)
             {
-                skill.Cooldown = MoveTowards(skill.Cooldown, 0, _deltaTime);
+                skill.Cooldown = Helper.MoveTowards(skill.Cooldown, 0, _deltaTime);
                 return false;
             }
 
@@ -133,7 +133,7 @@ namespace CoPilot
         {
             if (skill.Cooldown > 0)
             {
-                skill.Cooldown = MoveTowards(skill.Cooldown, 0, _deltaTime);
+                skill.Cooldown = Helper.MoveTowards(skill.Cooldown, 0, _deltaTime);
                 return false;
             }
 
@@ -299,13 +299,6 @@ namespace CoPilot
                         break;
                 }
             }
-        }
-
-        private static float MoveTowards(float cur, float tar, float max)
-        {
-            if (Math.Abs(tar - cur) <= max)
-                return tar;
-            return cur + Math.Sign(tar - cur) * max;
         }
     }
 }
