@@ -284,16 +284,17 @@ namespace CoPilot
 				{
 					var currentTask = tasks.First();
 					var taskDistance = Vector3.Distance(CoPilot.instance.playerPosition, currentTask.WorldPosition);
-					
-					//We are close to leader again, remove transition task.
-					if (currentTask.Type == TaskNodeType.Transition && followTarget != null &&
-					    Vector3.Distance(followTarget.Pos, CoPilot.instance.playerPosition) < CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
+					var playerDistanceMoved = Vector3.Distance(CoPilot.instance.playerPosition, lastPlayerPosition);
+
+					//We are using a same map transition and have moved significnatly since last tick. Mark the transition task as done.
+					if (currentTask.Type == TaskNodeType.Transition && 
+					    playerDistanceMoved >= CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 					{
 						tasks.RemoveAt(0);
+						lastPlayerPosition = CoPilot.instance.playerPosition;
 						yield return null;
 						continue;
 					}
-					
 					switch (currentTask.Type)
 					{
 						case TaskNodeType.Movement:
@@ -347,12 +348,13 @@ namespace CoPilot
 						}
 						case TaskNodeType.Transition:
 						{
+							
 							//Click the transition
 							Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
 							yield return new WaitTime(60);
 							yield return Mouse.SetCursorPosAndLeftClickHuman(new Vector2(currentTask.LabelOnGround.Label.GetClientRect().Center.X, currentTask.LabelOnGround.Label.GetClientRect().Center.Y), 100);
-							yield return new WaitTime(500);
-							
+							yield return new WaitTime(300);
+
 							currentTask.AttemptCount++;
 							if (currentTask.AttemptCount > 6)
 								tasks.RemoveAt(0);
@@ -582,10 +584,10 @@ namespace CoPilot
 			{
 				// ignored
 			}
+
 			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
 			CoPilot.instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
 			CoPilot.instance.Graphics.DrawText("Leader: " + (followTarget != null ? "Found" : "Null"), new Vector2(350, 160));
-			CoPilot.instance.Graphics.DrawText("Distance: " + (followTarget != null ? Vector3.Distance(lastTargetPosition, followTarget.Pos).ToString("F2") : "Pos Null"), new Vector2(350, 180));
 			CoPilot.instance.Graphics.DrawLine(new Vector2(490, 120), new Vector2(490,180), 1, Color.White);
 		}
 
