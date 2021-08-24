@@ -180,7 +180,7 @@ namespace CoPilot
 						{
 							var transition = GetBestPortalLabel();
 							// Check for Portal within Screen Distance.
-								if (transition != null && transition.ItemOnGround.DistancePlayer < 200)
+								if (transition != null)
 									tasks.Add(new TaskNode(transition,200, TaskNodeType.Transition));
 						}
 						//We have no path, set us to go to leader pos.
