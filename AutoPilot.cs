@@ -176,11 +176,11 @@ namespace CoPilot
 					{
 						//Leader moved VERY far in one frame. Check for transition to use to follow them.
 						var distanceMoved = Vector3.Distance(lastTargetPosition, followTarget.Pos);
-						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
+						if (/*lastTargetPosition != Vector3.Zero &&*/ distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 						{
 							var transition = GetBestPortalLabel();
 							// Check for Portal within Screen Distance.
-								if (transition != null)
+								if (transition != null && transition.ItemOnGround.DistancePlayer < 200)
 									tasks.Add(new TaskNode(transition,200, TaskNodeType.Transition));
 						}
 						//We have no path, set us to go to leader pos.
