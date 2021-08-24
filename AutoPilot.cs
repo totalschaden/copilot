@@ -176,11 +176,11 @@ namespace CoPilot
 					{
 						//Leader moved VERY far in one frame. Check for transition to use to follow them.
 						var distanceMoved = Vector3.Distance(lastTargetPosition, followTarget.Pos);
-						if (/*lastTargetPosition != Vector3.Zero &&*/ distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
+						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 						{
 							var transition = GetBestPortalLabel();
 							// Check for Portal within Screen Distance.
-								if (transition != null && transition.ItemOnGround.DistancePlayer < 200)
+								if (transition != null && transition.ItemOnGround.DistancePlayer < 80)
 									tasks.Add(new TaskNode(transition,200, TaskNodeType.Transition));
 						}
 						//We have no path, set us to go to leader pos.
@@ -284,17 +284,16 @@ namespace CoPilot
 				{
 					var currentTask = tasks.First();
 					var taskDistance = Vector3.Distance(CoPilot.instance.playerPosition, currentTask.WorldPosition);
-					var playerDistanceMoved = Vector3.Distance(CoPilot.instance.playerPosition, lastPlayerPosition);
-
-					//We are using a same map transition and have moved significnatly since last tick. Mark the transition task as done.
-					if (currentTask.Type == TaskNodeType.Transition && 
-					    playerDistanceMoved >= CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
+					
+					//We are close to leader again, remove transition task.
+					if (currentTask.Type == TaskNodeType.Transition && followTarget != null &&
+					    Vector3.Distance(followTarget.Pos, CoPilot.instance.playerPosition) < CoPilot.instance.Settings.autoPilotClearPathDistance.Value)
 					{
 						tasks.RemoveAt(0);
-						lastPlayerPosition = CoPilot.instance.playerPosition;
 						yield return null;
 						continue;
 					}
+					
 					switch (currentTask.Type)
 					{
 						case TaskNodeType.Movement:
@@ -348,13 +347,12 @@ namespace CoPilot
 						}
 						case TaskNodeType.Transition:
 						{
-							
 							//Click the transition
 							Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
 							yield return new WaitTime(60);
 							yield return Mouse.SetCursorPosAndLeftClickHuman(new Vector2(currentTask.LabelOnGround.Label.GetClientRect().Center.X, currentTask.LabelOnGround.Label.GetClientRect().Center.Y), 100);
-							yield return new WaitTime(300);
-
+							yield return new WaitTime(500);
+							
 							currentTask.AttemptCount++;
 							if (currentTask.AttemptCount > 6)
 								tasks.RemoveAt(0);
