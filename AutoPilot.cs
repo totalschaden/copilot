@@ -587,7 +587,8 @@ namespace CoPilot
 
 			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
 			CoPilot.instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
-			CoPilot.instance.Graphics.DrawLine(new Vector2(490, 120), new Vector2(490,160), 1, Color.White);
+			CoPilot.instance.Graphics.DrawText("Leader: " + (followTarget != null ? "Found" : "Null"), new Vector2(350, 160));
+			CoPilot.instance.Graphics.DrawLine(new Vector2(490, 120), new Vector2(490,180), 1, Color.White);
 		}
 
 
