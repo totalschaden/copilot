@@ -584,10 +584,10 @@ namespace CoPilot
 			{
 				// ignored
 			}
-
 			CoPilot.instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
 			CoPilot.instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
 			CoPilot.instance.Graphics.DrawText("Leader: " + (followTarget != null ? "Found" : "Null"), new Vector2(350, 160));
+			CoPilot.instance.Graphics.DrawText("Distance: " + (followTarget != null ? Vector3.Distance(lastTargetPosition, followTarget.Pos).ToString("F2") : "Pos Null"), new Vector2(350, 180));
 			CoPilot.instance.Graphics.DrawLine(new Vector2(490, 120), new Vector2(490,180), 1, Color.White);
 		}
 
