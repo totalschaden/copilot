@@ -34,7 +34,7 @@ namespace CoPilot
         
         public ToggleNode autoPilotEnabled = new ToggleNode(false);
         public ToggleNode autoPilotGrace = new ToggleNode(true);
-        public TextNode autoPilotLeader = new TextNode();
+        public TextNode autoPilotLeader = new TextNode("");
         public ToggleNode autoPilotDashEnabled = new ToggleNode(false);
         public ToggleNode autoPilotCloseFollow = new ToggleNode(true);
         public HotkeyNode autoPilotDashKey = new HotkeyNode(Keys.W);
