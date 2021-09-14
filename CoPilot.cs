@@ -105,14 +105,21 @@ namespace CoPilot
                     {
                         if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
                             new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                        {
+                            any++;
                             rare++;
+                        }
                         break;
                     }
                     case MonsterRarity.Unique:
                     {
                         if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
                             new Vector2(playerPosition.X, playerPosition.Y)) <= range)
+                        {
+                            any++;
+                            rare++;
                             unique++;
+                        }
                         break;
                     }
                 }
