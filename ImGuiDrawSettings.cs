@@ -754,9 +754,6 @@ namespace CoPilot
                         ImGuiExtension.IntSlider("Enemy Range", CoPilot.instance.Settings.bladeVortexRange);
                     CoPilot.instance.Settings.bladeVortexCount.Value =
                         ImGuiExtension.IntSlider("Blade Count", CoPilot.instance.Settings.bladeVortexCount);
-                    CoPilot.instance.Settings.bladeVortexUnleashCount.Value =
-                        ImGuiExtension.IntSlider("If Unleash, wait for Charges",
-                            CoPilot.instance.Settings.bladeVortexUnleashCount);
                 }
             }
             catch (Exception e)

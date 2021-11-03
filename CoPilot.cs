@@ -974,13 +974,20 @@ namespace CoPilot
                             {
                                 skill.Stats.TryGetValue(GameStat.VirtualSupportAnticipationChargeGainIntervalMs,
                                     out var unleashCooldown);
+                                skill.Stats.TryGetValue(GameStat.SkillMaxUnleashSeals,
+                                    out var unleashMaxSeals);
                                 if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill))
                                     if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x =>
                                         x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
                                     {
+                                        if (Settings.debugMode)
+                                        {
+                                            LogError("Blade Vortex Unleash Cooldown: " + unleashCooldown);
+                                            LogError("Blade Vortex Unleash Max Seals: " + unleashMaxSeals);
+                                        }
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
-                                        SkillInfo.bladeVortex.Cooldown = unleashCooldown > 0
-                                            ? unleashCooldown * Settings.bladeVortexUnleashCount
+                                        SkillInfo.bladeVortex.Cooldown = unleashCooldown > 0 && unleashMaxSeals > 0
+                                            ? unleashCooldown * unleashMaxSeals
                                             : 0;
                                     }
                             }
