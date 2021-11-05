@@ -37,11 +37,11 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExileCore">
-      <HintPath>..\..\..\ExileCore.dll</HintPath>
+    <Reference Include="ExileCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\QH\ExileCore.dll</HintPath>
     </Reference>
     <Reference Include="GameOffsets, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\Qu\GameOffsets.dll</HintPath>
+      <HintPath>..\..\QH\GameOffsets.dll</HintPath>
     </Reference>
     <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
@@ -108,7 +108,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Resources\xBy.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
