@@ -447,10 +447,10 @@ namespace CoPilot
                             if (skill.Id == SkillInfo.enduringCry.Id)
                                 if (SkillInfo.ManageCooldown(SkillInfo.enduringCry, skill))
                                     if (MonsterCheck(Settings.enduringCryTriggerRange, Settings.enduringCryMinAny,
-                                            Settings.enduringCryMinRare, Settings.enduringCryMinUnique) ||
-                                        player.HPPercentage < (float) Settings.enduringCryHealHpp / 100 ||
+                                            Settings.enduringCryMinRare, Settings.enduringCryMinUnique) && 
+                                        (player.HPPercentage < (float) Settings.enduringCryHealHpp / 100 ||
                                         player.ESPercentage < (float) Settings.enduringCryHealEsp / 100
-                                        || Settings.enduringCrySpam)
+                                        || Settings.enduringCrySpam))
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
