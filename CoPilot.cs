@@ -449,8 +449,8 @@ namespace CoPilot
                                     if (MonsterCheck(Settings.enduringCryTriggerRange, Settings.enduringCryMinAny,
                                             Settings.enduringCryMinRare, Settings.enduringCryMinUnique) && 
                                         (player.HPPercentage < (float) Settings.enduringCryHealHpp / 100 ||
-                                        player.ESPercentage < (float) Settings.enduringCryHealEsp / 100
-                                        || Settings.enduringCrySpam))
+                                        player.ESPercentage < (float) Settings.enduringCryHealEsp / 100)
+                                        || Settings.enduringCrySpam)
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
