@@ -791,9 +791,9 @@ namespace CoPilot
                                     Settings.anyVaalMinRare, Settings.anyVaalMinUnique) && vaalSkills.Exists(x =>
                                     x.VaalSkillInternalName == skill.InternalName &&
                                     x.CurrVaalSouls >= x.VaalSoulsPerUse))
-                                    if (player.HPPercentage<= (float)Settings.anyVaalHpp ||
-                                        player.MaxES > 0 && player.ESPercentage<
-                                        (float)Settings.anyVaalEsp || player.MPPercentage < (float)Settings.anyVaalMpp / 100)
+                                    if (player.HPPercentage<= (float)Settings.anyVaalHpp / 100 ||
+                                        player.MaxES > 0 && player.ESPercentage < (float)Settings.anyVaalEsp / 100 || 
+                                        player.MPPercentage < (float)Settings.anyVaalMpp / 100)
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
