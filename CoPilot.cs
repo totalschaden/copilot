@@ -271,6 +271,9 @@ namespace CoPilot
 
         private static bool HasStat(Entity monster, GameStat stat)
         {
+            // Using this with GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where
+            // seems to cause Nullref errors on TC Fork. Where using the Code directly in a check seems fine, must have to do with Entity Parameter.
+            // Maybe someone knows why, i dont :)
             try
             {
                 var value = monster?.GetComponent<Stats>()?.StatDictionary?[stat];
@@ -327,7 +330,7 @@ namespace CoPilot
                 enemys = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster].Where(x =>
                     x != null && x.IsAlive && x.IsHostile && x.HasComponent<Targetable>() &&
                     x.GetComponent<Targetable>().isTargetable && x.HasComponent<Life>() &&
-                    x.GetComponent<Life>().CurHP > 0 && !HasStat(x, GameStat.CannotBeDamaged) &&
+                    x.GetComponent<Life>().CurHP > 0 && x.GetComponent<Stats>()?.StatDictionary?[GameStat.CannotBeDamaged] > 0 &&
                     GameController.Window.GetWindowRectangleTimeCache.Contains(
                         GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
                 if (Settings.debugMode)
