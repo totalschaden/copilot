@@ -23,12 +23,38 @@ namespace CoPilot
 
         public static void KeyDown(Keys key)
         {
+            if (key.HasFlag(Keys.Shift))
+            {
+                KeyDown(Keys.ShiftKey);
+            }
+            if (key.HasFlag(Keys.Control))
+            {
+                KeyDown(Keys.ControlKey);
+            }
+            if (key.HasFlag(Keys.Alt))
+            {
+                KeyDown(Keys.Menu);
+            }
+
             keybd_event((byte) key, 0, KeyeventfExtendedkey | 0, 0);
         }
 
         public static void KeyUp(Keys key)
         {
             keybd_event((byte) key, 0, KeyeventfExtendedkey | KeyeventfKeyup, 0); //0x7F
+
+            if (key.HasFlag(Keys.Shift))
+            {
+                KeyUp(Keys.ShiftKey);
+            }
+            if (key.HasFlag(Keys.Control))
+            {
+                KeyUp(Keys.ControlKey);
+            }
+            if (key.HasFlag(Keys.Alt))
+            {
+                KeyUp(Keys.Menu);
+            }
         }
 
         [DllImport("USER32.dll")]
@@ -49,9 +75,41 @@ namespace CoPilot
 
         private static IEnumerator KeyPressRoutine(Keys key)
         {
-            KeyDown(key);
+            if (key.HasFlag(Keys.Shift))
+            {
+                KeyDown(Keys.ShiftKey);
+                yield return new WaitTime(20);
+            }
+            if (key.HasFlag(Keys.Control))
+            {
+                KeyDown(Keys.ControlKey);
+                yield return new WaitTime(20);
+            }
+            if (key.HasFlag(Keys.Alt))
+            {
+                KeyDown(Keys.Menu);
+                yield return new WaitTime(20);
+            }
+
+            KeyDown(key & Keys.KeyCode);
             yield return new WaitTime(20);
-            KeyUp(key);
+            KeyUp(key & Keys.KeyCode);
+
+            if (key.HasFlag(Keys.Shift))
+            {
+                yield return new WaitTime(20);
+                KeyUp(Keys.ShiftKey);
+            }
+            if (key.HasFlag(Keys.Control))
+            {
+                yield return new WaitTime(20);
+                KeyUp(Keys.ControlKey);
+            }
+            if (key.HasFlag(Keys.Alt))
+            {
+                yield return new WaitTime(20);
+                KeyUp(Keys.Menu);
+            }
         }
     }
 }
