@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ExileCore;
+using ExileCore.Shared;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
 using SharpDX;
@@ -168,12 +169,27 @@ namespace CoPilot
             return Enum.GetValues(typeof(Keys)).Cast<Keys>();
         }
 
+        /// <summary>
+        /// Check if a key was pressed but is now up
+        /// </summary>
+        private static bool CheckKeyPressed(Keys key)
+        {
+            return
+                WinApi.GetKeyState(key & Keys.KeyCode) >= 0 &&
+                (WinApi.GetAsyncKeyState(key) & 1) == 1;
+        }
+
         public static Keys HotkeySelector(string buttonName, Keys currentKey)
         {
             var open = true;
             if (ImGui.Button(buttonName))
             {
                 ImGui.OpenPopup(buttonName);
+
+                foreach (Keys key in Enum.GetValues(typeof(Keys)))
+                {
+                    WinApi.GetAsyncKeyState(key);
+                }
             }
 
             if (ImGui.BeginPopupModal(buttonName, ref open, (ImGuiWindowFlags) 35))
@@ -185,15 +201,31 @@ namespace CoPilot
                 }
                 else
                 {
-                    foreach (var key in Enum.GetValues(typeof(Keys)))
+                    var keys = Enum.GetValues(typeof(Keys))
+                            .Cast<Keys>()
+                            .Where(k => k != Keys.None)
+                            .Where(k => k != Keys.KeyCode)
+                            .Where(k => (k & ~Keys.KeyCode) == Keys.None)
+                            .Where(CheckKeyPressed)
+                            .LastOrDefault();
+
+                    if (keys != Keys.None)
                     {
-                        var keyState = Input.GetKeyState((Keys) key);
-                        if (keyState)
+                        if (Input.GetKeyState(Keys.ShiftKey))
                         {
-                            currentKey = (Keys) key;
-                            ImGui.CloseCurrentPopup();
-                            break;
+                            keys |= Keys.Shift;
                         }
+                        if (Input.GetKeyState(Keys.ControlKey))
+                        {
+                            keys |= Keys.Control;
+                        }
+                        if (Input.GetKeyState(Keys.Menu))
+                        {
+                            keys |= Keys.Alt;
+                        }
+
+                        currentKey = keys;
+                        ImGui.CloseCurrentPopup();
                     }
                 }
 
