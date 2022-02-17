@@ -20,10 +20,14 @@ namespace CoPilot
 
         internal void UpdateSummons()
         {
+            var summonedObjects = CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects;
+
             if ((DateTime.Now - lastUpdate).TotalMilliseconds < 250 ||
-                CoPilot.instance.localPlayer?.GetComponent<Actor>() == null)
+                summonedObjects == null)
+            {
+                lastUpdate = DateTime.Now;
                 return;
-            lastUpdate = DateTime.Now;
+            }
 
             chaosElemental = 0;
             fireElemental = 0;
@@ -35,8 +39,8 @@ namespace CoPilot
             zombies = 0;
             holyRelict = 0;
 
-            foreach (var obj in CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects
-                .Where(x => x?.Entity != null && x.Entity.IsAlive))
+            foreach (var obj in summonedObjects
+                .Where(x => x?.Entity?.IsAlive == true))
                 if (obj.Entity.Metadata.Contains("ChaosElemental"))
                     chaosElemental++;
                 else if (obj.Entity.Metadata.Contains("FireElemental"))
@@ -53,7 +57,8 @@ namespace CoPilot
                     dropBearUniqueSummoned++;
                 else if (obj.Entity.Metadata.Contains("RaisedZombie"))
                     zombies++;
-                else if (obj.Entity.Metadata.EndsWith("HolyLivingRelic")) holyRelict++;
+                else if (obj.Entity.Metadata.EndsWith("HolyLivingRelic")) 
+                    holyRelict++;
         }
 
         public static float GetLowestMinionHpp()
@@ -71,7 +76,7 @@ namespace CoPilot
             const float hpp = 100;
             DeployedObject animatedGuardian = null;
             animatedGuardian = CoPilot.instance.localPlayer.GetComponent<Actor>().DeployedObjects.FirstOrDefault(x =>
-                x.Entity?.GetComponent<Life>() != null && x.Entity.Path.Contains("AnimatedArmour"));
+                x?.Entity?.GetComponent<Life>() != null && x.Entity.Path.Contains("AnimatedArmour"));
             return animatedGuardian?.Entity.GetComponent<Life>().HPPercentage ?? hpp;
         }
     }
