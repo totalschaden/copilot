@@ -513,7 +513,7 @@ namespace CoPilot
 			}
 			catch (Exception)
 			{
-				//ignore
+                CoPilot.instance.LogError("Error rendering: " + e, 5);
 			}
 			/*			 
 			// Debug for UI Element

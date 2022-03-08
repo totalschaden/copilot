@@ -24,7 +24,7 @@ namespace CoPilot
             }
             catch (Exception)
             {
-                // ignored
+                CoPilot.instance.LogError("Error getting list of players in a party: "e.ToString());
             }
 
             return playersInParty;
