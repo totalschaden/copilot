@@ -511,7 +511,7 @@ namespace CoPilot
 					CoPilot.instance.Graphics.DrawLine(portal.Label.GetClientRectCache.TopLeft, portal.Label.GetClientRectCache.TopRight, 2f,Color.Firebrick);
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
                 CoPilot.instance.LogError("Error rendering: " + e, 5);
 			}
