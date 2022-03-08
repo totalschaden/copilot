@@ -22,9 +22,9 @@ namespace CoPilot
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                CoPilot.instance.LogError("Error getting list of players in a party: "e.ToString());
+                CoPilot.instance.LogError("Error getting list of players in a party: " + e.ToString());
             }
 
             return playersInParty;
