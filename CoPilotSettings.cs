@@ -29,7 +29,12 @@ namespace CoPilot
 
         public ToggleNode Enable { get; set; }
 
-
+        #region COntrollerPILOT - Looten und Leveln 
+        public HotkeyNode controllerPilotMoveKey = new HotkeyNode(Keys.Q);
+        public RangeNode<int> controllerPilotDeadZone = new RangeNode<int>(1, 1, 300);
+        public RangeNode<int> controllerPilotMouseRange = new RangeNode<int>(3, 1, 700);
+        #endregion
+        
         #region AutoPilot
         
         public ToggleNode autoPilotEnabled = new ToggleNode(false);

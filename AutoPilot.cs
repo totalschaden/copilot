@@ -20,7 +20,7 @@ namespace CoPilot
 	    // Most Logic taken from Alpha Plugin
 	    private Coroutine autoPilotCoroutine;
 	    private readonly Random random = new Random();
-        private static Camera Camera => CoPilot.instance.GameController.Game.IngameState.Camera;
+        
         private const string PORTAL_ID = "Metadata/MiscellaneousObjects/MultiplexPortal";
         private const string AreaTransition_ID = "Metadata/MiscellaneousObjects/AreaTransition";
 
@@ -300,7 +300,7 @@ namespace CoPilot
 						case TaskNodeType.Movement:
 							if (CoPilot.instance.Settings.autoPilotDashEnabled && CheckDashTerrain(currentTask.WorldPosition.WorldToGrid()))
 								yield return null;
-							yield return Mouse.SetCursorPosHuman(WorldToValidScreenPosition(currentTask.WorldPosition));
+							yield return Mouse.SetCursorPosHuman(Helper.WorldToValidScreenPosition(currentTask.WorldPosition));
 							yield return new WaitTime(random.Next(25) + 30);
 							Input.KeyDown(CoPilot.instance.Settings.autoPilotMoveKey);
 							yield return new WaitTime(random.Next(25) + 30);
@@ -368,7 +368,7 @@ namespace CoPilot
 						{
 							if (Vector3.Distance(CoPilot.instance.playerPosition, currentTask.WorldPosition) > 150)
 							{
-								var screenPos = WorldToValidScreenPosition(currentTask.WorldPosition);
+								var screenPos = Helper.WorldToValidScreenPosition(currentTask.WorldPosition);
 								Input.KeyUp(CoPilot.instance.Settings.autoPilotMoveKey);
 								yield return new WaitTime(CoPilot.instance.Settings.autoPilotInputFrequency);
 								yield return Mouse.SetCursorPosAndLeftClickHuman(screenPos, 100);
@@ -445,7 +445,7 @@ namespace CoPilot
 
 			if (shouldDash)
 			{
-				Mouse.SetCursorPos(WorldToValidScreenPosition(targetPosition.GridToWorld(followTarget == null ? CoPilot.instance.GameController.Player.Pos.Z : followTarget.Pos.Z)));
+				Mouse.SetCursorPos(Helper.WorldToValidScreenPosition(targetPosition.GridToWorld(followTarget == null ? CoPilot.instance.GameController.Player.Pos.Z : followTarget.Pos.Z)));
 				Keyboard.KeyPress(CoPilot.instance.Settings.autoPilotDashKey);
 				return true;
 			}
@@ -556,14 +556,14 @@ namespace CoPilot
 						if (taskCount == 0)
 						{
 							CoPilot.instance.Graphics.DrawLine(
-								WorldToValidScreenPosition(CoPilot.instance.playerPosition),
-								WorldToValidScreenPosition(task.WorldPosition), 2f, Color.Pink);
+								Helper.WorldToValidScreenPosition(CoPilot.instance.playerPosition),
+								Helper.WorldToValidScreenPosition(task.WorldPosition), 2f, Color.Pink);
 							dist = Vector3.Distance(CoPilot.instance.playerPosition, task.WorldPosition);
 						}
 						else
 						{
-							CoPilot.instance.Graphics.DrawLine(WorldToValidScreenPosition(task.WorldPosition),
-								WorldToValidScreenPosition(cachedTasks[taskCount - 1].WorldPosition), 2f, Color.Pink);
+							CoPilot.instance.Graphics.DrawLine(Helper.WorldToValidScreenPosition(task.WorldPosition),
+								Helper.WorldToValidScreenPosition(cachedTasks[taskCount - 1].WorldPosition), 2f, Color.Pink);
 						}
 
 						taskCount++;
@@ -592,22 +592,6 @@ namespace CoPilot
 		}
 
 
-		private Vector2 WorldToValidScreenPosition(Vector3 worldPos)
-		{
-			var windowRect = CoPilot.instance.GameController.Window.GetWindowRectangle();
-			var screenPos = Camera.WorldToScreen(worldPos);
-			var result = screenPos + windowRect.Location;
-
-			var edgeBounds = 50;
-			if (!windowRect.Intersects(new RectangleF(result.X, result.Y, edgeBounds, edgeBounds)))
-			{
-				//Adjust for offscreen entity. Need to clamp the screen position using the game window info. 
-				if (result.X < windowRect.TopLeft.X) result.X = windowRect.TopLeft.X + edgeBounds;
-				if (result.Y < windowRect.TopLeft.Y) result.Y = windowRect.TopLeft.Y + edgeBounds;
-				if (result.X > windowRect.BottomRight.X) result.X = windowRect.BottomRight.X - edgeBounds;
-				if (result.Y > windowRect.BottomRight.Y) result.Y = windowRect.BottomRight.Y - edgeBounds;
-			}
-			return result;
-		}
+		
     }
 }
