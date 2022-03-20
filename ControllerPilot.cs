@@ -30,19 +30,21 @@ namespace CoPilot
                     .BoundsCenterPos);
             updateCoroutine = new Coroutine(UpdateController(), CoPilot.instance, "ControllerUpdate");
             Core.ParallelRunner.Run(updateCoroutine);
-            CoPilot.instance.LogError("###Test###");
         }
 
         public void Render()
         {
             try
             {
-                CoPilot.instance.Graphics.DrawText("Input: " + leftThumb.X + " " + leftThumb.Y,
-                    new Vector2(350, 150));
+                if (CoPilot.instance.Settings.controllerPilotDebug)
+                {
+                    CoPilot.instance.Graphics.DrawText("Input: " + leftThumb.X + " " + leftThumb.Y,
+                        new Vector2(350, 150));
+                }
             }
             catch (Exception e)
             {
-                    
+                // ignored
             }
         }
         private IEnumerator UpdateController()

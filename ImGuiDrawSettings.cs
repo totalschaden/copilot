@@ -865,6 +865,7 @@ namespace CoPilot
                         "Move Key: " + CoPilot.instance.Settings.controllerPilotMoveKey.Value, CoPilot.instance.Settings.controllerPilotMoveKey);
                     CoPilot.instance.Settings.controllerPilotDeadZone.Value = ImGuiExtension.IntSlider("Deadzone", CoPilot.instance.Settings.controllerPilotDeadZone);
                     CoPilot.instance.Settings.controllerPilotMouseRange.Value = ImGuiExtension.IntSlider("Mouse Range (0-100 x this)", CoPilot.instance.Settings.controllerPilotMouseRange);
+                    CoPilot.instance.Settings.controllerPilotDebug.Value = ImGuiExtension.Checkbox("Debug Input", CoPilot.instance.Settings.controllerPilotDebug.Value);
                 }
             }
             catch (Exception e)
