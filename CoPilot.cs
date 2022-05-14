@@ -320,7 +320,7 @@ namespace CoPilot
                 skills = localPlayer.GetComponent<Actor>().ActorSkills;
                 vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
                 playerPosition = localPlayer.Pos;
-                return;
+
                 if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
                     /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
                     GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
