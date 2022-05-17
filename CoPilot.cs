@@ -49,9 +49,8 @@ namespace CoPilot
         internal List<ActorSkill> skills = new List<ActorSkill>();
         private bool updateBladeBlast;
         private List<ActorVaalSkill> vaalSkills = new List<ActorVaalSkill>();
-        internal ControllerPilot controllerPilot = new ControllerPilot();
 
-        
+
 
         public override bool Initialise()
         {
@@ -63,7 +62,6 @@ namespace CoPilot
             Input.RegisterKey(Settings.autoPilotToggleKey.Value);
             Settings.autoPilotToggleKey.OnValueChanged += () => { Input.RegisterKey(Settings.autoPilotToggleKey.Value); };
             autoPilot.StartCoroutine();
-            controllerPilot.Start();
             return true;
         }
         
@@ -301,7 +299,6 @@ namespace CoPilot
                         Keyboard.KeyPress(Settings.autoPilotMoveKey);
                     }
                     autoPilot.Render();
-                    controllerPilot.Render();
                 }
                 catch (Exception e)
                 {
@@ -323,7 +320,7 @@ namespace CoPilot
                 skills = localPlayer.GetComponent<Actor>().ActorSkills;
                 vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
                 playerPosition = localPlayer.Pos;
-                return;
+
                 if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
                     /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
                     GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
