@@ -11,4 +11,4 @@ Add the Github URL(https://github.com/totalschaden/copilot) to the Auto Updater 
   
   
 
-![Picture](https://i.imgur.com/K6rfEwI.png)
+![Picture](https://i.imgur.com/ZF434hx.png)
