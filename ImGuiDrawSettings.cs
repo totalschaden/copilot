@@ -176,6 +176,7 @@ namespace CoPilot
                         Process.Start("https://www.amazon.de/hz/wishlist/ls/MZ543BDBC6PJ?ref_=wl_share");
                     if (ImGui.Button("Copy BTC Adress")) SetText("bc1qwjpdf9q3n94e88m3z398udjagach5u56txwpkh");
                     if (ImGui.Button("Copy ETH Adress")) SetText("0x78Af12D08B32f816dB9788C5Cf3122693143ed78");
+                    if (ImGui.Button("Copy LTC Adress")) SetText("LXCoWiLS5ZKEzHb7yTpJ7AxJrU9QLhCyHR");
                     CoPilot.instance.Settings.debugMode.Value = ImGuiExtension.Checkbox("Turn on Debug Mode",
                         CoPilot.instance.Settings.debugMode.Value);
                 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     internal static class SkillInfo
     {
         private static DateTime _lastUpdate = DateTime.MinValue;
@@ -58,6 +60,7 @@ namespace CoPilot
         internal static Skill sweep = new Skill();
         internal static Skill witherStep = new Skill();
         internal static Skill frenzy = new Skill();
+        internal static Skill summonSpiders = new Skill();
 
         internal static void ResetSkills()
         {
@@ -102,6 +105,7 @@ namespace CoPilot
             sweep = new Skill();
             witherStep = new Skill();
             frenzy = new Skill();
+            summonSpiders = new Skill();
         }
 
         public static void GetDeltaTime()
@@ -303,6 +307,10 @@ namespace CoPilot
                     case "corrosive_shroud":
                         plagueBearer.Id = skill.Id;
                         plagueBearer.BuffName = "corrosive_shroud";
+                        break;
+                    case "triggered_summon_spider":
+                        summonSpiders.Id = skill.Id;
+                        summonSpiders.BuffName = "summoned_spider_buff";
                         break;
                 }
             }

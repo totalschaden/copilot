@@ -10,10 +10,12 @@ using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared;
 using ExileCore.Shared.Enums;
+using Microsoft.VisualBasic.Logging;
 using SharpDX;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public class CoPilot : BaseSettingsPlugin<CoPilotSettings>
     {
         
@@ -257,7 +259,7 @@ namespace CoPilot
             var coroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
             Core.ParallelRunner.Run(coroutine);
             
-            //autoPilot.AreaChange();
+            autoPilot.AreaChange();
         }
         
         public override void DrawSettings()
@@ -311,6 +313,8 @@ namespace CoPilot
                     Quit();
                 }
 
+                if (GameController?.Game?.IngameState?.Data?.LocalPlayer == null || GameController?.IngameState?.IngameUi == null )
+                    return;
                 localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
                 player = localPlayer.GetComponent<Life>();
                 buffs = localPlayer.GetComponent<Buffs>().BuffsList;
@@ -320,7 +324,79 @@ namespace CoPilot
                 skills = localPlayer.GetComponent<Actor>().ActorSkills;
                 vaalSkills = localPlayer.GetComponent<Actor>().ActorVaalSkills;
                 playerPosition = localPlayer.Pos;
+                
+                #region Auto Map Tabber
 
+                try
+                {
+                    if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int)Settings.inputKeyPickIt.Value))
+                        if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber))
+                        {
+                            bool shouldBeClosed = GameController.IngameState.IngameUi.Atlas.IsVisible ||
+                                                  GameController.IngameState.IngameUi.AtlasTreePanel.IsVisible ||
+                                                  GameController.IngameState.IngameUi.StashElement.IsVisible ||
+                                                  GameController.IngameState.IngameUi.TradeWindow.IsVisible || 
+                                                  GameController.IngameState.IngameUi.ChallengesPanel.IsVisible ||
+                                                  GameController.IngameState.IngameUi.CraftBench.IsVisible ||
+                                                  GameController.IngameState.IngameUi.DelveWindow.IsVisible ||
+                                                  GameController.IngameState.IngameUi.ExpeditionWindow.IsVisible || 
+                                                  GameController.IngameState.IngameUi.BanditDialog.IsVisible ||
+                                                  GameController.IngameState.IngameUi.HarvestWindow.IsVisible ||
+                                                  GameController.IngameState.IngameUi.MetamorphWindow.IsVisible ||
+                                                  GameController.IngameState.IngameUi.SyndicatePanel.IsVisible || 
+                                                  GameController.IngameState.IngameUi.SyndicateTree.IsVisible ||
+                                                  GameController.IngameState.IngameUi.QuestRewardWindow.IsVisible ||
+                                                  GameController.IngameState.IngameUi.SynthesisWindow.IsVisible ||
+                                                  //GameController.IngameState.IngameUi.UltimatumPanel.IsVisible || 
+                                                  GameController.IngameState.IngameUi.MapDeviceWindow.IsVisible ||
+                                                  GameController.IngameState.IngameUi.SellWindow.IsVisible ||
+                                                  GameController.IngameState.IngameUi.SettingsPanel.IsVisible ||
+                                                  GameController.IngameState.IngameUi.InventoryPanel.IsVisible || 
+                                                  //GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
+                                                  GameController.IngameState.IngameUi.TreePanel.IsVisible;
+                           
+                            
+                            if (!GameController.IngameState.IngameUi.Map.SmallMiniMap.IsVisibleLocal && shouldBeClosed)
+                            {
+                                /*
+                                LogMessage("Atlas: " + GameController.IngameState.IngameUi.Atlas.IsVisible);
+                                LogMessage("AtlasTreePanel: " + GameController.IngameState.IngameUi.AtlasTreePanel.IsVisible);
+                                LogMessage("StashElement: " + GameController.IngameState.IngameUi.StashElement.IsVisible);
+                                LogMessage("TradeWindow: " + GameController.IngameState.IngameUi.TradeWindow.IsVisible);
+                                LogMessage("ChallengesPanel: " + GameController.IngameState.IngameUi.ChallengesPanel.IsVisible);
+                                LogMessage("CraftBench: " + GameController.IngameState.IngameUi.CraftBench.IsVisible);
+                                LogMessage("DelveWindow: " + GameController.IngameState.IngameUi.DelveWindow.IsVisible);
+                                LogMessage("ExpeditionWindow: " + GameController.IngameState.IngameUi.ExpeditionWindow.IsVisible);
+                                LogMessage("BanditDialog: " + GameController.IngameState.IngameUi.BanditDialog.IsVisible);
+                                LogMessage("HarvestWindow: " + GameController.IngameState.IngameUi.HarvestWindow.IsVisible);
+                                LogMessage("MetamorphWindow: " + GameController.IngameState.IngameUi.MetamorphWindow.IsVisible);
+                                LogMessage("SyndicatePanel: " + GameController.IngameState.IngameUi.SyndicatePanel.IsVisible);
+                                LogMessage("QuestRewardWindow: " + GameController.IngameState.IngameUi.QuestRewardWindow.IsVisible);
+                                LogMessage("SynthesisWindow: " + GameController.IngameState.IngameUi.SynthesisWindow.IsVisible);
+                                LogMessage("UltimatumPanel: " + GameController.IngameState.IngameUi.UltimatumPanel.IsVisible);
+                                LogMessage("MapDeviceWindow: " + GameController.IngameState.IngameUi.MapDeviceWindow.IsVisible);
+                                LogMessage("SellWindow: " + GameController.IngameState.IngameUi.SellWindow.IsVisible);
+                                LogMessage("SettingsPanel: " + GameController.IngameState.IngameUi.SettingsPanel.IsVisible);
+                                LogMessage("InventoryPanel: " + GameController.IngameState.IngameUi.InventoryPanel.IsVisible);
+                                LogMessage("TreePanel: " + GameController.IngameState.IngameUi.TreePanel.IsVisible);
+                                */
+                                Keyboard.KeyPress(Keys.Tab);
+                                SkillInfo.autoMapTabber.Cooldown = 250;
+                            }
+                            else if (GameController.IngameState.IngameUi.Map.SmallMiniMap.IsVisibleLocal && !shouldBeClosed)
+                            {
+                                //LogMessage("AN");
+                                Keyboard.KeyPress(Keys.Tab);
+                                SkillInfo.autoMapTabber.Cooldown = 250;
+                            }
+                        } 
+                }
+                catch (Exception e)
+                {
+                    LogError(e.ToString());
+                }
+
+                #endregion
                 if (GameController.Area.CurrentArea.IsHideout || GameController.Area.CurrentArea.IsTown ||
                     /*GameController.IngameState.IngameUi.StashElement.IsVisible ||*/ // 3.15 Null
                     GameController.IngameState.IngameUi.NpcDialog.IsVisible ||
@@ -373,24 +449,7 @@ namespace CoPilot
 
                 #endregion
 
-                #region Auto Map Tabber
-
-                try
-                {
-                    if (Settings.autoMapTabber && !Keyboard.IsKeyDown((int)Settings.inputKeyPickIt.Value))
-                        if (SkillInfo.ManageCooldown(SkillInfo.autoMapTabber) && GameController.IngameState.IngameUi
-                            .Map.SmallMiniMap.IsVisibleLocal)
-                        {
-                            Keyboard.KeyPress(Keys.Tab);
-                            SkillInfo.autoMapTabber.Cooldown = 250;
-                        }
-                }
-                catch (Exception e)
-                {
-                    LogError(e.ToString());
-                }
-
-                #endregion
+                
 
                 // Do not Cast anything while we are untouchable or Chat is Open
                 if (buffs.Exists(x => x.Name == "grace_period") ||
@@ -1043,6 +1102,23 @@ namespace CoPilot
                         {
                             LogError(e.ToString());
                         }
+
+                    #endregion
+
+                    #region Spider
+
+                    if (false)
+                    {
+                        if (skill.Id == SkillInfo.summonSpiders.Id && SkillInfo.ManageCooldown(SkillInfo.summonSpiders, skill))
+                        {
+                            var spidersSummoned = buffs.Count(x => x.Name == SkillInfo.summonSpiders.BuffName);
+                            
+                            if (spidersSummoned < 20 && GetCorpseWithin(30) >= 2)
+                            {
+                                
+                            } 
+                        }
+                    }
 
                     #endregion
 
