@@ -827,12 +827,9 @@ namespace CoPilot
                                 (skill.Id == SkillInfo.spiritOffering.Id || skill.Id == SkillInfo.boneOffering.Id ||
                                  skill.Id == SkillInfo.fleshOffering.Id))
                                 if (SkillInfo.ManageCooldown(SkillInfo.spiritOffering, skill))
-                                    if (!Settings.offeringsUseWhileCasting && !isCasting && !isAttacking ||
-                                        Settings.offeringsUseWhileCasting &&
-                                        MonsterCheck(Settings.offeringsTriggerRange, Settings.offeringsMinAny,
-                                            Settings.offeringsMinRare, Settings.offeringsMinUnique) &&
-                                        !buffs.Exists(x => x.Name == "active_offering") &&
-                                        CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
+                                    if (MonsterCheck(Settings.offeringsTriggerRange, Settings.offeringsMinAny,Settings.offeringsMinRare, Settings.offeringsMinUnique) 
+                                        &&!buffs.Exists(x => x.Name == "active_offering") 
+                                        && CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
