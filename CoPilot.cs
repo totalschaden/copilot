@@ -10,7 +10,6 @@ using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared;
 using ExileCore.Shared.Enums;
-using Microsoft.VisualBasic.Logging;
 using SharpDX;
 
 namespace CoPilot
@@ -23,7 +22,7 @@ namespace CoPilot
         private const int Delay = 45;
 
         private const int MouseAutoSnapRange = 250;
-        internal static CoPilot instance;
+        internal static CoPilot Instance;
         internal AutoPilot autoPilot = new AutoPilot();
         private readonly Summons summons = new Summons();
 
@@ -52,12 +51,14 @@ namespace CoPilot
         private bool updateBladeBlast;
         private List<ActorVaalSkill> vaalSkills = new List<ActorVaalSkill>();
 
+        private int cwdtCounter = 0;
+
 
 
         public override bool Initialise()
         {
-            if (instance == null)
-                instance = this;
+            if (Instance == null)
+                Instance = this;
             GameController.LeftPanel.WantUse(() => Settings.Enable);
             skillCoroutine = new Coroutine(WaitForSkillsAfterAreaChange(), this);
             Core.ParallelRunner.Run(skillCoroutine);
@@ -417,10 +418,8 @@ namespace CoPilot
                     corpses = GameController.Entities.Where(x =>
                         x.IsValid && !x.IsHidden && x.IsHostile && x.IsDead && x.IsTargetable &&
                         x.HasComponent<Monster>()).ToList();
-                
-                if (Settings.autoGolemEnabled) summons.UpdateSummons();
-                
-                
+
+
                 #region Auto Quit
 
                 if (Settings.autoQuitEnabled)
@@ -457,8 +456,93 @@ namespace CoPilot
                     !GameController.IsForeGroundCache)
                     return;
                 
-                foreach (var skill in skills.Where(skill => skill.IsOnSkillBar && skill.SkillSlotIndex >= 1 && skill.SkillSlotIndex != 2 && skill.CanBeUsed))
+                foreach (var skill in skills.Where(skill => skill.IsOnSkillBar && skill.SkillSlotIndex >= 1 && skill.SkillSlotIndex != 2 && skill.CanBeUsed || SkillInfo.summonSkeletons.Id == skill.Id))
                 {
+                    #region CWDT
+
+                    if (Settings.cwdtEnabled)
+                    {
+                        try
+                        {
+                            if (SkillInfo.summonSkeletons.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.wardFlask))
+                            {
+                                // Auto Ward Flask
+                                var wardFlask = GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.InventoryPosition.X == 0)?.Item;
+                                if (wardFlask != null && !buffs.Exists(x => x.Name == "flask_bonus_ward_not_break") &&
+                                    wardFlask.GetComponent<Charges>()?.NumCharges >= wardFlask.GetComponent<Charges>()?.ChargesMax)
+                                {
+                                    Keyboard.KeyPress(Keys.D1);
+                                    SkillInfo.wardFlask.Cooldown = 100;
+                                }
+                                // Auto Loop Start
+                                if (buffs.Exists(x => x.Name == "flask_bonus_ward_not_break"))
+                                {
+                                    if (!skill.IsOnCooldown)
+                                    {
+                                        cwdtCounter++;
+                                        if (cwdtCounter >= 3)
+                                        {
+                                            Keyboard.KeyPress(Keys.X);
+                                            SkillInfo.wardFlask.Cooldown = 160;
+                                            cwdtCounter = 0;
+                                        }
+                                    }
+                                    else if (skill.IsOnCooldown)
+                                        cwdtCounter = 0;
+                                    if ((bool) GameController.Game.IngameState.ServerData.PlayerInventories
+                                                 .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Weapon)
+                                                 ?.Inventory.Items.FirstOrDefault()?.Metadata.Contains("Wand"))
+                                    {
+                                        Keyboard.KeyPress(Keys.X);
+                                        SkillInfo.wardFlask.Cooldown = 500;
+                                    }
+                                }
+                            }
+
+                            if (SkillInfo.righteousFire.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.righteousFire, skill))
+                            {
+                                if (buffs.Exists(x => x.Name == "flask_bonus_ward_not_break") && !buffs.Exists(x => x.Name == SkillInfo.righteousFire.BuffName))
+                                {
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    SkillInfo.righteousFire.Cooldown = 500;
+                                }
+                            }
+                            // TODO
+                            // Add something like Auto Aura later on, keeping in CWDT for now
+                            if (SkillInfo.auraPurityOfElements.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraPurityOfElements, skill))
+                            {
+                                if (!buffs.Exists(x => x.Name == SkillInfo.auraPurityOfElements.BuffName))
+                                {
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    SkillInfo.auraPurityOfElements.Cooldown = 500;
+                                }
+                            }
+                            if (SkillInfo.auraHatred.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraHatred, skill))
+                            {
+                                if (!buffs.Exists(x => x.Name == SkillInfo.auraHatred.BuffName))
+                                {
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    SkillInfo.auraHatred.Cooldown = 500;
+                                }
+                            }
+                            if (SkillInfo.auraZealotry.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraZealotry, skill))
+                            {
+                                if (!buffs.Exists(x => x.Name == SkillInfo.auraZealotry.BuffName))
+                                {
+                                    Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                    SkillInfo.auraZealotry.Cooldown = 500;
+                                }
+                            }
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+                    }
+
+                    #endregion
+                    
                     #region Ranged Trigger -> Mirage Archer / Frenzy
 
                     if (Settings.rangedTriggerEnabled)
@@ -483,9 +567,9 @@ namespace CoPilot
                                 }
                                 else if (skill.Id == SkillInfo.frenzy.Id && SkillInfo.ManageCooldown(SkillInfo.frenzy, skill) &&
                                          (!Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
-                                              x.Name == "frenzy_charge" && x.Timer > 3 && x.Charges == maxFrenzyCharges) ||
+                                              x.Name == "frenzy_charge" && x.Timer > 3 && x.BuffCharges == maxFrenzyCharges) ||
                                           Settings.rangedTriggerPowerCharge && !buffs.Exists(x =>
-                                              x.Name == "power_charge" && x.Timer > 3 && x.Charges == maxPowerCharges)))
+                                              x.Name == "power_charge" && x.Timer > 3 && x.BuffCharges == maxPowerCharges)))
 
                                 {
                                     Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
@@ -610,8 +694,8 @@ namespace CoPilot
                                 {
                                     skill.Stats.TryGetValue(GameStat.BerserkMinimumRage, out var minRage);
                                     if (buffs.Exists(x =>
-                                            x.Name == "rage" && x.Charges >= minRage &&
-                                            x.Charges >= Settings.berserkMinRage) &&
+                                            x.Name == "rage" && x.BuffCharges >= minRage &&
+                                            x.BuffCharges >= Settings.berserkMinRage) &&
                                         MonsterCheck(Settings.berserkRange, Settings.berserkMinAny,
                                             Settings.berserkMinRare, Settings.berserkMinUnique))
                                     {
@@ -658,53 +742,39 @@ namespace CoPilot
                             if (SkillInfo.ManageCooldown(SkillInfo.autoSummon) && !isCasting && !isAttacking &&
                                 GetMonsterWithin(Settings.autoGolemAvoidRange) == 0)
                             {
-                                if (Settings.autoGolemEnabled &&
-                                    (summons.chaosElemental < Settings.autoGolemChaosMax ||
-                                     summons.fireElemental < Settings.autoGolemFireMax ||
-                                     summons.iceElemental < Settings.autoGolemIceMax ||
-                                     summons.lightningGolem < Settings.autoGolemLightningMax ||
-                                     summons.rockGolem < Settings.autoGolemRockMax ||
-                                     summons.boneGolem < Settings.autoBoneMax ||
-                                     summons.dropBearUniqueSummoned < Settings.autoGolemDropBearMax))
+                                if (Settings.autoGolemEnabled)
                                 {
-                                    if (skill.Id == SkillInfo.chaosGolem.Id &&
-                                        summons.chaosElemental < Settings.autoGolemChaosMax)
+                                    if (skill.Id == SkillInfo.chaosGolem.Id && skill.DeployedObjects.Count < Settings.autoGolemChaosMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
-                                    else if (skill.Id == SkillInfo.flameGolem.Id &&
-                                             summons.fireElemental < Settings.autoGolemFireMax)
+                                    else if (skill.Id == SkillInfo.flameGolem.Id && skill.DeployedObjects.Count < Settings.autoGolemFireMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
-                                    else if (skill.Id == SkillInfo.iceGolem.Id &&
-                                             summons.iceElemental < Settings.autoGolemIceMax)
+                                    else if (skill.Id == SkillInfo.iceGolem.Id && skill.DeployedObjects.Count < Settings.autoGolemIceMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
-                                    else if (skill.Id == SkillInfo.lightningGolem.Id &&
-                                             summons.lightningGolem < Settings.autoGolemLightningMax)
+                                    else if (skill.Id == SkillInfo.lightningGolem.Id && skill.DeployedObjects.Count < Settings.autoGolemLightningMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
-                                    else if (skill.Id == SkillInfo.stoneGolem.Id &&
-                                             summons.rockGolem < Settings.autoGolemRockMax)
+                                    else if (skill.Id == SkillInfo.stoneGolem.Id && skill.DeployedObjects.Count < Settings.autoGolemRockMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
-                                    else if (skill.Id == SkillInfo.carrionGolem.Id &&
-                                             summons.boneGolem < Settings.autoBoneMax)
+                                    else if (skill.Id == SkillInfo.carrionGolem.Id && skill.DeployedObjects.Count < Settings.autoBoneMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
                                     }
-                                    else if (skill.Id == SkillInfo.ursaGolem.Id && summons.dropBearUniqueSummoned <
-                                        Settings.autoGolemDropBearMax)
+                                    else if (skill.Id == SkillInfo.ursaGolem.Id && skill.DeployedObjects.Count < Settings.autoGolemDropBearMax)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
@@ -715,7 +785,7 @@ namespace CoPilot
                                 {
                                     if (!skill.Stats.TryGetValue(GameStat.NumberOfZombiesAllowed, out var maxZombies))
                                         maxZombies = 3;
-                                    if (summons.zombies < maxZombies &&
+                                    if (skill.DeployedObjects.Count < maxZombies &&
                                         CountCorpsesAroundMouse(MouseAutoSnapRange) > 0)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
@@ -729,7 +799,7 @@ namespace CoPilot
                                     if (!skill.Stats.TryGetValue(GameStat.NumberOfRelicsAllowed, out var maxRelicts))
                                         maxRelicts = 1;
                                     
-                                    if (summons.holyRelict < maxRelicts)
+                                    if (skill.DeployedObjects.Count < maxRelicts)
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                         SkillInfo.autoSummon.Cooldown = 2000;
@@ -774,11 +844,11 @@ namespace CoPilot
                                  skill.Id == SkillInfo.bladeFlurry.Id))
                                 if (buffs.Exists(b =>
                                     b.Name == SkillInfo.divineIre.BuffName &&
-                                    b.Charges >= Settings.divineIreStacks.Value ||
+                                    b.BuffCharges >= Settings.divineIreStacks.Value ||
                                     b.Name == SkillInfo.bladeFlurry.BuffName &&
-                                    b.Charges >= Settings.divineIreStacks ||
+                                    b.BuffCharges >= Settings.divineIreStacks ||
                                     b.Name == SkillInfo.scourgeArror.BuffName &&
-                                    b.Charges >= Settings.divineIreStacks))
+                                    b.BuffCharges >= Settings.divineIreStacks))
                                 {
                                     if (Settings.divineIreWaitForInfused)
                                         // Get delay here at some point ?
@@ -846,9 +916,8 @@ namespace CoPilot
                         {
                             if (SkillInfo.ManageCooldown(SkillInfo.vaalSkill, skill))
                                 if (MonsterCheck(Settings.anyVaalTriggerRange, Settings.anyVaalMinAny,
-                                    Settings.anyVaalMinRare, Settings.anyVaalMinUnique) && vaalSkills.Exists(x =>
-                                    x.VaalSkillInternalName == skill.InternalName &&
-                                    x.CurrVaalSouls >= x.VaalSoulsPerUse))
+                                    Settings.anyVaalMinRare, Settings.anyVaalMinUnique) 
+                                    && vaalSkills.Exists(x => x.VaalSkillInternalName == skill.InternalName && x.CurrVaalSouls >= x.VaalMaxSouls))
                                     if (player.HPPercentage<= (float)Settings.anyVaalHpp / 100 ||
                                         player.MaxES > 0 && player.ESPercentage < (float)Settings.anyVaalEsp / 100 || 
                                         player.MPPercentage < (float)Settings.anyVaalMpp / 100)
@@ -1036,7 +1105,7 @@ namespace CoPilot
                                     out var unleashMaxSeals);
                                 if (SkillInfo.ManageCooldown(SkillInfo.bladeVortex, skill))
                                     if (GetMonsterWithin(Settings.bladeVortexRange) > 0 && !buffs.Exists(x =>
-                                        x.Name == "blade_vortex_counter" && x.Charges >= Settings.bladeVortexCount))
+                                        x.Name == "blade_vortex_counter" && x.BuffCharges >= Settings.bladeVortexCount))
                                     {
                                         if (Settings.debugMode)
                                         {
@@ -1102,6 +1171,7 @@ namespace CoPilot
 
                     #endregion
 
+                    /*
                     #region Spider
 
                     if (false)
@@ -1116,9 +1186,10 @@ namespace CoPilot
                             } 
                         }
                     }
+                    
 
                     #endregion
-
+                    */
                     #region Detonate Mines ( to be done )
 /*
                     if (Settings.minesEnabled)
@@ -1151,7 +1222,7 @@ namespace CoPilot
                         if ((DateTime.Now - lastDelveFlare).TotalMilliseconds > 1000 &&
                             (player.ESPercentage < (float)Settings.delveFlareEspBelow / 100 ||
                              player.HPPercentage < (float)Settings.delveFlareHppBelow / 100) && buffs.Exists(x =>
-                                x.Name == "delve_degen_buff" && x.Charges >= Settings.delveFlareDebuffStacks))
+                                x.Name == "delve_degen_buff" && x.BuffCharges >= Settings.delveFlareDebuffStacks))
                         {
                             Keyboard.KeyPress(Settings.delveFlareKey.Value);
                             lastDelveFlare = DateTime.Now;

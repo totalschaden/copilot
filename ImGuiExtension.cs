@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -12,6 +13,7 @@ using ImGuiVector4 = System.Numerics.Vector4;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public class ImGuiExtension
     {
         /*

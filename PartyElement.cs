@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ExileCore.PoEMemory;
 using ExileCore.PoEMemory.MemoryObjects;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public static class PartyElements
     {
         public static List<string> ListOfPlayersInParty(int child)
@@ -14,7 +16,7 @@ namespace CoPilot
 
             try
             {
-                var baseWindow = CoPilot.instance.GameController.IngameState.IngameUi.Children[child];
+                var baseWindow = CoPilot.Instance.GameController.IngameState.IngameUi.Children[child];
                 if (baseWindow != null)
                 {
                     var partyList = baseWindow.Children[0]?.Children[0]?.Children;
@@ -36,7 +38,7 @@ namespace CoPilot
 
             try
             {
-                var baseWindow = CoPilot.instance.GameController?.IngameState?.IngameUi?.Children?[19];
+                var baseWindow = CoPilot.Instance.GameController?.IngameState?.IngameUi?.Children?[19];
                 var partElementList = baseWindow?.Children?[0]?.Children?[0]?.Children;
                 if (partElementList != null)
                 {
@@ -61,13 +63,14 @@ namespace CoPilot
             }
             catch (Exception e)
             {
-                CoPilot.instance.LogError("Character: " + e, 5);
+                CoPilot.Instance.LogError("Character: " + e, 5);
             }
 
             return playersInParty;
         }
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public class PartyElementWindow
     {
         public string PlayerName { get; set; } = string.Empty;

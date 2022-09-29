@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ExileCore.Shared;
@@ -7,6 +8,7 @@ using SharpDX;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public static class Mouse
     {
         public const int MouseeventfMove = 0x0001;
@@ -70,7 +72,7 @@ namespace CoPilot
         public static IEnumerator SetCursorPosHuman(Vector2 targetPos, bool limited = true)
         {
             // Keep Curser Away from Screen Edges to prevent UI Interaction.
-            var windowRect = CoPilot.instance.GameController.Window.GetWindowRectangle();
+            var windowRect = CoPilot.Instance.GameController.Window.GetWindowRectangle();
             var edgeBoundsX = windowRect.Size.Width / 4;
             var edgeBoundsY = windowRect.Size.Height / 4;
 
@@ -83,12 +85,12 @@ namespace CoPilot
             }
             
             
-            var step = (float)Math.Sqrt(Vector2.Distance(CoPilot.instance.GetMousePosition(), targetPos)) * speedMouse / 20;
+            var step = (float)Math.Sqrt(Vector2.Distance(CoPilot.Instance.GetMousePosition(), targetPos)) * speedMouse / 20;
 
             if (step > 6)
                 for (var i = 0; i < step; i++)
                 {
-                    var vector2 = Vector2.SmoothStep(CoPilot.instance.GetMousePosition(), targetPos, i / step);
+                    var vector2 = Vector2.SmoothStep(CoPilot.Instance.GetMousePosition(), targetPos, i / step);
                     SetCursorPos((int)vector2.X, (int)vector2.Y);
                     yield return new WaitTime(5);
                 }
@@ -98,9 +100,9 @@ namespace CoPilot
         public static IEnumerator SetCursorPosAndLeftClickHuman(Vector2 coords, int extraDelay)
         {
             SetCursorPos(coords);
-            yield return new WaitTime(CoPilot.instance.Settings.autoPilotInputFrequency + extraDelay);
+            yield return new WaitTime(CoPilot.Instance.Settings.autoPilotInputFrequency + extraDelay);
             LeftMouseDown();
-            yield return new WaitTime(CoPilot.instance.Settings.autoPilotInputFrequency + extraDelay);
+            yield return new WaitTime(CoPilot.Instance.Settings.autoPilotInputFrequency + extraDelay);
             LeftMouseUp();
             yield return new WaitTime(100);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ExileCore;
@@ -7,6 +8,7 @@ using ExileCore.Shared;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public static class Keyboard
     {
         private const string CoroutineKeyPress = "KeyPress";
@@ -42,8 +44,8 @@ namespace CoPilot
         public static void KeyPress(Keys key, bool anyDelay = true)
         {
             if (anyDelay)
-                CoPilot.instance.lastTimeAny = DateTime.Now;
-            _keyboardCoroutine = new Coroutine(KeyPressRoutine(key), CoPilot.instance, CoroutineKeyPress);
+                CoPilot.Instance.lastTimeAny = DateTime.Now;
+            _keyboardCoroutine = new Coroutine(KeyPressRoutine(key), CoPilot.Instance, CoroutineKeyPress);
             Core.ParallelRunner.Run(_keyboardCoroutine);
         }
 

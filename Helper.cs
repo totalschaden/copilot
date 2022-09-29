@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using SharpDX;
 using ExileCore.PoEMemory.MemoryObjects;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public static class Helper
     {
         internal static Random random = new Random();
-        private static Camera Camera => CoPilot.instance.GameController.Game.IngameState.Camera;
+        private static Camera Camera => CoPilot.Instance.GameController.Game.IngameState.Camera;
         
         internal static float MoveTowards(float cur, float tar, float max)
         {
@@ -17,7 +19,7 @@ namespace CoPilot
         }
         internal static Vector2 WorldToValidScreenPosition(Vector3 worldPos)
         {
-            var windowRect = CoPilot.instance.GameController.Window.GetWindowRectangle();
+            var windowRect = CoPilot.Instance.GameController.Window.GetWindowRectangle();
             var screenPos = Camera.WorldToScreen(worldPos);
             var result = screenPos + windowRect.Location;
 

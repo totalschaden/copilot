@@ -61,6 +61,12 @@ namespace CoPilot
         internal static Skill witherStep = new Skill();
         internal static Skill frenzy = new Skill();
         internal static Skill summonSpiders = new Skill();
+        internal static Skill wardFlask = new Skill();
+        internal static Skill summonSkeletons = new Skill();
+        internal static Skill righteousFire = new Skill();
+        internal static Skill auraPurityOfElements = new Skill();
+        internal static Skill auraHatred = new Skill();
+        internal static Skill auraZealotry = new Skill();
 
         internal static void ResetSkills()
         {
@@ -106,11 +112,18 @@ namespace CoPilot
             witherStep = new Skill();
             frenzy = new Skill();
             summonSpiders = new Skill();
+            wardFlask = new Skill();
+            summonSkeletons = new Skill();
+            righteousFire = new Skill();
+            auraPurityOfElements = new Skill();
+            auraHatred = new Skill();
+            auraZealotry = new Skill();
         }
 
         public static void GetDeltaTime()
         {
             var now = DateTime.Now.Ticks;
+            // ReSharper disable once PossibleLossOfFraction
             float dT = (now - _lastTime) / 10000;
             _lastTime = now;
             _deltaTime = dT;
@@ -125,19 +138,19 @@ namespace CoPilot
             }
 
             if (actorSkill.RemainingUses <= 0 && actorSkill.IsOnCooldown) return false;
-            if (!CoPilot.instance.Gcd())
+            if (!CoPilot.Instance.Gcd())
                 return false;
 
             if (!actorSkill.Stats.TryGetValue(GameStat.ManaCost, out var manaCost))
                 manaCost = 0;
 
-            if (CoPilot.instance.player.CurMana >= manaCost)
+            if (CoPilot.Instance.player.CurMana >= manaCost)
                 return true;
-            if (!CoPilot.instance.localPlayer.Stats.TryGetValue(GameStat.VirtualEnergyShieldProtectsMana,
+            if (!CoPilot.Instance.localPlayer.Stats.TryGetValue(GameStat.VirtualEnergyShieldProtectsMana,
                 out var hasEldritchBattery))
                 hasEldritchBattery = 0;
 
-            return hasEldritchBattery > 0 && CoPilot.instance.player.CurES > manaCost;
+            return hasEldritchBattery > 0 && CoPilot.Instance.player.CurES > manaCost;
         }
 
         internal static bool ManageCooldown(Skill skill)
@@ -160,10 +173,8 @@ namespace CoPilot
             if (!force && (DateTime.Now - _lastUpdate).TotalMilliseconds < 10000)
                 return;
             _lastUpdate = DateTime.Now;
-            foreach (var skill in CoPilot.instance.skills)
+            foreach (var skill in CoPilot.Instance.skills)
             {
-                if (!skill.IsOnSkillBar)
-                    continue;
                 switch (skill.InternalName)
                 {
                     case "enduring_cry":
@@ -311,6 +322,25 @@ namespace CoPilot
                     case "triggered_summon_spider":
                         summonSpiders.Id = skill.Id;
                         summonSpiders.BuffName = "summoned_spider_buff";
+                        break;
+                    case "summon_skeletons":
+                        summonSkeletons.Id = skill.Id;
+                        break;
+                    case "righteous_fire":
+                        righteousFire.Id = skill.Id;
+                        righteousFire.BuffName = "righteous_fire_aura";
+                        break;
+                    case "purity":
+                        auraPurityOfElements.Id = skill.Id;
+                        auraPurityOfElements.BuffName = "player_aura_resists";
+                        break;
+                    case "hatred":
+                        auraHatred.Id = skill.Id;
+                        auraHatred.BuffName = "player_aura_cold_damage";
+                        break;
+                    case "spell_damage_aura":
+                        auraZealotry.Id = skill.Id;
+                        auraZealotry.BuffName = "player_aura_spell_damage";
                         break;
                 }
             }

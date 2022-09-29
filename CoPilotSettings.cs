@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows.Forms;
 using ExileCore.Shared.Interfaces;
 using ExileCore.Shared.Nodes;
 // ReSharper disable FieldCanBeMadeReadOnly.Global
@@ -6,6 +7,7 @@ using ExileCore.Shared.Nodes;
 
 namespace CoPilot
 {
+    [SuppressMessage("Interoperability", "CA1416:Plattformkompatibilität überprüfen")]
     public class CoPilotSettings : ISettings
     {
         #region Auto Map Tabber
@@ -56,6 +58,13 @@ namespace CoPilot
         public RangeNode<int> espQuit = new RangeNode<int>(0, 0, 100);
         public ToggleNode autoQuitGuardian = new ToggleNode(false);
         public RangeNode<int> guardianHpp = new RangeNode<int>(35, 0, 100);
+
+        #endregion
+
+        #region CWDT
+
+        public ToggleNode cwdtEnabled = new ToggleNode(false);
+        
 
         #endregion
 
