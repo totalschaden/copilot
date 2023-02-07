@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows.Forms;
+using CoPilot.Properties;
+using ExileCore.PoEMemory.MemoryObjects;
 using ImGuiNET;
 using SharpDX;
 using Vector2 = System.Numerics.Vector2;
@@ -33,9 +36,8 @@ namespace CoPilot
         {
             var green = new Vector4(0.102f, 0.388f, 0.106f, 1.000f);
             var red = new Vector4(0.388f, 0.102f, 0.102f, 1.000f);
-            
 
-            var collapsingHeaderFlags = ImGuiTreeNodeFlags.CollapsingHeader;
+        var collapsingHeaderFlags = ImGuiTreeNodeFlags.CollapsingHeader;
             ImGui.Text("Plugin by Totalschaden. https://github.com/totalschaden/copilot");
 
             try
@@ -463,6 +465,49 @@ namespace CoPilot
                         CoPilot.Instance.Settings.moltenShellMinRare);
                     CoPilot.Instance.Settings.moltenShellMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
                         CoPilot.Instance.Settings.moltenShellMinUnique);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.Instance.LogError(e.ToString());
+            }
+            
+            
+            try
+            {
+                // Aura Blessing
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.Instance.Settings.auraBlessingEnabled ? green : red);
+                ImGui.PushID(9);
+                if (ImGui.TreeNodeEx("Aura Blessing", collapsingHeaderFlags))
+                {
+                    CoPilot.Instance.Settings.auraBlessingEnabled.Value = ImGuiExtension.Checkbox("Enabled",
+                        CoPilot.Instance.Settings.auraBlessingEnabled.Value);
+                    var auraDic = new Dictionary<string, string>();
+                    auraDic.Add("Malevolence", "damage_over_time_aura");
+                    auraDic.Add("Anger", "anger");
+                    auraDic.Add("Determination", "determination");
+                    auraDic.Add("Grace", "grace");
+                    auraDic.Add("Haste", "haste");
+                    auraDic.Add("Hatred", "hatred");
+                    auraDic.Add("Pride", "physical_damage_aura");
+                    auraDic.Add("Wrath", "wrath");
+                    auraDic.Add("Zealotry", "spell_damage_aura");
+                    var auraList = new List<string>(auraDic.Keys);
+                    CoPilot.Instance.Settings.auraBlessingName.Value = 
+                        ImGuiExtension.ComboBox("Blessing Aura Skill", CoPilot.Instance.Settings.auraBlessingName, auraList);
+                    CoPilot.Instance.Settings.auraBlessing.Value = auraDic[CoPilot.Instance.Settings.auraBlessingName];
+                    CoPilot.Instance.Settings.auraBlessingHpp.Value =
+                        ImGuiExtension.IntSlider("HP%", CoPilot.Instance.Settings.auraBlessingHpp);
+                    CoPilot.Instance.Settings.auraBlessingEsp.Value =
+                        ImGuiExtension.IntSlider("ES%", CoPilot.Instance.Settings.auraBlessingEsp);
+                    CoPilot.Instance.Settings.auraBlessingRange.Value =
+                        ImGuiExtension.IntSlider("Range", CoPilot.Instance.Settings.auraBlessingRange);
+                    CoPilot.Instance.Settings.auraBlessingMinAny.Value =
+                        ImGuiExtension.IntSlider("min Enemy Any", CoPilot.Instance.Settings.auraBlessingMinAny);
+                    CoPilot.Instance.Settings.auraBlessingMinRare.Value = ImGuiExtension.IntSlider("min Enemy Rare",
+                        CoPilot.Instance.Settings.auraBlessingMinRare);
+                    CoPilot.Instance.Settings.auraBlessingMinUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
+                        CoPilot.Instance.Settings.auraBlessingMinUnique);
                 }
             }
             catch (Exception e)
