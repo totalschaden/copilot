@@ -342,7 +342,6 @@ namespace CoPilot
                                                   GameController.IngameState.IngameUi.DelveWindow.IsVisible ||
                                                   GameController.IngameState.IngameUi.ExpeditionWindow.IsVisible || 
                                                   GameController.IngameState.IngameUi.BanditDialog.IsVisible ||
-                                                  GameController.IngameState.IngameUi.HarvestWindow.IsVisible ||
                                                   GameController.IngameState.IngameUi.MetamorphWindow.IsVisible ||
                                                   GameController.IngameState.IngameUi.SyndicatePanel.IsVisible || 
                                                   GameController.IngameState.IngameUi.SyndicateTree.IsVisible ||
@@ -411,7 +410,7 @@ namespace CoPilot
                         GameController.Game.IngameState.Camera.WorldToScreen(x.Pos))).ToList();
                 if (Settings.debugMode)
                 {
-                    Graphics.DrawText("Enemys: " + enemys.Count, new Vector2(100, 120), Color.White);
+                    Graphics.DrawText("Enemys: " + enemys.Count, new System.Numerics.Vector2(100, 120), Color.White);
                 }
                 
                 if (Settings.offeringsEnabled || Settings.autoZombieEnabled || Settings.generalCryEnabled)

@@ -575,10 +575,10 @@ namespace CoPilot
 				{
 					var targetDist = Vector3.Distance(CoPilot.Instance.playerPosition, lastTargetPosition);
 					CoPilot.Instance.Graphics.DrawText(
-						$"Follow Enabled: {CoPilot.Instance.Settings.autoPilotEnabled.Value}", new Vector2(500, 120));
+						$"Follow Enabled: {CoPilot.Instance.Settings.autoPilotEnabled.Value}", new System.Numerics.Vector2(500, 120));
 					CoPilot.Instance.Graphics.DrawText(
 						$"Task Count: {taskCount:D} Next WP Distance: {dist:F} Target Distance: {targetDist:F}",
-						new Vector2(500, 140));
+						new System.Numerics.Vector2(500, 140));
 					
 				}
 			}
@@ -587,10 +587,10 @@ namespace CoPilot
 				// ignored
 			}
 
-			CoPilot.Instance.Graphics.DrawText("AutoPilot: Active", new Vector2(350, 120));
-			CoPilot.Instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new Vector2(350, 140));
-			CoPilot.Instance.Graphics.DrawText("Leader: " + (followTarget != null ? "Found" : "Null"), new Vector2(350, 160));
-			CoPilot.Instance.Graphics.DrawLine(new Vector2(490, 120), new Vector2(490,180), 1, Color.White);
+			CoPilot.Instance.Graphics.DrawText("AutoPilot: Active", new System.Numerics.Vector2(350, 120));
+			CoPilot.Instance.Graphics.DrawText("Coroutine: " + (autoPilotCoroutine.Running ? "Active" : "Dead"), new System.Numerics.Vector2(350, 140));
+			CoPilot.Instance.Graphics.DrawText("Leader: " + (followTarget != null ? "Found" : "Null"), new System.Numerics.Vector2(350, 160));
+			CoPilot.Instance.Graphics.DrawLine(new System.Numerics.Vector2(490, 120), new System.Numerics.Vector2(490,180), 1, Color.White);
 		}
 
 
