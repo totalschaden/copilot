@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
+using ExileCore.PoEMemory.FilesInMemory.Atlas;
 using ExileCore.Shared.Interfaces;
 using ExileCore.Shared.Nodes;
 // ReSharper disable FieldCanBeMadeReadOnly.Global
@@ -105,6 +106,20 @@ namespace CoPilot
         public RangeNode<int> moltenShellMinAny = new RangeNode<int>(1, 0, 50);
         public RangeNode<int> moltenShellMinRare = new RangeNode<int>(0, 0, 50);
         public RangeNode<int> moltenShellMinUnique = new RangeNode<int>(0, 0, 50);
+
+        #endregion
+
+        #region Aura Blessing
+
+        public ToggleNode auraBlessingEnabled = new ToggleNode(false);
+        public RangeNode<int> auraBlessingRange = new RangeNode<int>(550, 100, 1000);
+        public RangeNode<int> auraBlessingHpp = new RangeNode<int>(100, 0, 100);
+        public RangeNode<int> auraBlessingEsp = new RangeNode<int>(0, 0, 100);
+        public RangeNode<int> auraBlessingMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> auraBlessingMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> auraBlessingMinUnique = new RangeNode<int>(0, 0, 50);
+        public TextNode auraBlessingName = new TextNode("");
+        public TextNode auraBlessing = new TextNode("");
 
         #endregion
 

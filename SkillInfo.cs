@@ -67,6 +67,16 @@ namespace CoPilot
         internal static Skill auraPurityOfElements = new Skill();
         internal static Skill auraHatred = new Skill();
         internal static Skill auraZealotry = new Skill();
+        internal static Skill auraMalevolence = new Skill();
+        internal static Skill auraAnger = new Skill();
+        internal static Skill auraDetermination = new Skill();
+        internal static Skill auraGrace = new Skill();
+        internal static Skill auraHaste = new Skill();
+        internal static Skill auraPride = new Skill();
+        internal static Skill auraWrath = new Skill();
+        internal static Skill blessing = new Skill();
+        internal static int isBlessing;
+
 
         internal static void ResetSkills()
         {
@@ -118,6 +128,15 @@ namespace CoPilot
             auraPurityOfElements = new Skill();
             auraHatred = new Skill();
             auraZealotry = new Skill();
+            auraMalevolence = new Skill();
+            auraAnger = new Skill();
+            auraDetermination = new Skill();
+            auraGrace = new Skill();
+            auraHaste = new Skill();
+            auraPride = new Skill();
+            auraWrath = new Skill();
+            blessing = new Skill();
+
         }
 
         public static void GetDeltaTime()
@@ -337,10 +356,92 @@ namespace CoPilot
                     case "hatred":
                         auraHatred.Id = skill.Id;
                         auraHatred.BuffName = "player_aura_cold_damage";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {   
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_cold_damage";
+                            auraHatred.IsBlessing = 1;
+                        }
                         break;
                     case "spell_damage_aura":
                         auraZealotry.Id = skill.Id;
                         auraZealotry.BuffName = "player_aura_spell_damage";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_spell_damage";
+                            auraZealotry.IsBlessing = 1;
+                        }
+                        break;
+                    case "damage_over_time_aura":
+                        auraMalevolence.Id = skill.Id;
+                        auraMalevolence.BuffName = "player_aura_damage_over_time";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_damage_over_time";
+                            auraMalevolence.IsBlessing = 1;
+                        }
+                        break;
+                    case "anger":
+                        auraAnger.Id = skill.Id;
+                        auraAnger.BuffName = "player_aura_fire_damage";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_fire_damage";
+                            auraAnger.IsBlessing = 1;
+                        }
+                        break;
+                    case "determination":
+                        auraDetermination.Id = skill.Id;
+                        auraDetermination.BuffName = "player_aura_armour";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_armour";
+                            auraDetermination.IsBlessing = 1;
+                        }
+                        break;
+                    case "grace":
+                        auraGrace.Id = skill.Id;
+                        auraGrace.BuffName = "player_aura_evasion";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_evasion";
+                            auraGrace.IsBlessing = 1;
+                        }
+                        break;
+                    case "haste":
+                        auraHaste.Id = skill.Id;
+                        auraHaste.BuffName = "player_aura_speed";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_speed";
+                            auraHaste.IsBlessing = 1;
+                        }
+                        break;
+                    case "physical_damage_aura":
+                        auraPride.Id = skill.Id;
+                        auraPride.BuffName = "player_physical_damage_aura";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_physical_damage_aura";
+                            auraPride.IsBlessing = 1;
+                        }
+                        break;
+                    case "wrath":
+                        auraWrath.Id = skill.Id;
+                        auraWrath.BuffName = "player_aura_lightning_damage";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "player_aura_lightning_damage";
+                            auraWrath.IsBlessing = 1;
+                        }
                         break;
                 }
             }
