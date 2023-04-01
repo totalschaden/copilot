@@ -21,6 +21,7 @@
     <DebugType>none</DebugType>
     <OutputPath>..\..\Compiled\CoPilot\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
