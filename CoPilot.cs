@@ -517,7 +517,7 @@ namespace CoPilot
                                     SkillInfo.auraPurityOfElements.Cooldown = 500;
                                 }
                             }
-                            if (SkillInfo.auraHatred.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraHatred, skill))
+                            if (SkillInfo.auraHatred.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraHatred, skill) && SkillInfo.auraHatred.IsBlessing == 0)
                             {
                                 if (!buffs.Exists(x => x.Name == SkillInfo.auraHatred.BuffName))
                                 {
@@ -525,7 +525,7 @@ namespace CoPilot
                                     SkillInfo.auraHatred.Cooldown = 500;
                                 }
                             }
-                            if (SkillInfo.auraZealotry.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraZealotry, skill))
+                            if (SkillInfo.auraZealotry.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.auraZealotry, skill) && SkillInfo.auraZealotry.IsBlessing == 0)
                             {
                                 if (!buffs.Exists(x => x.Name == SkillInfo.auraZealotry.BuffName))
                                 {
@@ -676,6 +676,30 @@ namespace CoPilot
                                          player.MaxES > 0 && player.ESPercentage <
                                          (float)Settings.moltenShellEsp / 100))
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Aura Blessing
+
+                    if (Settings.auraBlessingEnabled)
+                        try
+                        {
+                            if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out int isBlessing))
+                                if (skill.InternalName == Settings.auraBlessing.Value)
+                                    if (SkillInfo.ManageCooldown(SkillInfo.blessing, skill))
+                                        if (!buffs.Exists(x => x.Name == SkillInfo.blessing.BuffName))
+                                            if (MonsterCheck(Settings.auraBlessingRange, Settings.auraBlessingMinAny,
+                                                Settings.auraBlessingMinRare, Settings.auraBlessingMinUnique) &&
+                                            (player.HPPercentage <=
+                                            (float)Settings.auraBlessingHpp / 100 ||
+                                            player.MaxES > 0 && player.ESPercentage <
+                                            (float)Settings.auraBlessingEsp / 100))
+                                            Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                         }
                         catch (Exception e)
                         {
