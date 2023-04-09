@@ -353,6 +353,33 @@ namespace CoPilot
 
             try
             {
+                // Auto Toxic Rain Ballista
+                ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.Instance.Settings.autoToxicRainBallistaEnabled ? green : red);
+                ImGui.PushID(4);
+                if (ImGui.TreeNodeEx("Auto Toxic Rain Ballista", collapsingHeaderFlags))
+                {
+                    CoPilot.Instance.Settings.autoToxicRainBallistaEnabled.Value =
+                        ImGuiExtension.Checkbox("Enabled", CoPilot.Instance.Settings.autoToxicRainBallistaEnabled.Value);
+                    CoPilot.Instance.Settings.autoToxicRainBallistaRange.Value =
+                        ImGuiExtension.IntSlider("Range", CoPilot.Instance.Settings.autoToxicRainBallistaRange);
+                    CoPilot.Instance.Settings.autoToxicRainBallistaMax.Value = ImGuiExtension.IntSlider("Toxic Rain Ballistas max.",
+                        CoPilot.Instance.Settings.autoToxicRainBallistaMax);
+                    CoPilot.Instance.Settings.autoToxicRainBallistaMinAny.Value =
+                        ImGuiExtension.IntSlider("min Enemy Any", CoPilot.Instance.Settings.autoToxicRainBallistaMinAny);
+                    CoPilot.Instance.Settings.autoToxicRainBallistaMinRare.Value =
+                        ImGuiExtension.IntSlider("min Enemy Rare", CoPilot.Instance.Settings.autoToxicRainBallistaMinRare);
+                    CoPilot.Instance.Settings.autoToxicRainBallistaUnique.Value = ImGuiExtension.IntSlider("min Enemy Unique",
+                        CoPilot.Instance.Settings.autoToxicRainBallistaUnique);
+                }
+            }
+            catch (Exception e)
+            {
+                CoPilot.Instance.LogError(e.ToString());
+            }
+
+
+            try
+            {
                 ImGui.PushStyleColor(ImGuiCol.Header, CoPilot.Instance.Settings.delveFlareEnabled ? green : red);
                 ImGui.PushID(5);
                 if (ImGui.TreeNodeEx("Delve Flare", collapsingHeaderFlags))

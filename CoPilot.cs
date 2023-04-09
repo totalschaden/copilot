@@ -837,6 +837,28 @@ namespace CoPilot
 
                     #endregion
 
+                    #region Auto Toxic Rain Ballista
+
+                    if (Settings.autoToxicRainBallistaEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.toxicRain.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.toxicRain, skill) && !isCasting && !isAttacking)
+                                    if (MonsterCheck(Settings.autoToxicRainBallistaRange, Settings.autoToxicRainBallistaMinAny,
+                                            Settings.autoToxicRainBallistaMinRare, Settings.autoToxicRainBallistaUnique) &&
+                                            skill.DeployedObjects.Count < Settings.autoToxicRainBallistaMax)
+                                    {
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.toxicRain.Cooldown = 100;
+                                    }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
                     #region Vortex
 
                     if (Settings.vortexEnabled)

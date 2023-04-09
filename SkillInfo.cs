@@ -31,6 +31,7 @@ namespace CoPilot
         internal static Skill boneArmour = new Skill();
         internal static Skill arcaneCloak = new Skill();
         internal static Skill bloodRage = new Skill();
+        internal static Skill toxicRain = new Skill();
         internal static Skill chaosGolem = new Skill();
         internal static Skill flameGolem = new Skill();
         internal static Skill iceGolem = new Skill();
@@ -92,6 +93,7 @@ namespace CoPilot
             boneArmour = new Skill();
             arcaneCloak = new Skill();
             bloodRage = new Skill();
+            toxicRain = new Skill();
             chaosGolem = new Skill();
             flameGolem = new Skill();
             iceGolem = new Skill();
@@ -241,6 +243,9 @@ namespace CoPilot
                     case "blood_rage":
                         bloodRage.Id = skill.Id;
                         bloodRage.BuffName = "blood_rage";
+                        break;
+                    case "rain_of_spores":
+                        toxicRain.Id = skill.Id;
                         break;
                     case "summon_chaos_elemental":
                         chaosGolem.Id = skill.Id;
