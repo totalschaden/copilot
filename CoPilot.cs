@@ -741,7 +741,9 @@ namespace CoPilot
                         {
                             if (skill.Id == SkillInfo.bloodRage.Id)
                                 if (SkillInfo.ManageCooldown(SkillInfo.bloodRage, skill))
-                                    if (MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
+                                    if (!buffs.Exists(b =>
+                                            b.Name == SkillInfo.bloodRage.BuffName && b.Timer > 1.0) &&
+                                        MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
                                             Settings.bloodRageMinRare, Settings.bloodRageMinUnique))
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
