@@ -76,12 +76,12 @@ namespace CoPilot
 
         private int GetMonsterWithin(float maxDistance, MonsterRarity rarity = MonsterRarity.White)
         {
-            return (from monster in enemys where monster.Rarity >= rarity select Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
+            return (from monster in enemys where monster.Rarity >= rarity select Vector2.Distance(new Vector2(monster.PosNum.X, monster.PosNum.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
         }
         
         private int GetCorpseWithin(float maxDistance)
         {
-            return corpses.Select(corpse => Vector2.Distance(new Vector2(corpse.Pos.X, corpse.Pos.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
+            return corpses.Select(corpse => Vector2.Distance(new Vector2(corpse.PosNum.X, corpse.PosNum.Y), new Vector2(playerPosition.X, playerPosition.Y))).Count(distance => distance <= maxDistance);
         }
 
         private bool MonsterCheck(int range, int minAny, int minRare, int minUnique)
@@ -92,21 +92,21 @@ namespace CoPilot
                 {
                     case MonsterRarity.White:
                     {
-                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                        if (Vector2.Distance(new Vector2(monster.PosNum.X, monster.PosNum.Y),
                             new Vector2(playerPosition.X, playerPosition.Y)) <= range)
                             any++;
                         break;
                     }
                     case MonsterRarity.Magic:
                     {
-                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                        if (Vector2.Distance(new Vector2(monster.PosNum.X, monster.PosNum.Y),
                             new Vector2(playerPosition.X, playerPosition.Y)) <= range)
                             any++;
                         break;
                     }
                     case MonsterRarity.Rare:
                     {
-                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                        if (Vector2.Distance(new Vector2(monster.PosNum.X, monster.PosNum.Y),
                             new Vector2(playerPosition.X, playerPosition.Y)) <= range)
                         {
                             any++;
@@ -116,7 +116,7 @@ namespace CoPilot
                     }
                     case MonsterRarity.Unique:
                     {
-                        if (Vector2.Distance(new Vector2(monster.Pos.X, monster.Pos.Y),
+                        if (Vector2.Distance(new Vector2(monster.PosNum.X, monster.PosNum.Y),
                             new Vector2(playerPosition.X, playerPosition.Y)) <= range)
                         {
                             any++;
@@ -1203,7 +1203,7 @@ namespace CoPilot
                         {
                             if (skill.Id == SkillInfo.plagueBearer.Id)
                             {
-                                if (SkillInfo.ManageCooldown(SkillInfo.plagueBearer, skill) && GetMonsterWithin(Settings.plagueBearerRange) > Settings.plagueBearerMinEnemys && buffs.Exists(x => x.Name == "corrosive_shroud_at_max_damage"))
+                                if (SkillInfo.ManageCooldown(SkillInfo.plagueBearer, skill) && GetMonsterWithin(Settings.plagueBearerRange) >= Settings.plagueBearerMinEnemys && buffs.Exists(x => x.Name == "corrosive_shroud_at_max_damage"))
                                 {
                                     Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
                                 }

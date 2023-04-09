@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows.Forms;
-using CoPilot.Properties;
 using ExileCore.PoEMemory.MemoryObjects;
 using ImGuiNET;
 using SharpDX;
