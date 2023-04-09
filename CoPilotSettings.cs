@@ -232,6 +232,17 @@ namespace CoPilot
 
         #endregion
 
+        #region Auto Toxic Rain Ballista
+
+        public ToggleNode autoToxicRainBallistaEnabled = new ToggleNode(false);
+        public RangeNode<int> autoToxicRainBallistaRange = new RangeNode<int>(300, 800, 3000);
+        public RangeNode<int> autoToxicRainBallistaMax = new RangeNode<int>(0, 0, 15);
+        public RangeNode<int> autoToxicRainBallistaMinAny = new RangeNode<int>(1, 0, 50);
+        public RangeNode<int> autoToxicRainBallistaMinRare = new RangeNode<int>(0, 0, 50);
+        public RangeNode<int> autoToxicRainBallistaUnique = new RangeNode<int>(0, 0, 50);
+
+        #endregion
+
         #region Auto Curse
 
         public ToggleNode autoCurseEnabled = new ToggleNode(false);

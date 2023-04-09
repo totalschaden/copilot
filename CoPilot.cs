@@ -741,9 +741,7 @@ namespace CoPilot
                         {
                             if (skill.Id == SkillInfo.bloodRage.Id)
                                 if (SkillInfo.ManageCooldown(SkillInfo.bloodRage, skill))
-                                    if (!buffs.Exists(b =>
-                                            b.Name == SkillInfo.bloodRage.BuffName && b.Timer > 1.0) &&
-                                        MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
+                                    if (MonsterCheck(Settings.bloodRageRange, Settings.bloodRageMinAny,
                                             Settings.bloodRageMinRare, Settings.bloodRageMinUnique))
                                     {
                                         Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
@@ -829,6 +827,28 @@ namespace CoPilot
                                     }
                                 }
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            LogError(e.ToString());
+                        }
+
+                    #endregion
+
+                    #region Auto Toxic Rain Ballista
+
+                    if (Settings.autoToxicRainBallistaEnabled)
+                        try
+                        {
+                            if (skill.Id == SkillInfo.toxicRain.Id)
+                                if (SkillInfo.ManageCooldown(SkillInfo.toxicRain, skill) && !isCasting && !isAttacking)
+                                    if (MonsterCheck(Settings.autoToxicRainBallistaRange, Settings.autoToxicRainBallistaMinAny,
+                                            Settings.autoToxicRainBallistaMinRare, Settings.autoToxicRainBallistaUnique) &&
+                                            skill.DeployedObjects.Count < Settings.autoToxicRainBallistaMax)
+                                    {
+                                        Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                                        SkillInfo.toxicRain.Cooldown = 100;
+                                    }
                         }
                         catch (Exception e)
                         {
