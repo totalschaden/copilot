@@ -328,6 +328,9 @@ namespace CoPilot
             return new ImGuiVector4(r, g, b, a);
         }
 
+        /*
+         How to Update IMGUI to new Api FAST !
+         
         // Color menu tabs
         public static void ImGuiExtension_ColorTabs(string idString, int height, IReadOnlyList<string> settingList,
             ref int selectedItem, ref int uniqueIdPop)
@@ -362,7 +365,7 @@ namespace CoPilot
             return ImGui.BeginChild(id, new ImGuiVector2(newcontentRegionArea.X, newcontentRegionArea.Y), border,
                 flags);
         }
-
+        */
         //Spacing
         public static void Spacing(int amount)
         {

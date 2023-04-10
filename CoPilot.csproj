@@ -28,7 +28,7 @@
     <OutputPath>..\..\Compiled\CoPilot\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.75.0" />
+    <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
