@@ -528,6 +528,7 @@ namespace CoPilot
                     auraDic.Add("Pride", "physical_damage_aura");
                     auraDic.Add("Wrath", "wrath");
                     auraDic.Add("Zealotry", "spell_damage_aura");
+                    auraDic.Add("Envy", "envy");
                     var auraList = new List<string>(auraDic.Keys);
                     CoPilot.Instance.Settings.auraBlessingName.Value = 
                         ImGuiExtension.ComboBox("Blessing Aura Skill", CoPilot.Instance.Settings.auraBlessingName, auraList);

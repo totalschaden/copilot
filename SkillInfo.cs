@@ -171,7 +171,7 @@ namespace CoPilot
                 out var hasEldritchBattery))
                 hasEldritchBattery = 0;
 
-            return hasEldritchBattery > 0 && CoPilot.Instance.player.CurES > manaCost;
+            return hasEldritchBattery > 0 && (CoPilot.Instance.player.CurES + CoPilot.Instance.player.CurMana) >= manaCost;
         }
 
         internal static bool ManageCooldown(Skill skill)
