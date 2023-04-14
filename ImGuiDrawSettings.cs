@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using ExileCore.PoEMemory.MemoryObjects;
@@ -175,8 +176,7 @@ namespace CoPilot
                 if (ImGui.TreeNodeEx("Donation - Send some Snacks nom nom", collapsingHeaderFlags))
                 {
                     ImGui.Text("Thanks to anyone who is considering this.");
-                    if (ImGui.Button("Open Amazon.de Wishlist"))
-                        Process.Start("https://www.amazon.de/hz/wishlist/ls/MZ543BDBC6PJ?ref_=wl_share");
+                    if (ImGui.Button("Copy Amazon.de Wishlist URL")) SetText("https://www.amazon.de/hz/wishlist/ls/MZ543BDBC6PJ?ref_=wl_share");
                     if (ImGui.Button("Copy BTC Adress")) SetText("bc1qwjpdf9q3n94e88m3z398udjagach5u56txwpkh");
                     if (ImGui.Button("Copy ETH Adress")) SetText("0x78Af12D08B32f816dB9788C5Cf3122693143ed78");
                     if (ImGui.Button("Copy LTC Adress")) SetText("LXCoWiLS5ZKEzHb7yTpJ7AxJrU9QLhCyHR");
@@ -201,6 +201,16 @@ namespace CoPilot
                     CoPilot.Instance.Settings.autoPilotGrace.Value =
                         ImGuiExtension.Checkbox("Remove Grace Period", CoPilot.Instance.Settings.autoPilotGrace.Value);
                     CoPilot.Instance.Settings.autoPilotLeader = ImGuiExtension.InputText("Leader Name: ", CoPilot.Instance.Settings.autoPilotLeader, 60, ImGuiInputTextFlags.None);
+                    if (string.IsNullOrWhiteSpace(CoPilot.Instance.Settings.autoPilotLeader.Value))
+                    {
+                        // Show error message or set a default value
+                        CoPilot.Instance.Settings.autoPilotLeader.Value = "DefaultLeader";
+                    }
+                    else
+                    {
+                        // Remove any invalid characters from the input
+                        CoPilot.Instance.Settings.autoPilotLeader.Value = new string(CoPilot.Instance.Settings.autoPilotLeader.Value.Where(c => char.IsLetterOrDigit(c) || c == '_').ToArray());
+                    }
                     CoPilot.Instance.Settings.autoPilotDashEnabled.Value = ImGuiExtension.Checkbox(
                         "Dash Enabled", CoPilot.Instance.Settings.autoPilotDashEnabled.Value);
                     CoPilot.Instance.Settings.autoPilotCloseFollow.Value = ImGuiExtension.Checkbox(

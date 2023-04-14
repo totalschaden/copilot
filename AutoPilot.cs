@@ -47,7 +47,7 @@ namespace CoPilot
             hasUsedWp = false;
         }
         
-        private LabelOnGround GetBestPortalLabel()
+        private LabelOnGround GetBestPortalLabel(bool getTransit = true)
         {
 	        try
 	        {
@@ -246,8 +246,8 @@ namespace CoPilot
 				else if (tasks.Count == 0) /* &&
 				         lastTargetPosition != Vector3.Zero)*/
 				{
-					var portal = GetBestPortalLabel();
-					if (portal == null || portal != null && portal.ItemOnGround?.DistancePlayer > 80 && CoPilot.Instance.GameController?.Area?.CurrentArea?.RealLevel < 68)
+					var portal = GetBestPortalLabel(false);
+					if (portal == null || portal != null && portal.ItemOnGround?.DistancePlayer > 70 && CoPilot.Instance.GameController?.Area?.CurrentArea?.RealLevel < 68 && (bool)CoPilot.Instance.GameController?.Area?.CurrentArea?.IsTown)
 					{
 						foreach (var partyElementWindow in PartyElements.GetPlayerInfoElementList())
 						{
@@ -459,8 +459,9 @@ namespace CoPilot
 		{
 			try
 			{
-				return CoPilot.Instance.GameController.Entities.First(x => x?.Type == EntityType.Player &&
-				                                                           string.Equals(x.GetComponent<Player>()?.PlayerName?.ToLower(), CoPilot.Instance.Settings.autoPilotLeader.Value.ToLower()));
+				string leaderName = CoPilot.Instance.Settings.autoPilotLeader.Value.ToLower();
+				return CoPilot.Instance.GameController.Entities.FirstOrDefault(x => x?.Type == EntityType.Player &&
+				                                                                    string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));
 			}
 			// Sometimes we can get "Collection was modified; enumeration operation may not execute" exception
 			catch
