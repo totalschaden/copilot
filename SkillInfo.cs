@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
@@ -75,6 +75,7 @@ namespace CoPilot
         internal static Skill auraHaste = new Skill();
         internal static Skill auraPride = new Skill();
         internal static Skill auraWrath = new Skill();
+        internal static Skill auraEnvy = new Skill();
         internal static Skill blessing = new Skill();
         internal static int isBlessing;
 
@@ -137,6 +138,7 @@ namespace CoPilot
             auraHaste = new Skill();
             auraPride = new Skill();
             auraWrath = new Skill();
+            auraEnvy = new Skill();
             blessing = new Skill();
 
         }
@@ -171,6 +173,7 @@ namespace CoPilot
                 out var hasEldritchBattery))
                 hasEldritchBattery = 0;
 
+            //Include CurMana along with CurES
             return hasEldritchBattery > 0 && (CoPilot.Instance.player.CurES + CoPilot.Instance.player.CurMana) >= manaCost;
         }
 
@@ -448,6 +451,17 @@ namespace CoPilot
                             auraWrath.IsBlessing = 1;
                         }
                         break;
+                    case "envy":
+                        auraEnvy.Id = skill.Id;
+                        auraEnvy.BuffName = "envy_chaos_damage";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
+                        {
+                            blessing.Id = skill.Id;
+                            blessing.BuffName = "envy_chaos_damage";
+                            auraEnvy.IsBlessing = 1;
+                        }
+                        break;
+
                 }
             }
         }
