@@ -518,21 +518,6 @@ namespace CoPilot
                 {
                     CoPilot.Instance.Settings.auraBlessingEnabled.Value = ImGuiExtension.Checkbox("Enabled",
                         CoPilot.Instance.Settings.auraBlessingEnabled.Value);
-                    var auraDic = new Dictionary<string, string>();
-                    auraDic.Add("Malevolence", "damage_over_time_aura");
-                    auraDic.Add("Anger", "anger");
-                    auraDic.Add("Determination", "determination");
-                    auraDic.Add("Grace", "grace");
-                    auraDic.Add("Haste", "haste");
-                    auraDic.Add("Hatred", "hatred");
-                    auraDic.Add("Pride", "physical_damage_aura");
-                    auraDic.Add("Wrath", "wrath");
-                    auraDic.Add("Zealotry", "spell_damage_aura");
-                    auraDic.Add("Envy", "envy");
-                    var auraList = new List<string>(auraDic.Keys);
-                    CoPilot.Instance.Settings.auraBlessingName.Value = 
-                        ImGuiExtension.ComboBox("Blessing Aura Skill", CoPilot.Instance.Settings.auraBlessingName, auraList);
-                    CoPilot.Instance.Settings.auraBlessing.Value = auraDic[CoPilot.Instance.Settings.auraBlessingName];
                     CoPilot.Instance.Settings.auraBlessingHpp.Value =
                         ImGuiExtension.IntSlider("HP%", CoPilot.Instance.Settings.auraBlessingHpp);
                     CoPilot.Instance.Settings.auraBlessingEsp.Value =

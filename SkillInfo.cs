@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
@@ -12,9 +13,12 @@ namespace CoPilot
         private static long _lastTime;
         internal static float _deltaTime;
 
+        internal static List<Skill> CachedAuraSkills = new List<Skill>();
+
         // Pseudo Skills
         internal static Skill autoMapTabber = new Skill();
         internal static Skill autoSummon = new Skill();
+        internal static Skill blessing = new Skill();
 
         internal static Skill vaalSkill = new Skill();
 
@@ -76,8 +80,7 @@ namespace CoPilot
         internal static Skill auraPride = new Skill();
         internal static Skill auraWrath = new Skill();
         internal static Skill auraEnvy = new Skill();
-        internal static Skill blessing = new Skill();
-        internal static int isBlessing;
+
 
 
         internal static void ResetSkills()
@@ -139,8 +142,6 @@ namespace CoPilot
             auraPride = new Skill();
             auraWrath = new Skill();
             auraEnvy = new Skill();
-            blessing = new Skill();
-
         }
 
         public static void GetDeltaTime()
@@ -360,15 +361,21 @@ namespace CoPilot
                     case "purity":
                         auraPurityOfElements.Id = skill.Id;
                         auraPurityOfElements.BuffName = "player_aura_resists";
+                        if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out var isBlessing))
+                        {
+                            if (isBlessing > 0)
+                                auraPurityOfElements.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraPurityOfElements);
+                        }
                         break;
                     case "hatred":
                         auraHatred.Id = skill.Id;
                         auraHatred.BuffName = "player_aura_cold_damage";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
-                        {   
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_cold_damage";
-                            auraHatred.IsBlessing = 1;
+                        {
+                            if (isBlessing > 0)
+                                auraHatred.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraHatred);
                         }
                         break;
                     case "spell_damage_aura":
@@ -376,9 +383,9 @@ namespace CoPilot
                         auraZealotry.BuffName = "player_aura_spell_damage";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_spell_damage";
-                            auraZealotry.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraZealotry.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraZealotry);
                         }
                         break;
                     case "damage_over_time_aura":
@@ -386,9 +393,9 @@ namespace CoPilot
                         auraMalevolence.BuffName = "player_aura_damage_over_time";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_damage_over_time";
-                            auraMalevolence.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraMalevolence.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraMalevolence);
                         }
                         break;
                     case "anger":
@@ -396,9 +403,9 @@ namespace CoPilot
                         auraAnger.BuffName = "player_aura_fire_damage";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_fire_damage";
-                            auraAnger.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraAnger.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraAnger);
                         }
                         break;
                     case "determination":
@@ -406,9 +413,9 @@ namespace CoPilot
                         auraDetermination.BuffName = "player_aura_armour";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_armour";
-                            auraDetermination.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraDetermination.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraDetermination);
                         }
                         break;
                     case "grace":
@@ -416,9 +423,9 @@ namespace CoPilot
                         auraGrace.BuffName = "player_aura_evasion";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_evasion";
-                            auraGrace.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraGrace.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraGrace);
                         }
                         break;
                     case "haste":
@@ -426,9 +433,9 @@ namespace CoPilot
                         auraHaste.BuffName = "player_aura_speed";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_speed";
-                            auraHaste.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraHaste.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraHaste);
                         }
                         break;
                     case "physical_damage_aura":
@@ -436,9 +443,9 @@ namespace CoPilot
                         auraPride.BuffName = "player_physical_damage_aura";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_physical_damage_aura";
-                            auraPride.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraPride.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraPride);
                         }
                         break;
                     case "wrath":
@@ -446,9 +453,9 @@ namespace CoPilot
                         auraWrath.BuffName = "player_aura_lightning_damage";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "player_aura_lightning_damage";
-                            auraWrath.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraWrath.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraWrath);
                         }
                         break;
                     case "envy":
@@ -456,9 +463,9 @@ namespace CoPilot
                         auraEnvy.BuffName = "envy_chaos_damage";
                         if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out isBlessing))
                         {
-                            blessing.Id = skill.Id;
-                            blessing.BuffName = "envy_chaos_damage";
-                            auraEnvy.IsBlessing = 1;
+                            if (isBlessing > 0)
+                                auraEnvy.IsBlessing = 1;
+                            CachedAuraSkills.Add(auraEnvy);
                         }
                         break;
 

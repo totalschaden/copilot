@@ -688,17 +688,18 @@ namespace CoPilot
                     if (Settings.auraBlessingEnabled)
                         try
                         {
-                            if (skill.Stats.TryGetValue(GameStat.SkillIsBlessingSkill, out int isBlessing))
-                                if (skill.InternalName == Settings.auraBlessing.Value)
-                                    if (SkillInfo.ManageCooldown(SkillInfo.blessing, skill))
-                                        if (!buffs.Exists(x => x.Name == SkillInfo.blessing.BuffName))
-                                            if (MonsterCheck(Settings.auraBlessingRange, Settings.auraBlessingMinAny,
-                                                Settings.auraBlessingMinRare, Settings.auraBlessingMinUnique) &&
-                                            (player.HPPercentage <=
-                                            (float)Settings.auraBlessingHpp / 100 ||
-                                            player.MaxES > 0 && player.ESPercentage <
-                                            (float)Settings.auraBlessingEsp / 100))
+                            if (SkillInfo.ManageCooldown(SkillInfo.blessing, skill))
+                            {
+                                var cachedSkill = SkillInfo.CachedAuraSkills.Find(s => s.IsBlessing > 0 && s.Id == skill.Id);
+                                if (cachedSkill != null && !buffs.Exists(x => x.Name == cachedSkill.BuffName && x.Timer > 0.2))
+                                    if (MonsterCheck(Settings.auraBlessingRange, Settings.auraBlessingMinAny,
+                                            Settings.auraBlessingMinRare, Settings.auraBlessingMinUnique) &&
+                                        (player.HPPercentage <=
+                                         (float)Settings.auraBlessingHpp / 100 ||
+                                         player.MaxES > 0 && player.ESPercentage <
+                                         (float)Settings.auraBlessingEsp / 100))
                                             Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
+                            }
                         }
                         catch (Exception e)
                         {
