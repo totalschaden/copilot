@@ -198,6 +198,7 @@ namespace CoPilot
             if (!force && (DateTime.Now - _lastUpdate).TotalMilliseconds < 10000)
                 return;
             _lastUpdate = DateTime.Now;
+            CachedAuraSkills = new List<Skill>();
             foreach (var skill in CoPilot.Instance.skills)
             {
                 switch (skill.InternalName)
