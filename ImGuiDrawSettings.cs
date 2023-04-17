@@ -518,6 +518,8 @@ namespace CoPilot
                 {
                     CoPilot.Instance.Settings.auraBlessingEnabled.Value = ImGuiExtension.Checkbox("Enabled",
                         CoPilot.Instance.Settings.auraBlessingEnabled.Value);
+                    CoPilot.Instance.Settings.auraBlessingWitheringStep.Value = 
+                        ImGuiExtension.Checkbox("Do Not Override Withering Step", CoPilot.Instance.Settings.auraBlessingWitheringStep.Value);
                     CoPilot.Instance.Settings.auraBlessingHpp.Value =
                         ImGuiExtension.IntSlider("HP%", CoPilot.Instance.Settings.auraBlessingHpp);
                     CoPilot.Instance.Settings.auraBlessingEsp.Value =
