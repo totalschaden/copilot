@@ -686,12 +686,12 @@ namespace CoPilot
                     #region Aura Blessing
 
                     if (Settings.auraBlessingEnabled)
-                        //guard statement to check for withering step
-                        if (Settings.auraBlessingWitheringStep && buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName)) return;
                         try
                         {
                             if (SkillInfo.ManageCooldown(SkillInfo.blessing, skill))
                             {
+                                //guard statement to check for withering step
+                                if (Settings.auraBlessingWitheringStep && buffs.Exists(b => b.Name == SkillInfo.witherStep.BuffName)) return;
                                 var cachedSkill = SkillInfo.CachedAuraSkills.Find(s => s.IsBlessing > 0 && s.Id == skill.Id);
                                 if (cachedSkill != null && !buffs.Exists(x => x.Name == cachedSkill.BuffName && x.Timer > 0.2))
                                     if (MonsterCheck(Settings.auraBlessingRange, Settings.auraBlessingMinAny,
