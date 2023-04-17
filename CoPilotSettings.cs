@@ -112,6 +112,7 @@ namespace CoPilot
         #region Aura Blessing
 
         public ToggleNode auraBlessingEnabled = new ToggleNode(false);
+        public ToggleNode auraBlessingWitheringStep = new ToggleNode(false);
         public RangeNode<int> auraBlessingRange = new RangeNode<int>(550, 100, 1000);
         public RangeNode<int> auraBlessingHpp = new RangeNode<int>(100, 0, 100);
         public RangeNode<int> auraBlessingEsp = new RangeNode<int>(0, 0, 100);
