@@ -292,6 +292,8 @@ namespace CoPilot
         {
             try
             {
+                //if chat is open, dont do anything
+                if (GameController?.Game?.IngameState?.IngameUi?.ChatPanel?.Children[3]?.IsVisible == true) return;
                 if (!Settings.Enable) return;
                 SkillInfo.GetDeltaTime();
                 
