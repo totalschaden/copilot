@@ -38,7 +38,7 @@ namespace CoPilot
 
             try
             {
-                var baseWindow = CoPilot.Instance.GameController?.IngameState?.IngameUi?.Children?[19];
+                var baseWindow = CoPilot.Instance.GameController?.IngameState?.IngameUi?.PartyElement;
                 var partElementList = baseWindow?.Children?[0]?.Children?[0]?.Children;
                 if (partElementList != null)
                 {
