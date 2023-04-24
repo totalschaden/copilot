@@ -264,8 +264,8 @@ namespace CoPilot
 
 								if (CoPilot.Instance.GameController.IngameState.IngameUi.ChildCount > 0)
 								{
-									var ui = (CoPilot.Instance.GameController?.IngameState?.IngameUi?.Children).FirstOrDefault(x => x != null && x.ChildCount == 4 && x.Children[3].ChildCount == 5 && x.Children[3].Children[2].IsVisible && x.Children[3].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"));
-									if (ui != null)
+									var ui = CoPilot.Instance.GameController?.IngameState?.IngameUi?.PopUpWindow;
+									if (ui != null && ui.Children[3].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
 										yield return Mouse.SetCursorPosHuman(ui.Children[3].Children[2].GetClientRect()
 											.Center);
 									yield return new WaitTime(200);
