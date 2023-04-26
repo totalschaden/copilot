@@ -46,50 +46,82 @@ namespace CoPilot
             lastPlayerPosition = Vector3.Zero;
             hasUsedWp = false;
         }
-        
-        private LabelOnGround GetBestPortalLabel(bool getTransit = true)
+
+        private PartyElementWindow GetLeaderPartyElement()
         {
 	        try
 	        {
-		        var portalLabels =
-			        CoPilot.Instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels.Where(x =>
-				        x != null && x.IsVisible && x.Label != null && x.Label.IsValid && x.Label.IsVisible && x.ItemOnGround != null && 
-				        (x.ItemOnGround.Metadata.ToLower().Contains("areatransition") || x.ItemOnGround.Metadata.ToLower().Contains("portal") ))
-				        .OrderBy(x => Vector3.Distance(lastTargetPosition, x.ItemOnGround.Pos)).ToList();
-
-
-		        return CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout != null && (bool)CoPilot.Instance.GameController?.Area?.CurrentArea?.IsHideout
-			        ? portalLabels?[random.Next(portalLabels.Count)]
-			        : portalLabels?.FirstOrDefault();
+				foreach (var partyElementWindow in PartyElements.GetPlayerInfoElementList())
+				{
+					if (string.Equals(partyElementWindow?.PlayerName?.ToLower(), CoPilot.Instance.Settings.autoPilotLeader.Value.ToLower(), StringComparison.CurrentCultureIgnoreCase))
+					{
+						return partyElementWindow;
+					}
+				}
+				return null;
 	        }
 	        catch
 	        {
 		        return null;
 	        }
         }
-        private Entity GetBestPortal()
+
+        private LabelOnGround GetBestPortalLabel(PartyElementWindow leaderPartyElement)
         {
 	        try
 	        {
-		        var validPortals = CoPilot.Instance.GameController.EntityListWrapper.Entities.Where(x =>
-				        x?.Type == EntityType.AreaTransition ||
-				        x?.Type == EntityType.Portal ||
-				        x?.Type == EntityType.TownPortal ||
-				        x?.Type == EntityType.IngameIcon)
-			        .Where(x => x.IsTargetable && (x.Type != EntityType.IngameIcon ||
-			                                       x.Type == EntityType.IngameIcon &&
-			                                       x.Metadata.ToLower().Contains("portal")))
-			        .OrderBy(x => Vector3.Distance(lastTargetPosition, x.Pos)).ToList();
+				var currentZoneName = CoPilot.Instance.GameController?.Area.CurrentArea.DisplayName;
+				if(leaderPartyElement.ZoneName.Equals(currentZoneName) || (!leaderPartyElement.ZoneName.Equals(currentZoneName) && (bool)CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout)) // TODO: or is chamber of sins a7 or is epilogue
+				{
+					var portalLabels =
+						CoPilot.Instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels.Where(x =>
+							x != null && x.IsVisible && x.Label != null && x.Label.IsValid && x.Label.IsVisible && x.ItemOnGround != null && 
+							(x.ItemOnGround.Metadata.ToLower().Contains("areatransition") || x.ItemOnGround.Metadata.ToLower().Contains("portal") ))
+							.OrderBy(x => Vector3.Distance(lastTargetPosition, x.ItemOnGround.Pos)).ToList();
 
-		        return CoPilot.Instance.GameController.Area.CurrentArea.IsHideout
-			        ? validPortals[random.Next(validPortals.Count)]
-			        : validPortals.FirstOrDefault();
+
+					return CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout != null && (bool)CoPilot.Instance.GameController?.Area?.CurrentArea?.IsHideout
+						? portalLabels?[random.Next(portalLabels.Count)]
+						: portalLabels?.FirstOrDefault();
+				}
+				return null;
 	        }
 	        catch
 	        {
 		        return null;
 	        }
         }
+		private Vector2 GetTpButton(PartyElementWindow leaderPartyElement)
+		{
+			try
+			{
+				var windowOffset = CoPilot.Instance.GameController.Window.GetWindowRectangle().TopLeft;
+				var elemCenter = (Vector2) leaderPartyElement?.TpButton?.GetClientRectCache.Center;
+				var finalPos = new Vector2(elemCenter.X + windowOffset.X, elemCenter.Y + windowOffset.Y);
+				
+				return finalPos;
+			}
+			catch
+			{
+				return Vector2.Zero;
+			}
+		}
+		private Element GetTpConfirmation()
+		{
+			try
+			{
+				var ui = CoPilot.Instance.GameController?.IngameState?.IngameUi?.PopUpWindow;
+
+				if (ui.Children[3].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
+					return ui.Children[3].Children[2];
+				
+				return null;
+			}
+			catch
+			{
+				return null;
+			}
+		}
         public void AreaChange()
         {
             ResetPathing();
@@ -161,7 +193,6 @@ namespace CoPilot
 	        while (true)
 	        {
 		        if (!CoPilot.Instance.Settings.Enable.Value || !CoPilot.Instance.Settings.autoPilotEnabled.Value || CoPilot.Instance.localPlayer == null || !CoPilot.Instance.localPlayer.IsAlive || 
-		            
 		            !CoPilot.Instance.GameController.IsForeGroundCache || MenuWindow.IsOpened || CoPilot.Instance.GameController.IsLoading || !CoPilot.Instance.GameController.InGame)
 		        {
 			        yield return new WaitTime(100);
@@ -170,8 +201,37 @@ namespace CoPilot
 		        
 		        //Cache the current follow target (if present)
 				followTarget = GetFollowingTarget();
-				if (followTarget != null)
-				{
+				var leaderPartyElement = GetLeaderPartyElement();
+
+				if (followTarget == null && !leaderPartyElement.ZoneName.Equals(CoPilot.Instance.GameController?.Area.CurrentArea.DisplayName)) {
+					var portal = GetBestPortalLabel(leaderPartyElement);
+					if (portal != null) {
+						// Hideout -> Map || Chamber of Sins A7 -> Map
+						tasks.Add(new TaskNode(portal, CoPilot.Instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
+					} else {
+						// Swirly-able
+						// TODO: change to tasks.Add
+						var tpButton = GetTpButton(leaderPartyElement);
+						if(!tpButton.Equals(Vector2.Zero))
+						{
+							yield return Mouse.SetCursorPosHuman(tpButton, false);
+							yield return new WaitTime(200);
+							yield return Mouse.LeftClick();
+							yield return new WaitTime(200);
+						}
+
+						var tpConfirmation = GetTpConfirmation();
+						if (tpConfirmation != null)
+						{
+							yield return Mouse.SetCursorPosHuman(tpConfirmation.GetClientRect()
+								.Center);
+							yield return new WaitTime(200);
+							yield return Mouse.LeftClick();
+							yield return new WaitTime(1000);
+						}
+					}
+				} else if (followTarget != null) {
+					// TODO: If in town, do not follow (optional)
 					var distanceToLeader = Vector3.Distance(CoPilot.Instance.playerPosition, followTarget.Pos);
 					//We are NOT within clear path distance range of leader. Logic can continue
 					if (distanceToLeader >= CoPilot.Instance.Settings.autoPilotClearPathDistance.Value)
@@ -180,7 +240,7 @@ namespace CoPilot
 						var distanceMoved = Vector3.Distance(lastTargetPosition, followTarget.Pos);
 						if (lastTargetPosition != Vector3.Zero && distanceMoved > CoPilot.Instance.Settings.autoPilotClearPathDistance.Value)
 						{
-							var transition = GetBestPortalLabel();
+							var transition = GetBestPortalLabel(leaderPartyElement);
 							// Check for Portal within Screen Distance.
 								if (transition != null && transition.ItemOnGround.DistancePlayer < 80)
 									tasks.Add(new TaskNode(transition,200, TaskNodeType.Transition));
@@ -236,49 +296,9 @@ namespace CoPilot
 							}
 
 						}
-
 					}
 					if (followTarget?.Pos != null)
 						lastTargetPosition = followTarget.Pos;
-				}
-				//Leader is null but we have tracked them this map.
-				//Try using transition to follow them to their map
-				else if (tasks.Count == 0) /* &&
-				         lastTargetPosition != Vector3.Zero)*/
-				{
-					var portal = GetBestPortalLabel(false);
-					if (portal == null || portal != null && portal.ItemOnGround?.DistancePlayer > 70 && CoPilot.Instance.GameController?.Area?.CurrentArea?.RealLevel < 68 && (bool)CoPilot.Instance.GameController?.Area?.CurrentArea?.IsTown)
-					{
-						foreach (var partyElementWindow in PartyElements.GetPlayerInfoElementList())
-						{
-							if (string.Equals(partyElementWindow?.PlayerName?.ToLower(), CoPilot.Instance.Settings.autoPilotLeader.Value.ToLower(), StringComparison.CurrentCultureIgnoreCase))
-							{
-								var windowOffset = CoPilot.Instance.GameController.Window.GetWindowRectangle().TopLeft;
-								var elemCenter = (Vector2) partyElementWindow?.TpButton?.GetClientRectCache.Center;
-								var finalPos = new Vector2(elemCenter.X + windowOffset.X, elemCenter.Y + windowOffset.Y);
-								
-								yield return Mouse.SetCursorPosHuman(finalPos, false);
-								yield return new WaitTime(200);
-								yield return Mouse.LeftClick();
-								yield return new WaitTime(1500);
-
-								if (CoPilot.Instance.GameController.IngameState.IngameUi.ChildCount > 0)
-								{
-									var ui = CoPilot.Instance.GameController?.IngameState?.IngameUi?.PopUpWindow;
-									if (ui != null && ui.Children[3].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
-										yield return Mouse.SetCursorPosHuman(ui.Children[3].Children[2].GetClientRect()
-											.Center);
-									yield return new WaitTime(200);
-									yield return Mouse.LeftClick();
-									yield return new WaitTime(1000);
-								}
-							}
-						}
-					}
-					else if (portal != null)
-					{
-						tasks.Add(new TaskNode(portal, CoPilot.Instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
-					}
 				}
 
 				//We have our tasks, now we need to perform in game logic with them.
@@ -460,8 +480,7 @@ namespace CoPilot
 			try
 			{
 				string leaderName = CoPilot.Instance.Settings.autoPilotLeader.Value.ToLower();
-				return CoPilot.Instance.GameController.Entities.FirstOrDefault(x => x?.Type == EntityType.Player &&
-				                                                                    string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));
+				return CoPilot.Instance.GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Player].FirstOrDefault(x => string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));                                                                  string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));
 			}
 			// Sometimes we can get "Collection was modified; enumeration operation may not execute" exception
 			catch

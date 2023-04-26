@@ -53,7 +53,8 @@ namespace CoPilot
                                 //get party element
                                 Element = partyElement,
                                 //party element swirly tp thingo, if in another area it becomes child 4 as child 3 becomes the area string
-                                TpButton = partyElement.Children[partyElement.ChildCount == 4 ? 3 : 2]
+                                TpButton = partyElement.Children[partyElement.ChildCount == 4 ? 3 : 2],
+                                ZoneName = (partyElement.ChildCount == 4) ? partyElement.Children[2].Text : CoPilot.Instance.GameController?.Area.CurrentArea.DisplayName
                             };
 
                             playersInParty.Add(newElement);
@@ -76,6 +77,7 @@ namespace CoPilot
         public string PlayerName { get; set; } = string.Empty;
         public PlayerData Data { get; set; } = new PlayerData();
         public Element Element { get; set; } = new Element();
+        public string ZoneName { get; set; } = string.Empty;
         public Element TpButton { get; set; } = new Element();
 
         public override string ToString()
