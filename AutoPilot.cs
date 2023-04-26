@@ -480,7 +480,7 @@ namespace CoPilot
 			try
 			{
 				string leaderName = CoPilot.Instance.Settings.autoPilotLeader.Value.ToLower();
-				return CoPilot.Instance.GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Player].FirstOrDefault(x => string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));                                                                  string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));
+				return CoPilot.Instance.GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Player].FirstOrDefault(x => string.Equals(x.GetComponent<Player>()?.PlayerName.ToLower(), leaderName, StringComparison.OrdinalIgnoreCase));
 			}
 			// Sometimes we can get "Collection was modified; enumeration operation may not execute" exception
 			catch
