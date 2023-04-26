@@ -71,7 +71,7 @@ namespace CoPilot
 	        try
 	        {
 				var currentZoneName = CoPilot.Instance.GameController?.Area.CurrentArea.DisplayName;
-				if(leaderPartyElement.ZoneName.Equals(currentZoneName) || (!leaderPartyElement.ZoneName.Equals(currentZoneName) && (bool)CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout)) // TODO: or is chamber of sins a7 or is epilogue
+				if(leaderPartyElement.ZoneName.Equals(currentZoneName) || (!leaderPartyElement.ZoneName.Equals(currentZoneName) && (bool)CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout) || CoPilot.Instance.GameController?.Area?.CurrentArea?.RealLevel >= 68) // TODO: or is chamber of sins a7 or is epilogue
 				{
 					var portalLabels =
 						CoPilot.Instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels.Where(x =>
@@ -209,17 +209,8 @@ namespace CoPilot
 						// Hideout -> Map || Chamber of Sins A7 -> Map
 						tasks.Add(new TaskNode(portal, CoPilot.Instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
 					} else {
-						// Swirly-able
-						// TODO: change to tasks.Add
-						var tpButton = GetTpButton(leaderPartyElement);
-						if(!tpButton.Equals(Vector2.Zero))
-						{
-							yield return Mouse.SetCursorPosHuman(tpButton, false);
-							yield return new WaitTime(200);
-							yield return Mouse.LeftClick();
-							yield return new WaitTime(200);
-						}
-
+						// Swirly-able (inverted due to overlay)
+						
 						var tpConfirmation = GetTpConfirmation();
 						if (tpConfirmation != null)
 						{
@@ -228,6 +219,16 @@ namespace CoPilot
 							yield return new WaitTime(200);
 							yield return Mouse.LeftClick();
 							yield return new WaitTime(1000);
+						}
+						
+						// TODO: change to tasks.Add
+						var tpButton = GetTpButton(leaderPartyElement);
+						if(!tpButton.Equals(Vector2.Zero))
+						{
+							yield return Mouse.SetCursorPosHuman(tpButton, false);
+							yield return new WaitTime(200);
+							yield return Mouse.LeftClick();
+							yield return new WaitTime(200);
 						}
 					}
 				} else if (followTarget != null) {
