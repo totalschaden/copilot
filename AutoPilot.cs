@@ -112,10 +112,10 @@ namespace CoPilot
 			{
 				var ui = CoPilot.Instance.GameController?.IngameState?.IngameUi?.PopUpWindow;
 
-				if (ui.Children[3].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
-					return ui.Children[3].Children[2];
-				
-				return null;
+                if (ui.Children[0].Children[0].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
+                    return ui.Children[0].Children[0].Children[3].Children[0];
+
+                return null;
 			}
 			catch
 			{
