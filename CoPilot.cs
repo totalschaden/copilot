@@ -316,9 +316,11 @@ namespace CoPilot
 
                 if (GameController?.Game?.IngameState?.Data?.LocalPlayer == null || GameController?.IngameState?.IngameUi == null )
                     return;
-                var chatField = GameController?.IngameState?.IngameUi?.ChatPanel?.Children[3]?.IsVisible;
+
+                var chatField = GameController?.IngameState?.IngameUi?.ChatPanel?.ChatInputElement?.IsVisible;
                 if (chatField != null && (bool)chatField)
                     return;
+
                     
                 localPlayer = GameController.Game.IngameState.Data.LocalPlayer;
                 player = localPlayer.GetComponent<Life>();

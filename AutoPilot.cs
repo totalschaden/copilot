@@ -71,7 +71,7 @@ namespace CoPilot
 	        try
 	        {
 				var currentZoneName = CoPilot.Instance.GameController?.Area.CurrentArea.DisplayName;
-				if(leaderPartyElement.ZoneName.Equals(currentZoneName) || (!leaderPartyElement.ZoneName.Equals(currentZoneName) && (bool)CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout) || CoPilot.Instance.GameController?.Area?.CurrentArea?.RealLevel >= 68) // TODO: or is chamber of sins a7 or is epilogue
+				if(leaderPartyElement.ZoneName.Equals(currentZoneName) || (!leaderPartyElement.ZoneName.Equals(currentZoneName) && (bool)CoPilot.Instance?.GameController?.Area?.CurrentArea?.IsHideout)) // TODO: or is chamber of sins a7 or is epilogue
 				{
 					var portalLabels =
 						CoPilot.Instance.GameController?.Game?.IngameState?.IngameUi?.ItemsOnGroundLabels.Where(x =>
@@ -112,10 +112,10 @@ namespace CoPilot
 			{
 				var ui = CoPilot.Instance.GameController?.IngameState?.IngameUi?.PopUpWindow;
 
-                		if (ui.Children[0].Children[0].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
-                    			return ui.Children[0].Children[0].Children[3].Children[0];
-
-                		return null;
+				if (ui.Children[3].Children[0].Text.Equals("Are you sure you want to teleport to this player's location?"))
+					return ui.Children[3].Children[2];
+				
+				return null;
 			}
 			catch
 			{
@@ -209,18 +209,7 @@ namespace CoPilot
 						// Hideout -> Map || Chamber of Sins A7 -> Map
 						tasks.Add(new TaskNode(portal, CoPilot.Instance.Settings.autoPilotPathfindingNodeDistance.Value, TaskNodeType.Transition));
 					} else {
-						// Swirly-able (inverted due to overlay)
-						
-						var tpConfirmation = GetTpConfirmation();
-						if (tpConfirmation != null)
-						{
-							yield return Mouse.SetCursorPosHuman(tpConfirmation.GetClientRect()
-								.Center);
-							yield return new WaitTime(200);
-							yield return Mouse.LeftClick();
-							yield return new WaitTime(1000);
-						}
-						
+						// Swirly-able
 						// TODO: change to tasks.Add
 						var tpButton = GetTpButton(leaderPartyElement);
 						if(!tpButton.Equals(Vector2.Zero))
@@ -229,6 +218,16 @@ namespace CoPilot
 							yield return new WaitTime(200);
 							yield return Mouse.LeftClick();
 							yield return new WaitTime(200);
+						}
+
+						var tpConfirmation = GetTpConfirmation();
+						if (tpConfirmation != null)
+						{
+							yield return Mouse.SetCursorPosHuman(tpConfirmation.GetClientRect()
+								.Center);
+							yield return new WaitTime(200);
+							yield return Mouse.LeftClick();
+							yield return new WaitTime(1000);
 						}
 					}
 				} else if (followTarget != null) {
