@@ -480,6 +480,11 @@ namespace CoPilot
                                 // Auto Loop Start
                                 if (buffs.Exists(x => x.Name == "flask_bonus_ward_not_break"))
                                 {
+                                    // Don't enable the loop in the Halls of the Dead if not in combat
+                                    if (GameController.Area.CurrentArea.Name == "The Halls of the Dead" && !MonsterCheck(5000, 1, 0, 0))
+                                    {
+                                        continue;
+                                    }
                                     if (!skill.IsOnCooldown)
                                     {
                                         cwdtCounter++;
@@ -504,6 +509,11 @@ namespace CoPilot
 
                             if (SkillInfo.righteousFire.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.righteousFire, skill))
                             {
+                                // Don't enable RF in the Halls of the Dead if not in combat
+                                if (GameController.Area.CurrentArea.Name == "The Halls of the Dead" && !MonsterCheck(5000, 1, 0, 0))
+                                {
+                                    continue;
+                                }
                                 if (buffs.Exists(x => x.Name == "flask_bonus_ward_not_break") && !buffs.Exists(x => x.Name == SkillInfo.righteousFire.BuffName))
                                 {
                                     Keyboard.KeyPress(GetSkillInputKey(skill.SkillSlotIndex));
