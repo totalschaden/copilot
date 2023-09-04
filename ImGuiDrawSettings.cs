@@ -747,8 +747,8 @@ namespace CoPilot
                         CoPilot.Instance.Settings.convocationEnabled.Value);
                     CoPilot.Instance.Settings.convocationAvoidUniqueRange.Value = ImGuiExtension.IntSlider(
                         "Do not use when Unique Enemy within", CoPilot.Instance.Settings.convocationAvoidUniqueRange);
-                    CoPilot.Instance.Settings.guardianHpp.Value =
-                        ImGuiExtension.IntSlider("Summon HP% below", CoPilot.Instance.Settings.guardianHpp);
+                    CoPilot.Instance.Settings.convocationHpp.Value =
+                        ImGuiExtension.IntSlider("Summon HP% below", CoPilot.Instance.Settings.convocationHpp);
                     CoPilot.Instance.Settings.convocationMobRange.Value = ImGuiExtension.IntSlider("Mob Trigger Range",
                         CoPilot.Instance.Settings.convocationMobRange);
                     CoPilot.Instance.Settings.convocationMinnionRange.Value = ImGuiExtension.IntSlider("Minnion Range",
