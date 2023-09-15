@@ -534,9 +534,9 @@ namespace CoPilot
 					CoPilot.Instance.Graphics.DrawLine(portal.Label.GetClientRectCache.TopLeft, portal.Label.GetClientRectCache.TopRight, 2f,Color.Firebrick);
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				//ignore
+                CoPilot.instance.LogError("Error rendering: " + e, 5);
 			}
 			/*			 
 			// Debug for UI Element
