@@ -7,3 +7,4 @@ riderModule.iml
 /.vs
 /CoPilot.csproj.user
 /CoPilot.csproj
+*.DotSettings.user
