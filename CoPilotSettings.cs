@@ -62,7 +62,9 @@ public class CoPilotSettings : ISettings
     #region CWDT
 
     public ToggleNode cwdtEnabled = new ToggleNode(false);
-        
+    public ToggleNode cwdtUseRf = new ToggleNode(true);
+    public RangeNode<int> cwdtUseRfIfLifeRecoveryRateReduceIsNoMoreThan = new RangeNode<int>(100, 0, 100);
+    public ToggleNode cwdtUseRubyFlask = new ToggleNode(false);
 
     #endregion
 
