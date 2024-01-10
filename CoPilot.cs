@@ -489,9 +489,9 @@ public class CoPilot : BaseSettingsPlugin<CoPilotSettings>
 
                         if (Settings.cwdtUseRf && SkillInfo.righteousFire.Id == skill.Id && SkillInfo.ManageCooldown(SkillInfo.righteousFire, skill))
                         {
-                            if (ExileCore.PoEMemory.RemoteMemoryObject.pTheGame.IngameState.Data.MapStats
-                                .TryGetValue(GameStat.MapPlayerLifeAndEsRecoverySpeedPctFinal, out var value) &&
-                                Settings.cwdtUseRfIfLifeRecoveryRateReduceIsNoMoreThan >= Math.Abs(value))
+                            ExileCore.PoEMemory.RemoteMemoryObject.pTheGame.IngameState.Data.MapStats
+                                .TryGetValue(GameStat.MapPlayerLifeAndEsRecoverySpeedPctFinal, out var value);
+                            if (Settings.cwdtUseRfIfLifeRecoveryRateReduceIsNoMoreThan >= Math.Abs(value))
                             {
                                 if (buffs.Exists(x => x.Name == "flask_bonus_ward_not_break") && !buffs.Exists(x => x.Name == SkillInfo.righteousFire.BuffName))
                                 {
