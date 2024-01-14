@@ -65,6 +65,8 @@ internal static class SkillInfo
     internal static Skill frenzy = new Skill();
     internal static Skill summonSpiders = new Skill();
     internal static Skill wardFlask = new Skill();
+    internal static Skill rubyFlask = new Skill();
+    internal static Skill amethystFlask = new Skill();
     internal static Skill summonSkeletons = new Skill();
     internal static Skill righteousFire = new Skill();
     internal static Skill auraPurityOfElements = new Skill();
@@ -127,6 +129,8 @@ internal static class SkillInfo
         frenzy = new Skill();
         summonSpiders = new Skill();
         wardFlask = new Skill();
+        rubyFlask = new Skill();
+        amethystFlask = new Skill();
         summonSkeletons = new Skill();
         righteousFire = new Skill();
         auraPurityOfElements = new Skill();
