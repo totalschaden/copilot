@@ -502,6 +502,14 @@ public class CoPilot : BaseSettingsPlugin<CoPilotSettings>
 
                             // Auto Ruby Flask
                             if (Settings.cwdtUseRubyFlask)
+                        // Auto Ruby Flask
+                        if (Settings.cwdtUseRubyFlask)
+                        {
+                            var rubyFlask = GameController.Game.IngameState.ServerData.PlayerInventories
+                                .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?
+                                .Inventory?.InventorySlotItems?.FirstOrDefault(x => x.InventoryPosition.X == 1)?.Item;
+                            if (rubyFlask != null && !buffs.Exists(x => x.Name == "flask_utility_resist_fire") &&
+                                rubyFlask.GetComponent<Charges>()?.NumCharges >= rubyFlask.GetComponent<Charges>()?.ChargesMax)
                             {
                                 var rubyFlask = GameController.Game.IngameState.ServerData.PlayerInventories
                                     .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?
@@ -512,6 +520,22 @@ public class CoPilot : BaseSettingsPlugin<CoPilotSettings>
                                     Keyboard.KeyPress(Keys.D2);
                                     SkillInfo.rubyFlask.Cooldown = 100;
                                 }
+                                Keyboard.KeyPress(Keys.D2);
+                                SkillInfo.rubyFlask.Cooldown = 100;
+                            }
+                        }
+
+                        // Auto Amethyst Flask
+                        if (Settings.cwdtUseAmethystFlask)
+                        {
+                            var amethystFlask = GameController.Game.IngameState.ServerData.PlayerInventories
+                                .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?
+                                .Inventory?.InventorySlotItems?.FirstOrDefault(x => x.InventoryPosition.X == 2)?.Item;
+                            if (amethystFlask != null && !buffs.Exists(x => x.Name == "flask_utility_resist_chaos") &&
+                                amethystFlask.GetComponent<Charges>()?.NumCharges >= amethystFlask.GetComponent<Charges>()?.ChargesMax)
+                            {
+                                Keyboard.KeyPress(Keys.D3);
+                                SkillInfo.amethystFlask.Cooldown = 100;
                             }
                         }
                         // TODO

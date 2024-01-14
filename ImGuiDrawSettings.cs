@@ -935,6 +935,8 @@ internal class ImGuiDrawSettings
                     "Use RF ONLY if Life Recovery Rate Reduce is no more than", CoPilot.Instance.Settings.cwdtUseRfIfLifeRecoveryRateReduceIsNoMoreThan);
                 CoPilot.Instance.Settings.cwdtUseRubyFlask.Value = ImGuiExtension.Checkbox("Use Ruby Flask (must be in second slot)",
                     CoPilot.Instance.Settings.cwdtUseRubyFlask.Value);
+                CoPilot.Instance.Settings.cwdtUseAmethystFlask.Value = ImGuiExtension.Checkbox("Use Amethyst Flask (must be in third slot)",
+                    CoPilot.Instance.Settings.cwdtUseAmethystFlask.Value);
             }
         }
         catch (Exception e)
