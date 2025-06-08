@@ -949,6 +949,6 @@ internal class ImGuiDrawSettings
             CoPilot.Instance.LogError(e.ToString());
         }
 
-        ImGui.End();
+        //ImGui.End();
     }
 }
